@@ -61,7 +61,8 @@ function content(body) {
   if (!fields(body, ['subject', 'body']) || typeof body.subject !== 'string' || typeof body.body !== 'string') return null;
   const subject = body.subject.trim(), text = body.body.trim();
   if (!subject || subject.length > 200 || !text || text.length > 4000
-    || /[\u0000-\u001f\u007f]/.test(subject) || /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/.test(text)) return null;
+    || /[<>\u0000-\u001f\u007f-\u009f\u2028\u2029\p{Cf}]/u.test(subject)
+    || /[<>\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f\u2028\u2029\p{Cf}]/u.test(text)) return null;
   return { subject, body: text };
 }
 
@@ -142,10 +143,12 @@ export function createCollectionsService({ store, generator, now = () => new Dat
       });
       if (prepared.status) return prepared;
 
-      let generated;
+      let generated, guardrailBlocked = false;
       try {
         generated = content(await generator(structuredClone(prepared.input)));
-      } catch {
+        guardrailBlocked = !generated;
+      } catch (failure) {
+        guardrailBlocked = ['AI_INVALID_RESPONSE', 'AI_INVALID_INPUT'].includes(failure?.code);
         // Never propagate provider responses, credentials, or raw model text to the API/log.
       }
       if (!generated) {
@@ -153,6 +156,11 @@ export function createCollectionsService({ store, generator, now = () => new Dat
           if (!invoiceFor(state, user, invoiceId)) return notFound();
           const denied = deny(state, user, 'reminder.generate', 'invoice', invoiceId);
           if (denied) return denied;
+          if (guardrailBlocked) {
+            const message = 'AI 内容未通过安全检查，未保存新内容，原草稿已保留。';
+            log(state, user, 'reminder.generate', 'invoice', invoiceId, 'failure', message);
+            return error('AI_UNAVAILABLE', message, { retryable: true, guardrail: 'blocked' });
+          }
           log(state, user, 'reminder.generate', 'invoice', invoiceId, 'failure', 'AI 文案生成失败，原草稿已保留。');
           return error('AI_UNAVAILABLE', 'AI 文案生成失败，请检查密钥或稍后重试。', { retryable: true });
         });

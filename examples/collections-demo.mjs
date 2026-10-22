@@ -48,7 +48,7 @@ async function main() {
   });
 
   console.log('Issue #4｜Rantau 合成数据；仅内存演示，关闭后不保存。');
-  console.log('现在向 DeepSeek 请求 1 次催收草稿；发送仍为模拟，不会向客户发送邮件。');
+  console.log('现在向 DeepSeek 请求 1 次话术选择，本地组装催收草稿；不会向客户发送邮件。');
   const result = await service.generateReminder(finance.id, invoice.id);
   if (result.status >= 400) {
     console.error(`生成失败（${result.status}）：${result.body.error.message}`);

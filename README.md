@@ -58,7 +58,7 @@ AI 催收：首次使用将 `.env.example` 复制为 `.env`，只填写 `DEEPSEE
 node --env-file=.env examples/collections-demo.mjs
 ```
 
-这会请求一次 DeepSeek 草稿，输入 `SEND` 才模拟发送。地址与模型已配置；`.env` 不上传 Git。自动测试使用模型替身，真实 API 须填入有效密钥后另行验证；完整应用仍待联调。
+这会请求一次 DeepSeek 话术选择并在本地组装草稿，输入 `SEND` 才模拟发送。AI 只能选择审核过的催收话术，无权读文件或执行命令；事实和客户资料不进入模型请求。地址与模型已配置；`.env` 不上传 Git。自动测试使用模型替身，完整应用仍待联调。详见 [AI 安全边界](docs/COLLECTIONS.md#ai-安全边界)。
 
 ## 交付与声明
 
