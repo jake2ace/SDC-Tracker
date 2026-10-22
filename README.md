@@ -4,7 +4,7 @@
 
 SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 
-> 当前状态：Issue #1 的共享数据、接口类型和验收样例已落地。页面、数据库和业务接口仍需实现；以下是完整初赛目标。
+> 当前分支：Issue #1 的共享数据已落地；Issue #3 已有自动开票模块、测试和命令行演示，等待接入 Issue #2 的会话、审批和数据库。以下是完整初赛目标。
 
 ## 初赛必须完成
 
@@ -18,6 +18,7 @@ SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 
 - [完成标准](docs/ACCEPTANCE.md)
 - [Issue #1：故事、数据与接口约定](docs/DATA_CONTRACT.md)
+- [Issue #3：自动开票运行与接入](docs/INVOICING.md)
 - [故事与完成标准 PDF（前期方案名：Milestone2Cash）](docs/Milestone2Cash_初赛故事与完成标准.pdf)
 - [GitHub 项目管理流程](docs/WORKFLOW.md)
 
@@ -41,7 +42,14 @@ node --test tests/contract.test.mjs
 
 前端与后端从同一份 [demo.json](data/demo.json) 初始化；字段使用 [domain.ts](contracts/domain.ts)，接口使用 [api.ts](contracts/api.ts)。测试预期在 [expected-results.json](data/expected-results.json)。JSON 数据可直接复制进 mock adapter；不得硬编码另一套金额或日期。
 
-应用启动命令将在基础工程完成后补充。检查契约通过不代表接口已经可访问，也不代表真实 AI 已接入。
+运行自动开票演示及全部测试（Node.js 22.13 或以上；SQLite 只用于测试，无需安装依赖）：
+
+```sh
+node examples/invoicing-demo.mjs
+node --test tests/*.test.mjs
+```
+
+演示会依次显示生成草稿、未批准阻断、模拟失败、重试成功与重复开票保护。审批使用明确标注的测试占位，数据仅保存在内存；应用启动命令将在基础工程接入后补充。检查通过不代表完整应用或真实 AI 已接入。
 
 ## 交付与声明
 
