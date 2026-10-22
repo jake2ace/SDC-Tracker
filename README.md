@@ -1,94 +1,57 @@
 # SDC Tracker
 
-**Project delivery → automated invoicing → AI-assisted collections → a 30-day cash-flow forecast.**
+**让小企业知道：哪些项目款该收、谁需要催、晚到账会不会影响未来 30 天的现金。**
 
-SDC Hackathon 2026 · Domain 2 · Team Lets go
+SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 
-The shared story, data, API types, and acceptance examples from Issue #1 are the source of truth. Issue #2 adds a local backend foundation: SQLite persistence, explicit demo identities, company isolation, invoice approval guards, and activity logs. The frontend is owned by another teammate and is not included in this backend implementation.
+## 我们要做成什么
 
-## Preliminary-round product goals
+用同一份业务数据跑通：**阶段完成 → 发票草稿 → 人工批准 → 模拟开票 → 逾期提醒 → 人工确认发送 → 登记收款 → 现金流更新**。
 
-| Feature | Intended result |
+| 功能 | 完成标准 |
 |---|---|
-| Automated invoicing | Generate a correct invoice draft when a project milestone is completed; simulate issuing it only after human approval and retain the result. |
-| AI-assisted collections | Identify overdue balances, generate an editable reminder, simulate sending it after human confirmation, and stop reminders after payment. |
-| Cash-flow forecast | Show the next 30 days of expected balances, compare on-time and delayed receipts, and identify dates and amounts below the safety line. |
+| 自动开票 | 按付款约定生成草稿；未经批准不能开票，重复点击不重复开票。 |
+| AI 催收 | 只处理本公司的逾期欠款；提醒可检查、修改，确认后模拟发送；付款后停止催收。 |
+| 现金流预测 | 展示未来 30 天余额、按时与延迟到账的差异、低于安全线的日期及缺口，并能追溯每笔来源。 |
+| 多案例验证 | 两家公司、正常和延迟到账、已收款、失败重试、无权限操作都能正确演示。 |
 
-These features must share data and support one complete demonstration. Use team-created synthetic data and simulated external integrations while implementing the actual business rules. These are the full product goals; the current backend foundation does not implement all three features.
+**当前后端已接通 #2 的数据库、权限、审批和日志，以及 #3–#5 的业务接口。前端页面与视觉设计交给 Claude，按接口联调。** `examples/forecast-ui` 是可选的预测验证页，不是最终前端。
 
-## Documentation and shared contracts
+## 本地启动
 
-- [Acceptance criteria](docs/ACCEPTANCE.md)
-- [Issue #1 story, data, and API agreement](docs/DATA_CONTRACT.md)
-- [Story and acceptance PDF, originally named Milestone2Cash](docs/Milestone2Cash_初赛故事与完成标准.pdf)
-- [GitHub project workflow](docs/WORKFLOW.md)
-- [Backend setup and implemented endpoints](docs/BACKEND.md)
-- [Frontend and business-feature handoff](docs/BACKEND_HANDOFF.md)
-- [Shared domain types](contracts/domain.ts) and [API types](contracts/api.ts)
-- [Synthetic seed](data/demo.json) and [expected results](data/expected-results.json)
-
-The existing Issue #1 documents and contracts retain their original content. New backend documentation and API messages are in English.
-
-## Run the backend
-
-Requirements: **Node.js 22.13 or later**. No third-party runtime packages or dependency installation are required. SQLite uses Node's built-in `node:sqlite` module; supported Node versions may print an experimental-feature warning.
+需要 Node.js **22.13 或以上**，无需安装运行依赖。已有 `.env` 就直接使用；首次配置才从 `.env.example` 创建 `.env`，填写 `DEEPSEEK_API_KEY`。不要覆盖已有密钥，也不要把密钥交给前端。
 
 ```sh
-npm start
+DEMO_MODE=true node --env-file=.env src/server.mjs
 ```
 
-The service listens on `http://127.0.0.1:3000` by default. `GET /health` exposes service metadata. Demo APIs are disabled by default, and `/` does not serve a webpage.
-
-For local integration with the synthetic demo:
+API 默认在 `http://127.0.0.1:3000`；根路径不提供网页。前端若运行在另一个端口，启动时允许它的精确来源，例如：
 
 ```sh
-DEMO_MODE=true npm start
+DEMO_MODE=true CORS_ORIGINS=http://localhost:5173 node --env-file=.env src/server.mjs
 ```
 
-Then use an explicit synthetic identity:
-
-```sh
-curl -H 'X-Demo-User: u_lumen_pm' \
-  http://127.0.0.1:3000/api/demo/session
-```
-
-Data is persisted in `.local/sdc-tracker.sqlite`, which is not committed. Environment files are not loaded automatically. See [backend setup](docs/BACKEND.md) for environment variables, CORS, reset behavior, and API examples.
-
-## Business modules available for integration
-
-The invoicing service and route adapter from Issue #3, and the DeepSeek collections service and route adapter from Issue #4, are present in this repository. Their HTTP routes are not mounted by this backend foundation yet; the endpoint coverage in [BACKEND.md](docs/BACKEND.md) remains the current server contract.
-
-- [Invoicing setup and integration](docs/INVOICING.md)
-- [Collections setup and integration](docs/COLLECTIONS.md)
-- [Standalone invoicing example](examples/invoicing-demo.mjs)
-- [Standalone collections example](examples/collections-demo.mjs)
-
-The standalone collections example needs a locally configured `DEEPSEEK_API_KEY` and may call the model. Automated tests use model substitutes. Do not commit `.env` or a real API key. The shared HTTP server, frontend, and business services still require integration before the full product can be demonstrated.
-
-## Validate
+每次 `/api/*` 请求都要带演示角色头，如 `X-Demo-User: u_lumen_pm`。这是合成身份切换，**不是生产登录系统**。SQLite 保存到 `.local/sdc-tracker.sqlite`，重启保留数据。
 
 ```sh
 npm test
 ```
 
-The test suite includes the shared-contract checks and backend checks. Passing these checks does not establish that the remaining business features, real AI, a frontend, or a deployed application are complete.
+测试使用 AI 替身，不消耗密钥额度。运行中的后端在生成新催收草稿时才调用 DeepSeek；缺少密钥会明确报错。开票、发送和付款登记均为演示流程，不接真实财务账户。
 
-## Development order
+## 给开发者
 
-1. Agree on the demonstration story, fields, and API contract.
-2. Integrate the independently developed frontend with the backend persistence, permissions, approvals, and logs.
-3. Mount the existing invoicing and collections route adapters, then connect the cash-flow forecast against the shared contracts.
-4. Verify the acceptance criteria and repeat the checks against the deployed environment.
-5. Prepare submission materials and check every link and reproduction instruction.
+- [后端与 Claude 前端交接：启动、接口、角色、多案例验收](docs/BACKEND_HANDOFF.md)
+- [统一数据与 API 约定](docs/DATA_CONTRACT.md) · [API 类型](contracts/api.ts)
+- [开票](docs/INVOICING.md) · [AI 催收与安全边界](docs/COLLECTIONS.md) · [现金流与 8 个案例](docs/FORECAST.md)
+- [初赛完成标准](docs/ACCEPTANCE.md) · [项目管理流程](docs/WORKFLOW.md)
 
-Track tasks in Issues and the project board. Review local changes before publishing them. **Ask the repository owner before pushing commits or creating a pull request.** Issue #2 requires another team member's review before it is closed.
+AI 只选择审核过的话术，业务事实在本地组装；客户资料不进入模型请求。预测由确定的账本规则计算，不调用 AI，也不代表银行已到账。前端必须使用接口返回的数据，不能另造一套固定数值。
 
-## Delivery and disclosure
+**接下来：Claude 完成前端接入 → 录制多案例完整流程 → 部署验证 → 整理初赛材料。**
 
-Prepare the working prototype, public GitHub repository and README, official PRD, pitch deck, Technical & Tools Declaration, and 5–7-minute pitch/demo video. Verify the current official format and deadline before submission. Keep the development repository private until the team is ready to publish the submission version under the rules.
+## 交付与声明
 
-Record actual use of AI development tools, runtime models, third-party code, and services. Collect Replit evidence and RunPod evidence where applicable. This backend does not claim real AI integration, Replit deployment, or a connection to a live Orbyte system.
+初赛材料包括原型、公开 GitHub / README、官方 PRD、PPTX、技术工具声明及 5–7 分钟演示视频；开发期间仓库保持 private。提交前核对官方格式、截止时间、访问权限及 Replit / RunPod 等工具证据要求，记录实际使用的 AI、模型与第三方代码。
 
-References: [Official Domain 2 brief](https://drive.google.com/file/d/11wqbeO-HYep-DJPQ-LPZnrZfQvCgr5BU/view) · [Participant Handbook](https://drive.google.com/file/d/1fGBS-jevDj_FrF8wsbYNPzyU5TTrfk1V/view)
-
-Code is licensed under Apache-2.0. Third-party material retains its own license and attribution.
+参考：[Domain 2 正式赛题](https://drive.google.com/file/d/11wqbeO-HYep-DJPQ-LPZnrZfQvCgr5BU/view) · [Participant Handbook](https://drive.google.com/file/d/1fGBS-jevDj_FrF8wsbYNPzyU5TTrfk1V/view)。代码采用 Apache-2.0；第三方内容保留各自许可与署名。

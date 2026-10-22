@@ -5,11 +5,17 @@ import { dirname, join, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { openStore } from './store.mjs';
 import { ApiError, requireCondition, requireObject } from './errors.mjs';
-import { findInvoice } from './guards.mjs';
 import { appendActivity, activityFor, decideInvoice, sessionFor, updateSettings } from './service.mjs';
+import { createInvoicingService } from './invoicing/service.mjs';
+import { routeInvoicingRequest } from './invoicing/routes.mjs';
+import { createCollectionsService } from './collections/service.mjs';
+import { routeCollectionsRequest } from './collections/routes.mjs';
+import { createDeepSeekGenerator } from './collections/deepseek.mjs';
+import { createForecastService } from './forecast/service.mjs';
+import { routeForecastRequest } from './forecast/routes.mjs';
+import { limitGenerator } from './collections/budget.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const INVOICE_STATUSES = ['pending_approval', 'approved', 'rejected', 'issued', 'paid'];
 
 async function readBody(req) {
   const chunks = []; let size = 0;
@@ -48,9 +54,17 @@ export function createApplication({
   databasePath = process.env.DB_PATH || join(root, '.local', 'sdc-tracker.sqlite'),
   seed = JSON.parse(readFileSync(join(root, 'data', 'demo.json'), 'utf8')),
   demoMode = process.env.DEMO_MODE === 'true',
-  allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(value => value.trim()).filter(Boolean)
+  allowedOrigins = (process.env.CORS_ORIGINS || '').split(',').map(value => value.trim()).filter(Boolean),
+  allowedHosts = (process.env.ALLOWED_HOSTS || '').split(',').map(value => value.trim()).filter(Boolean),
+  reminderGenerator = createDeepSeekGenerator(),
+  aiLimits,
 } = {}) {
+  const generator = limitGenerator(reminderGenerator, aiLimits);
   const store = openStore({ databasePath, seed });
+  const invoicing = createInvoicingService({ store });
+  const collections = createCollectionsService({ store, generator });
+  const forecast = createForecastService({ store });
+  let activeReminderRequests = 0;
   const server = createServer(async (req, res) => {
     const requestId = randomUUID();
     let pathname = '[invalid-url]'; let actor = null;
@@ -63,6 +77,11 @@ export function createApplication({
       res.end(JSON.stringify(value));
     };
     try {
+      const port = server.address()?.port;
+      const hosts = [`127.0.0.1:${port}`, `localhost:${port}`, `[::1]:${port}`, ...allowedHosts];
+      requireCondition(hosts.includes(req.headers.host), 'FORBIDDEN', 'This request host is not allowed.');
+      requireCondition(typeof req.url === 'string' && req.url.startsWith('/') && !req.url.startsWith('//')
+        && req.url.length <= 2048 && !req.url.includes('#'), 'VALIDATION_ERROR', 'The request URL is invalid.');
       let url;
       try { url = new URL(req.url, 'http://localhost'); }
       catch { throw new ApiError('VALIDATION_ERROR', 'The request URL is invalid.'); }
@@ -79,10 +98,15 @@ export function createApplication({
       if (req.method === 'OPTIONS') {
         requireCondition(req.headers.origin && pathname.startsWith('/api/'), 'NOT_FOUND', 'Preflight endpoint not found.');
         res.writeHead(204, {
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type, X-Demo-User',
           'Access-Control-Max-Age': '600'
         }); res.end(); return;
+      }
+      if (req.method === 'GET' || req.method === 'HEAD') {
+        requireCondition(req.headers['transfer-encoding'] === undefined
+          && (req.headers['content-length'] === undefined || req.headers['content-length'] === '0'),
+        'VALIDATION_ERROR', 'Read-only requests cannot contain a body.');
       }
       if (pathname === '/health' && req.method === 'GET') {
         validateQuery(url, []);
@@ -92,41 +116,49 @@ export function createApplication({
       if (pathname.startsWith('/api/demo/')) requireCondition(demoMode, 'NOT_FOUND', 'Demo controls are disabled.');
       requireCondition(actor, 'UNAUTHENTICATED', 'Provide a known X-Demo-User identity in explicitly enabled demo mode.');
 
+      const body = ['POST', 'PUT', 'PATCH'].includes(req.method) ? await readBody(req) : {};
+
       if (pathname === '/api/demo/session' && req.method === 'GET') {
         validateQuery(url, []); send(200, sessionFor(state, actor)); return;
       }
       if (pathname === '/api/demo/settings' && req.method === 'PUT') {
-        validateQuery(url, []); const body = await readBody(req);
+        validateQuery(url, []);
         send(200, store.transaction(current => updateSettings(current, actor, body))); return;
       }
       if (pathname === '/api/demo/reset' && req.method === 'POST') {
-        validateQuery(url, []); requireObject(await readBody(req), []);
+        validateQuery(url, []); requireObject(body, []);
+        requireCondition(activeReminderRequests === 0, 'INVALID_STATE', 'Wait for reminder generation to finish before resetting the demo.');
         send(200, { settings: store.reset() }); return;
       }
-      if (pathname === '/api/projects' && req.method === 'GET') {
-        validateQuery(url, []);
-        const projects = state.projects.filter(project => project.companyId === actor.companyId).map(project => ({
-          ...project, client: state.clients.find(client => client.id === project.clientId && client.companyId === actor.companyId),
-          milestones: state.milestones.filter(milestone => milestone.projectId === project.id),
-          invoices: state.invoices.filter(invoice => invoice.projectId === project.id && invoice.companyId === actor.companyId)
-        }));
-        send(200, { projects }); return;
+      const moduleRequest = { method: req.method, pathname, query: url.searchParams, body, userId: actor.id };
+      for (const [route, service] of [[routeInvoicingRequest, invoicing], [routeCollectionsRequest, collections], [routeForecastRequest, forecast]]) {
+        const generating = route === routeCollectionsRequest && req.method === 'POST'
+          && /^\/api\/invoices\/[^/]*\/reminders$/.test(pathname);
+        if (generating) activeReminderRequests++;
+        let result;
+        try { result = await route(service, moduleRequest); }
+        finally { if (generating) activeReminderRequests--; }
+        if (!result) continue;
+        if (result.status >= 400) {
+          const error = result.body.error;
+          store.recordRequestError({ requestId, at: new Date().toISOString(), method: req.method,
+            path: pathname, status: result.status, code: error.code, message: error.message, actor });
+          store.transaction(current => appendActivity(current, actor, {
+            action: 'api.error', result: [401, 403].includes(result.status) ? 'denied' : 'failure',
+            message: `${req.method} request failed: ${error.code}. Request ID: ${requestId}`,
+          }));
+          send(result.status, { error: { ...error, details: { ...error.details, requestId } } });
+        } else send(result.status, result.body);
+        return;
       }
-      if (pathname === '/api/invoices' && req.method === 'GET') {
-        validateQuery(url, ['status']); const status = url.searchParams.get('status');
-        requireCondition(status === null || INVOICE_STATUSES.includes(status), 'VALIDATION_ERROR', 'Unknown invoice status.');
-        send(200, { invoices: state.invoices.filter(invoice => invoice.companyId === actor.companyId && (!status || invoice.status === status)) }); return;
-      }
-      const match = /^\/api\/invoices\/([^/]+)(?:\/(approve|reject))?$/.exec(pathname);
+      const match = /^\/api\/invoices\/([^/]+)\/(approve|reject)$/.exec(pathname);
       if (match) {
         validateQuery(url, []);
-        if (!match[2] && req.method === 'GET') {
-          const invoice = findInvoice(state, actor, match[1]);
-          send(200, { invoice, logs: activityFor(state, actor, state.logs.length).filter(log => log.entityType === 'invoice' && log.entityId === invoice.id) }); return;
-        }
-        if (match[2] && req.method === 'POST') {
-          const body = await readBody(req);
-          send(200, store.transaction(current => decideInvoice(current, actor, match[1], match[2], body))); return;
+        if (req.method === 'POST') {
+          let id;
+          try { id = decodeURIComponent(match[1]); } catch { throw new ApiError('VALIDATION_ERROR', 'The invoice ID is invalid.'); }
+          requireCondition(id.trim() && !/[\/\\?#\u0000-\u001f\u007f]/.test(id), 'VALIDATION_ERROR', 'The invoice ID is invalid.');
+          send(200, store.transaction(current => decideInvoice(current, actor, id, match[2], body))); return;
         }
       }
       if (pathname === '/api/activity' && req.method === 'GET') {
@@ -136,7 +168,7 @@ export function createApplication({
         requireCondition(Number.isSafeInteger(limit) && limit >= 1 && limit <= 200, 'VALIDATION_ERROR', 'limit must be an integer from 1 to 200.');
         send(200, { logs: activityFor(state, actor, limit) }); return;
       }
-      throw new ApiError('NOT_FOUND', 'This route is not implemented in the backend foundation.');
+      throw new ApiError('NOT_FOUND', 'This API route does not exist.');
     } catch (error) {
       const known = error instanceof ApiError;
       const code = known ? error.code : 'UPSTREAM_FAILED';
@@ -149,8 +181,8 @@ export function createApplication({
           // A system event avoids attaching a foreign or nonexistent entity to this company.
           message: `${req.method} request failed: ${message} Request ID: ${requestId}`
         }));
-      } catch (logError) { console.error('Request logging failed', requestId, logError.message); }
-      if (!known) console.error('Backend request failed', requestId, error.message);
+      } catch { console.error('Request logging failed', requestId); }
+      if (!known) console.error('Backend request failed', requestId);
       if (!res.headersSent && !res.destroyed) send(status, { error: { code, message, details: { ...(known ? error.details : {}), requestId } } });
     }
   });

@@ -29,7 +29,7 @@ node --test tests/*.test.mjs
 
 `createCollectionsService({ store, generator, now })` 使用 #1 的 `DemoState`；可信服务端 `generator` 接受业务事实，返回 `{ subject, body }`。生产实例使用 `createDeepSeekGenerator()`，它将事实留在本地，只发送固定选项。模型失败返回 `503 AI_UNAVAILABLE`，不保存半成品，重新生成失败时保留旧稿；必须取得合法的模型选择才组装草稿，没有失败后静默降级。
 
-`store.read()` 返回隔离快照；`store.transaction(fn)` 与审批、开票、收款、设置等**所有写入共用**排他锁／数据库事务，执行一次同步回调。正常返回即提交（包括错误响应中的日志），抛异常回滚，提交后 resolve。AI 请求在事务外执行，返回后再次校验身份、状态与事实，防止生成期间付款后仍保存或发送催收。实际数据库、会话和页面仍需 #2 接入，未完成整站联调。
+`store.read()` 返回隔离快照；`store.transaction(fn)` 与审批、开票、收款、设置等**所有写入共用**排他锁／数据库事务，执行一次同步回调。正常返回即提交（包括错误响应中的日志），抛异常回滚，提交后 resolve。AI 请求在事务外执行，返回后再次校验身份、状态与事实，防止生成期间付款后仍保存或发送催收。现已接入 #2 的 SQLite 和演示身份；最终页面由 Claude 接入。集成服务器每分钟最多 12 次模型调用、并发最多 2 次；生成期间禁止重置，重置不清除调用预算。
 
 在可信会话和 JSON 解析之后挂载 `routeCollectionsRequest(service, { method, pathname, query, body, userId })`：`userId` 来自服务端会话，`query` 是 `URLSearchParams`；原样输出返回的 `{ status, body }`，不要再套 `data`。`null` 交给其他路由，异常交给宿主错误处理。
 

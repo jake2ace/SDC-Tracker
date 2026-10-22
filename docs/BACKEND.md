@@ -1,6 +1,6 @@
 # Backend foundation
 
-This document covers the Issue #2 backend. The existing [API contract](../contracts/api.ts), [domain types](../contracts/domain.ts), and [Issue #1 agreement](DATA_CONTRACT.md) remain authoritative for business features. Only the endpoint subset listed below is implemented here.
+This document details the Issue #2 foundation. Its HTTP server now also mounts Issues #3–#5 against the same SQLite store. Use the [current integration handoff](BACKEND_HANDOFF.md) for the complete endpoint list, AI budget and Host configuration. The existing [API contract](../contracts/api.ts), [domain types](../contracts/domain.ts), and [Issue #1 agreement](DATA_CONTRACT.md) remain authoritative.
 
 ## Start locally
 
@@ -144,16 +144,11 @@ Authenticated API failures and write outcomes are recorded using the existing `A
 
 Requests without a valid identity are recorded separately in SQLite's `backend_request_errors` table. They do not appear in a company's public activity API, which prevents a caller from injecting unauthenticated errors into another company's activity trail. Neither the API nor logs should include secret values.
 
-## Not implemented here
+## Integrated business modules and remaining scope
 
-- Milestone completion and automatic draft creation.
-- Issuing invoices through the simulated accounting adapter and recording payments.
-- Collections views, AI reminder generation/editing, and simulated sending.
-- The overview and 30-day forecast.
-- Real authentication, live Orbyte integration, real customer data, external payments, or email delivery.
-- A frontend, hosted deployment, real AI service, or Replit usage evidence.
+Milestone completion, draft creation, approved simulated issuance, payment recording, collections, guarded DeepSeek draft generation/editing, simulated sending, overview and 30-day forecast are mounted in the same server. The process permits 12 actual AI calls per minute and 2 concurrently; reset is blocked during generation. Load the existing key using `node --env-file=.env src/server.mjs` with `DEMO_MODE=true`.
 
-The shared `failNext.accounting` and `failNext.outbox` controls are persisted for the future mock adapters. This foundation does not pretend to call those adapters or consume their switches.
+The shared `failNext.accounting` and `failNext.outbox` controls now drive the mounted mock adapters. Real authentication, live Orbyte integration, real financial transactions/email delivery, the final frontend, hosted deployment and Replit usage evidence remain outside this local backend verification.
 
 ## Verification
 

@@ -179,7 +179,7 @@ test('settings are validated atomically and cannot override the identity establi
   assert.deepEqual(session.settings.failNext, { accounting: true, outbox: false });
 });
 
-test('approval is owner-only, preserves the invoice basis, is idempotent and cannot issue an invoice', async t => {
+test('approval is owner-only, preserves the invoice basis, is idempotent and does not itself issue an invoice', async t => {
   const app = await start(t);
   expectError(await app.request(`${invoiceUrl}/approve`, { actor: pm, method: 'POST', body: {} }), 403, 'FORBIDDEN');
   const approved = await app.request(`${invoiceUrl}/approve`, { method: 'POST', body: {} });
@@ -195,7 +195,6 @@ test('approval is owner-only, preserves the invoice basis, is idempotent and can
   assert.equal(repeated.status, 200);
   assert.deepEqual(repeated.body.invoice, approved.body.invoice);
   expectError(await app.request(`${invoiceUrl}/approve`, { actor: finance, method: 'POST', body: {} }), 403, 'FORBIDDEN');
-  expectError(await app.request(`${invoiceUrl}/issue`, { actor: finance, method: 'POST', body: {} }), 404, 'NOT_FOUND');
   const detail = await app.request(invoiceUrl);
   assert.equal(detail.body.invoice.invoiceNo, null);
   const success = detail.body.logs.filter(log => log.result === 'success' && log.action.includes('approve'));
@@ -350,17 +349,19 @@ test('shared guards enforce company boundaries, role checks and approval before 
   assert.doesNotThrow(() => requireApprovedInvoice({ ...draft, status: 'approved', approval }));
 });
 
-test('unimplemented business modules fail closed without reporting fabricated results', async t => {
+test('mounted modules return contract results while unapproved writes and unknown routes fail closed', async t => {
   const app = await start(t);
   for (const url of ['/api/overview', '/api/collections', '/api/forecast']) {
-    expectError(await app.request(url), 404, 'NOT_FOUND');
+    assert.equal((await app.request(url)).status, 200);
   }
   for (const [url, body] of [
     [`/api/milestones/${draft.milestoneId}/complete`, {}],
     [`${invoiceUrl}/payments`, { receivedAt: seed.settings.demoDate }],
     [`${invoiceUrl}/reminders`, {}],
   ]) {
-    expectError(await app.request(url, { method: 'POST', body }), 404, 'NOT_FOUND');
+    expectError(await app.request(url, { method: 'POST', body }), 403, 'FORBIDDEN');
   }
+  expectError(await app.request(`${invoiceUrl}/issue`, { actor: finance, method: 'POST', body: {} }), 409, 'INVALID_STATE');
+  expectError(await app.request('/api/unknown'), 404, 'NOT_FOUND');
   assert.deepEqual((await app.request(invoiceUrl)).body.invoice, draft);
 });

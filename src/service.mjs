@@ -67,8 +67,9 @@ export function decideInvoice(state, actor, id, action, body) {
   requireObject(body, action === 'reject' ? ['reason'] : []);
   let reason;
   if (action === 'reject') {
-    requireCondition(typeof body.reason === 'string' && body.reason.trim().length >= 1 && body.reason.trim().length <= 500,
-      'VALIDATION_ERROR', 'A rejection reason of 1–500 characters is required.');
+    requireCondition(typeof body.reason === 'string' && body.reason.trim().length >= 1 && body.reason.trim().length <= 500
+      && !/[<>\u0000-\u001f\u007f-\u009f\p{Cf}]/u.test(body.reason),
+      'VALIDATION_ERROR', 'A plain-text rejection reason of 1–500 characters is required.');
     reason = body.reason.trim();
   }
   // Authorization and body checks always precede idempotent replay.
