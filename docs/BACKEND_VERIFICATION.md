@@ -6,10 +6,12 @@ Verified locally on 2026-10-22 (MYT), using Node.js v26.9.0 and temporary SQLite
 
 Command: `npm test`
 
-- Tests: **50**
-- Passed: **50**
+- Tests: **265**
+- Passed: **265**
 - Failed: **0**
-- Includes the existing Issue #1 contract/golden checks and 13 backend tests.
+- Includes the Issue #1 contract/golden checks, 13 backend tests, and the invoicing/collections checks from the current main branch.
+
+The initial backend-only snapshot passed 50 tests. After preserving the newly merged Issue #3 and Issue #4 modules and resolving README/environment-example conflicts, the combined suite passed all 265 tests. Business-module HTTP routes remain unmounted in this foundation; no live model call or deployment was performed by this verification.
 
 Backend coverage includes explicit demo opt-in, known-header identity, company-scoped reads, atomic settings validation, owner-only decisions, authorized idempotent replays, terminal rejection, concurrent approve/reject, activity ordering and limits, request/body/CORS validation, restart persistence, complete seed reset, and reusable approval guards.
 
@@ -22,7 +24,7 @@ Unsupported business routes return `404`; they do not produce placeholder invoic
 - Newly added backend source, tests and configuration comments are in English.
 - Updated README and new backend documentation are presented in English.
 - Runtime SQLite data is ignored by Git.
-- No push or new pull request has been made for this local backend branch.
+- This local verification was recorded before publication of the backend branch was approved.
 
 ## Next review
 

@@ -77,6 +77,8 @@ For Issue #5, calculate against the same invoice/payment/expense data and shared
 
 ## Acceptance and remaining work
 
+The latest main branch already includes the Issue #3 invoicing and Issue #4 collections services and route adapters. They remain unchanged by this foundation and are not mounted in `src/server.mjs` yet. Use the modules' integration documentation when connecting them; pass the trusted actor ID, preserve the adapter's status/body, and explicitly configure the collections generator.
+
 Local automated results and scope checks are recorded in [BACKEND_VERIFICATION.md](BACKEND_VERIFICATION.md).
 
 Run `npm test` and inspect the actual result. Then ask another team member to verify:

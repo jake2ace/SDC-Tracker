@@ -54,6 +54,17 @@ curl -H 'X-Demo-User: u_lumen_pm' \
 
 Data is persisted in `.local/sdc-tracker.sqlite`, which is not committed. Environment files are not loaded automatically. See [backend setup](docs/BACKEND.md) for environment variables, CORS, reset behavior, and API examples.
 
+## Business modules available for integration
+
+The invoicing service and route adapter from Issue #3, and the DeepSeek collections service and route adapter from Issue #4, are present in this repository. Their HTTP routes are not mounted by this backend foundation yet; the endpoint coverage in [BACKEND.md](docs/BACKEND.md) remains the current server contract.
+
+- [Invoicing setup and integration](docs/INVOICING.md)
+- [Collections setup and integration](docs/COLLECTIONS.md)
+- [Standalone invoicing example](examples/invoicing-demo.mjs)
+- [Standalone collections example](examples/collections-demo.mjs)
+
+The standalone collections example needs a locally configured `DEEPSEEK_API_KEY` and may call the model. Automated tests use model substitutes. Do not commit `.env` or a real API key. The shared HTTP server, frontend, and business services still require integration before the full product can be demonstrated.
+
 ## Validate
 
 ```sh
@@ -66,7 +77,7 @@ The test suite includes the shared-contract checks and backend checks. Passing t
 
 1. Agree on the demonstration story, fields, and API contract.
 2. Integrate the independently developed frontend with the backend persistence, permissions, approvals, and logs.
-3. Implement invoicing, AI-assisted collections, and the cash-flow forecast against the shared contracts.
+3. Mount the existing invoicing and collections route adapters, then connect the cash-flow forecast against the shared contracts.
 4. Verify the acceptance criteria and repeat the checks against the deployed environment.
 5. Prepare submission materials and check every link and reproduction instruction.
 
