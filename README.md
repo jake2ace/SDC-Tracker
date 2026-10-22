@@ -4,7 +4,7 @@
 
 SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 
-> 当前分支：Issue #1 共享数据、Issue #3 自动开票、Issue #4 AI 催收模块及测试已落地；等待接入 Issue #2 的页面、会话、审批和数据库。以下是完整初赛目标。
+> Issue #1、#3、#4 已合并；当前分支新增 Issue #5 现金流预测、总览接口和按草图制作的预测预览页。完整应用仍等待接入 Issue #2 的页面、会话、审批和数据库。以下是完整初赛目标。
 
 ## 初赛必须完成
 
@@ -20,6 +20,7 @@ SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 - [Issue #1：故事、数据与接口约定](docs/DATA_CONTRACT.md)
 - [Issue #3：自动开票运行与接入](docs/INVOICING.md)
 - [Issue #4：DeepSeek AI 催收运行与接入](docs/COLLECTIONS.md)
+- [Issue #5：现金流预览与接入](docs/FORECAST.md)
 - [故事与完成标准 PDF（前期方案名：Milestone2Cash）](docs/Milestone2Cash_初赛故事与完成标准.pdf)
 - [GitHub 项目管理流程](docs/WORKFLOW.md)
 
@@ -34,6 +35,14 @@ SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 用 Issues 记录任务，用看板跟踪状态，用 Pull Request 合并修改。人员由团队自行认领与安排。
 
 ## 如何运行
+
+直接查看现金流预测页（Node.js 22.13 或以上，无需安装依赖、无需密钥）：
+
+```sh
+node examples/forecast-server.mjs
+```
+
+打开 [本地现金流预览](http://127.0.0.1:4175)。可一键切换 8 个故事案例，也能手动组合两家公司、按时／延迟收款和付款前后状态，查看 30 天曲线与逐笔依据。[多案例验收表](docs/FORECAST.md#多案例演示与验收)列出了预期结果；自动测试覆盖 40 组有效组合。页面沿用已确认的草图风格，只读合成数据；这不是完整应用入口。
 
 当前先检查 Issue #1 的共享契约（Node.js 20 或以上，无需安装依赖）：
 
