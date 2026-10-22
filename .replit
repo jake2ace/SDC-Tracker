@@ -1,0 +1,12 @@
+run = "npm start"
+modules = ["nodejs-22"]
+
+[env]
+# Configure ALLOWED_HOSTS with the actual deployment host before public preview.
+HOST = "0.0.0.0"
+PORT = "3000"
+DEMO_MODE = "true"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

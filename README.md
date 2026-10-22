@@ -1,71 +1,57 @@
 # SDC Tracker
 
-**项目交付 → 自动开票 → AI 催收 → 30 天现金流预测。**
+**让小企业知道：哪些项目款该收、谁需要催、晚到账会不会影响未来 30 天的现金。**
 
 SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 
-> 当前分支：Issue #1 共享数据、Issue #3 自动开票、Issue #4 AI 催收模块及测试已落地；等待接入 Issue #2 的页面、会话、审批和数据库。以下是完整初赛目标。
+## 我们要做成什么
 
-## 初赛必须完成
+用同一份业务数据跑通：**阶段完成 → 发票草稿 → 人工批准 → 模拟开票 → 逾期提醒 → 人工确认发送 → 登记收款 → 现金流更新**。
 
-| 功能 | 最终效果 |
+| 功能 | 完成标准 |
 |---|---|
-| 自动开票 | 项目阶段完成后生成正确的发票草稿；人工批准后模拟开票，保存结果。 |
-| AI 催收 | 识别逾期欠款，AI 生成可修改的提醒；人工确认后模拟发送，付款后停止催收。 |
-| 现金流预测 | 展示未来 30 天预计余额，对比按时与延迟到账，标出低于安全线的日期和金额。 |
+| 自动开票 | 按付款约定生成草稿；未经批准不能开票，重复点击不重复开票。 |
+| AI 催收 | 只处理本公司的逾期欠款；提醒可检查、修改，确认后模拟发送；付款后停止催收。 |
+| 现金流预测 | 展示未来 30 天余额、按时与延迟到账的差异、低于安全线的日期及缺口，并能追溯每笔来源。 |
+| 多案例验证 | 两家公司、正常和延迟到账、已收款、失败重试、无权限操作都能正确演示。 |
 
-三个功能共用数据，必须能演示一次完整流程。使用团队自建合成数据和模拟外部接口，业务逻辑真正运行。
+**当前后端已接通 #2 的数据库、权限、审批和日志，以及 #3–#5 的业务接口。前端页面与视觉设计交给 Claude，按接口联调。** `examples/forecast-ui` 是可选的预测验证页，不是最终前端。
 
-- [完成标准](docs/ACCEPTANCE.md)
-- [Issue #1：故事、数据与接口约定](docs/DATA_CONTRACT.md)
-- [Issue #3：自动开票运行与接入](docs/INVOICING.md)
-- [Issue #4：DeepSeek AI 催收运行与接入](docs/COLLECTIONS.md)
-- [故事与完成标准 PDF（前期方案名：Milestone2Cash）](docs/Milestone2Cash_初赛故事与完成标准.pdf)
-- [GitHub 项目管理流程](docs/WORKFLOW.md)
+## 本地启动
 
-## 做事顺序
-
-1. 统一演示案例、数据字段和接口约定。
-2. 搭建数据库、页面、权限、审批和日志。
-3. 开发开票、AI 催收与现金流三个功能，持续联调。
-4. 按完成标准验收，部署后再验证一次。
-5. 完成提交材料，检查链接和可复现性。
-
-用 Issues 记录任务，用看板跟踪状态，用 Pull Request 合并修改。人员由团队自行认领与安排。
-
-## 如何运行
-
-当前先检查 Issue #1 的共享契约（Node.js 20 或以上，无需安装依赖）：
+需要 Node.js **22.13 或以上**，无需安装运行依赖。已有 `.env` 就直接使用；首次配置才从 `.env.example` 创建 `.env`，填写 `DEEPSEEK_API_KEY`。不要覆盖已有密钥，也不要把密钥交给前端。
 
 ```sh
-node --test tests/contract.test.mjs
+DEMO_MODE=true node --env-file=.env src/server.mjs
 ```
 
-前端与后端从同一份 [demo.json](data/demo.json) 初始化；字段使用 [domain.ts](contracts/domain.ts)，接口使用 [api.ts](contracts/api.ts)。测试预期在 [expected-results.json](data/expected-results.json)。JSON 数据可直接复制进 mock adapter；不得硬编码另一套金额或日期。
-
-运行自动开票演示及全部测试（Node.js 22.13 或以上；SQLite 只用于测试，无需安装依赖）：
+API 默认在 `http://127.0.0.1:3000`；根路径不提供网页。前端若运行在另一个端口，启动时允许它的精确来源，例如：
 
 ```sh
-node examples/invoicing-demo.mjs
-node --test tests/*.test.mjs
+DEMO_MODE=true CORS_ORIGINS=http://localhost:5173 node --env-file=.env src/server.mjs
 ```
 
-演示会依次显示生成草稿、未批准阻断、模拟失败、重试成功与重复开票保护。审批使用明确标注的测试占位，数据仅保存在内存；应用启动命令将在基础工程接入后补充。
-
-AI 催收：首次使用将 `.env.example` 复制为 `.env`，只填写 `DEEPSEEK_API_KEY=` 右侧，再运行：
+每次 `/api/*` 请求都要带演示角色头，如 `X-Demo-User: u_lumen_pm`。这是合成身份切换，**不是生产登录系统**。SQLite 保存到 `.local/sdc-tracker.sqlite`，重启保留数据。
 
 ```sh
-node --env-file=.env examples/collections-demo.mjs
+npm test
 ```
 
-这会请求一次 DeepSeek 话术选择并在本地组装草稿，输入 `SEND` 才模拟发送。AI 只能选择审核过的催收话术，无权读文件或执行命令；事实和客户资料不进入模型请求。地址与模型已配置；`.env` 不上传 Git。自动测试使用模型替身，完整应用仍待联调。详见 [AI 安全边界](docs/COLLECTIONS.md#ai-安全边界)。
+测试使用 AI 替身，不消耗密钥额度。运行中的后端在生成新催收草稿时才调用 DeepSeek；缺少密钥会明确报错。开票、发送和付款登记均为演示流程，不接真实财务账户。
+
+## 给开发者
+
+- [后端与 Claude 前端交接：启动、接口、角色、多案例验收](docs/BACKEND_HANDOFF.md)
+- [统一数据与 API 约定](docs/DATA_CONTRACT.md) · [API 类型](contracts/api.ts)
+- [开票](docs/INVOICING.md) · [AI 催收与安全边界](docs/COLLECTIONS.md) · [现金流与 8 个案例](docs/FORECAST.md)
+- [初赛完成标准](docs/ACCEPTANCE.md) · [项目管理流程](docs/WORKFLOW.md)
+
+AI 只选择审核过的话术，业务事实在本地组装；客户资料不进入模型请求。预测由确定的账本规则计算，不调用 AI，也不代表银行已到账。前端必须使用接口返回的数据，不能另造一套固定数值。
+
+**接下来：Claude 完成前端接入 → 录制多案例完整流程 → 部署验证 → 整理初赛材料。**
 
 ## 交付与声明
 
-初赛交付包括原型、公开 GitHub / README、官方 PRD、PPTX、技术工具声明及 5–7 分钟演示视频。开发期仓库保持 private，提交前按规则公开并核对访问权限。
+初赛材料包括原型、公开 GitHub / README、官方 PRD、PPTX、技术工具声明及 5–7 分钟演示视频；开发期间仓库保持 private。提交前核对官方格式、截止时间、访问权限及 Replit / RunPod 等工具证据要求，记录实际使用的 AI、模型与第三方代码。
 
-实际使用的 AI、第三方代码、模型和服务均须记录；Replit 使用证据及适用的 RunPod 证据随声明整理。提交前确认官方格式、截止时间和 API sponsor 声明的具体要求。
-
-参考：[Domain 2 正式赛题](https://drive.google.com/file/d/11wqbeO-HYep-DJPQ-LPZnrZfQvCgr5BU/view) · [Participant Handbook](https://drive.google.com/file/d/1fGBS-jevDj_FrF8wsbYNPzyU5TTrfk1V/view)
-
-代码采用 Apache-2.0；第三方内容保留各自许可与署名。
+参考：[Domain 2 正式赛题](https://drive.google.com/file/d/11wqbeO-HYep-DJPQ-LPZnrZfQvCgr5BU/view) · [Participant Handbook](https://drive.google.com/file/d/1fGBS-jevDj_FrF8wsbYNPzyU5TTrfk1V/view)。代码采用 Apache-2.0；第三方内容保留各自许可与署名。
