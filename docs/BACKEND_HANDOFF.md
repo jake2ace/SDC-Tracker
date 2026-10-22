@@ -68,9 +68,9 @@ Successful results match `contracts/api.ts` directly. Empty-body operations need
 | `POST /api/invoices/{id}/reject` | `{ reason }`, 1–500 trimmed characters | `{ invoice }` |
 | `POST /api/invoices/{id}/issue` | Empty | `{ invoice, receipt }` |
 | `GET /api/collections` | Optional `filter=overdue\|unpaid\|paid` | `{ items }` |
-| `POST /api/invoices/{id}/reminders` | Optional `{ regenerate: true }` | `{ reminder }` |
+| `POST /api/invoices/{id}/reminders` | Optional `{ regenerate: true }`; `{ useTemplate: true }` explicitly chooses the manual fallback | `{ reminder }`, including `reviewToken` |
 | `PATCH /api/reminders/{id}` | `{ subject, body }` | `{ reminder }` |
-| `POST /api/reminders/{id}/send` | Empty | `{ reminder, outbox }` |
+| `POST /api/reminders/{id}/send` | `{ reviewToken }` from the exact draft shown in the confirmation | `{ reminder, outbox }` |
 | `POST /api/invoices/{id}/payments` | `{ receivedAt: "YYYY-MM-DD" }` | `{ invoice, payment, cancelledReminders }` |
 | `GET /api/overview` | None | `Overview` |
 | `GET /api/forecast` | See below | `ForecastResult` |
@@ -82,7 +82,7 @@ Forecast parameters: `mode=fixed|rolling`, `scenario=on_time|late`. A late scena
 
 1. Load session, projects, invoices, overview and forecast from the integrated API. Load collections only for owner or finance.
 2. Use returned IDs. A fresh seed has no pending invoice draft; completing Lumen's `ms_kt_2` creates one. Repeat completion must reuse it.
-3. Separate owner approval, finance issue, reminder generation and reminder sending into explicit actions. **Generating, editing or viewing a reminder must never auto-send it.** Show its text and require a deliberate finance confirmation before calling `/send`.
+3. Separate owner approval, finance issue, reminder generation and reminder sending into explicit actions. **Generating, editing or viewing a reminder must never auto-send it.** Show its recipient and text, capture its `reviewToken`, and require a deliberate finance confirmation before calling `/send`. Do not fetch a newer token behind an open confirmation: `409 DRAFT_CHANGED` requires loading and reviewing the new draft before another confirmation. The server checks text, recipient and invoice identity/facts atomically with sending; delivery retries keep the same token.
 4. After each successful write, reload the affected invoice, collections, overview, forecast and activity. After payment, cancelled reminders must stop offering a send action. Display returned state rather than predicting success locally.
 5. On company switch or reset, cancel stale requests and clear cached records before reloading. Do not let a slow response restore the previous company's data. Reset replaces the whole demo dataset; label it clearly.
 6. Render business text as plain text, never raw HTML. Keep loading, empty, failure and retry states visible. Mark accounting and outbox receipts as **simulated**.
@@ -91,7 +91,7 @@ Errors use `{ error: { code, message, details } }`. Retain `details.requestId` a
 
 ## AI and safety boundary
 
-The running backend uses the guarded DeepSeek adapter for new reminder drafts. It reads `DEEPSEEK_API_KEY` only on the server. A missing key or provider failure returns `AI_UNAVAILABLE`; there is no silent replacement pretending to be AI.
+The running backend uses the guarded DeepSeek adapter for new reminder drafts. It reads `DEEPSEEK_API_KEY` only on the server. A missing key or provider failure returns `AI_UNAVAILABLE`; there is no silent replacement pretending to be AI. The UI may then offer an explicit manual fallback: POST `{ useTemplate: true }` returns `source: "manual_template"`, built locally from the same validated facts and approved phrases without an AI call. Label it as a non-AI template. It remains editable and still requires finance confirmation with its `reviewToken`. Existing drafts are retained unless `regenerate: true` is also explicitly requested.
 
 The model chooses three IDs from approved phrase catalogs. Business facts and customer information are assembled locally, not included in model requests. The model has no file, database, shell or sending tools. Unrecognized output is rejected; manual text edits are validated and are not fed back into the model. Finance must confirm a draft to simulate sending. Recording full payment cancels remaining draft reminders.
 

@@ -54,6 +54,8 @@ function error(result, status, code) {
 
 const generate = async h => ok(await h.service.generateReminder(FINANCE, INVOICE)).reminder;
 const valid = async h => assert.deepEqual(validateState(await h.store.read()), []);
+const reviewed = reminder => ({ reviewToken: reminder.reviewToken });
+const stored = ({ reviewToken, ...reminder }) => reminder;
 
 function deferredGenerator() {
   let resolveStarted;
@@ -90,7 +92,7 @@ test('authentication, role restrictions and foreign-company objects are checked 
   const actions = user => [
     () => h.service.generateReminder(user, INVOICE),
     () => h.service.editReminder(user, draft.id, copy),
-    () => h.service.sendReminder(user, draft.id),
+    () => h.service.sendReminder(user, draft.id, reviewed(draft)),
     () => h.service.recordPayment(user, INVOICE, { receivedAt: '2026-11-08' }),
   ];
   for (const user of [undefined, 'missing-user']) {
@@ -104,7 +106,7 @@ test('authentication, role restrictions and foreign-company objects are checked 
   const foreignReminder = seed.reminders.find(row => row.invoiceId === FOREIGN_INVOICE);
   error(await h.service.generateReminder(FINANCE, FOREIGN_INVOICE), 404, 'NOT_FOUND');
   error(await h.service.editReminder(FINANCE, foreignReminder.id, copy), 404, 'NOT_FOUND');
-  error(await h.service.sendReminder(FINANCE, foreignReminder.id), 404, 'NOT_FOUND');
+  error(await h.service.sendReminder(FINANCE, foreignReminder.id, reviewed(draft)), 404, 'NOT_FOUND');
   error(await h.service.recordPayment(FINANCE, FOREIGN_INVOICE, { receivedAt: '2026-11-08' }), 404, 'NOT_FOUND');
   assert.equal(h.calls.length, 1);
   const state = await h.store.read();
@@ -120,7 +122,7 @@ test('strict request validation prevents caller overrides and empty edited conte
   for (const query of [{ filter: 'all' }, { companyId: 'co_rantau' }, null, []]) {
     error(await h.service.listCollections(FINANCE, query), 400, 'VALIDATION_ERROR');
   }
-  for (const body of [{ regenerate: 'true' }, { amount: 1 }, { source: 'ai' }, null, []]) {
+  for (const body of [{ regenerate: 'true' }, { useTemplate: 'true' }, { amount: 1 }, { source: 'ai' }, null, []]) {
     error(await h.service.generateReminder(FINANCE, INVOICE, body), 400, 'VALIDATION_ERROR');
   }
   for (const body of [null, [], {}, { subject: ' ', body: 'hello' }, { subject: 'hi', body: '\n ' },
@@ -128,7 +130,8 @@ test('strict request validation prevents caller overrides and empty edited conte
     { ...copy, companyId: 'co_rantau' }]) {
     error(await h.service.editReminder(FINANCE, draft.id, body), 400, 'VALIDATION_ERROR');
   }
-  for (const body of [{ to: 'attacker@example.test' }, { approved: true }, null, []]) {
+  for (const body of [{}, { reviewToken: '' }, { reviewToken: 'x'.repeat(64) }, { reviewToken: 1 },
+    { ...reviewed(draft), to: 'attacker@example.test' }, { approved: true }, null, []]) {
     error(await h.service.sendReminder(FINANCE, draft.id, body), 400, 'VALIDATION_ERROR');
   }
   for (const body of [null, [], {}, { receivedAt: '2026-02-30' }, { receivedAt: '2026-10-21' },
@@ -137,7 +140,7 @@ test('strict request validation prevents caller overrides and empty edited conte
     error(await h.service.recordPayment(FINANCE, INVOICE, body), 400, 'VALIDATION_ERROR');
   }
   assert.equal(h.calls.length, 1);
-  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), draft);
+  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), stored(draft));
   await valid(h);
 });
 
@@ -208,7 +211,7 @@ test('AI failure neither creates a partial draft nor overwrites an existing edit
   const draft = await generate(h);
   const edited = ok(await h.service.editReminder(FINANCE, draft.id, { subject: 'User subject', body: 'User text' })).reminder;
   error(await broken.service.generateReminder(FINANCE, INVOICE, { regenerate: true }), 503, 'AI_UNAVAILABLE');
-  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), edited);
+  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), stored(edited));
   assert.equal(JSON.stringify((await h.store.read()).logs).includes('sk-test-never-expose'), false);
   assert.ok((await h.store.read()).logs.some(row => row.result === 'failure'));
   await valid(h);
@@ -229,7 +232,7 @@ test('malformed generator output cannot be stored as an AI draft', async t => {
 test('send requires explicit action and creates one simulated receipt even after retries and payment', async t => {
   const h = await setup(t);
   const draft = await generate(h);
-  const sent = ok(await h.service.sendReminder(FINANCE, draft.id));
+  const sent = ok(await h.service.sendReminder(FINANCE, draft.id, reviewed(draft)));
   assert.equal(sent.reminder.status, 'sent');
   assert.equal(sent.reminder.sentBy, 'Priya Nair');
   assert.equal(sent.outbox.requestId, draft.sendRequestId);
@@ -240,11 +243,11 @@ test('send requires explicit action and creates one simulated receipt even after
   assert.equal(sent.outbox.simulation, true);
   const other = h.connect();
   const retries = await Promise.all(Array.from({ length: 8 }, (_, index) =>
-    (index % 2 ? h : other).service.sendReminder(FINANCE, draft.id)));
+    (index % 2 ? h : other).service.sendReminder(FINANCE, draft.id, reviewed(draft))));
   for (const retry of retries) assert.deepEqual(ok(retry, [200]), sent);
   ok(await h.service.recordPayment(FINANCE, INVOICE, { receivedAt: '2026-11-08' }));
-  assert.deepEqual(ok(await other.service.sendReminder(FINANCE, draft.id), [200]), sent);
-  error(await h.service.sendReminder(OWNER, draft.id), 403, 'FORBIDDEN');
+  assert.deepEqual(ok(await other.service.sendReminder(FINANCE, draft.id, reviewed(draft)), [200]), sent);
+  error(await h.service.sendReminder(OWNER, draft.id, reviewed(draft)), 403, 'FORBIDDEN');
   error(await h.service.editReminder(FINANCE, draft.id, copy), 409, 'INVALID_STATE');
   const state = await h.store.read();
   assert.equal(state.mockOutbox.filter(row => row.requestId === draft.sendRequestId).length, 1);
@@ -256,7 +259,7 @@ test('outbox failure is consumed once, persists draft error and retries with the
   const h = await setup(t);
   const draft = await generate(h);
   await h.store.transaction(state => { state.settings.failNext.outbox = true; });
-  error(await h.service.sendReminder(FINANCE, draft.id), 502, 'UPSTREAM_FAILED');
+  error(await h.service.sendReminder(FINANCE, draft.id, reviewed(draft)), 502, 'UPSTREAM_FAILED');
   const failed = await h.store.read();
   const failedDraft = failed.reminders.find(row => row.id === draft.id);
   assert.equal(failed.settings.failNext.outbox, false);
@@ -265,23 +268,119 @@ test('outbox failure is consumed once, persists draft error and retries with the
   assert.equal(failedDraft.sendRequestId, draft.sendRequestId);
   assert.equal(failed.mockOutbox.length, seed.mockOutbox.length);
   assert.ok(failed.logs.some(row => row.action === 'reminder.send' && row.result === 'failure'));
-  const sent = ok(await h.service.sendReminder(FINANCE, draft.id));
+  const sent = ok(await h.service.sendReminder(FINANCE, draft.id, reviewed(draft)));
   assert.equal(sent.outbox.requestId, draft.sendRequestId);
   assert.equal(sent.reminder.lastSendError, null);
   await valid(h);
+});
+
+test('a captured review cannot send content changed by another connection', async t => {
+  const h = await setup(t);
+  const original = await generate(h);
+  const other = h.connect();
+  const edited = ok(await other.service.editReminder(FINANCE, original.id, {
+    subject: 'Changed in another tab', body: 'This message has not been reviewed in the first tab.',
+  })).reminder;
+  assert.notEqual(edited.reviewToken, original.reviewToken);
+  await h.store.transaction(state => { state.settings.failNext.outbox = true; });
+  const stale = await h.service.sendReminder(FINANCE, original.id, reviewed(original));
+  error(stale, 409, 'DRAFT_CHANGED');
+  assert.equal(stale.body.error.details.reviewRequired, true);
+  const blocked = await h.store.read();
+  assert.equal(blocked.mockOutbox.length, seed.mockOutbox.length);
+  assert.equal(blocked.settings.failNext.outbox, true, 'Version rejection happens before an outbox attempt');
+  assert.ok(blocked.logs.some(row => row.entityId === original.id && row.action === 'reminder.send' && row.result === 'denied'));
+  error(await h.service.sendReminder(FINANCE, original.id, reviewed(edited)), 502, 'UPSTREAM_FAILED');
+  const sent = ok(await h.service.sendReminder(FINANCE, original.id, reviewed(edited)));
+  assert.equal(sent.outbox.subject, edited.subject);
+  assert.equal(sent.reminder.body, edited.body);
+  assert.equal(sent.reminder.reviewToken, edited.reviewToken);
+  assert.deepEqual(ok(await other.service.sendReminder(FINANCE, original.id, reviewed(edited))), sent);
+  await valid(h);
+});
+
+test('review tokens bind recipient identity, invoice facts and regenerated content', async t => {
+  for (const [label, change] of [
+    ['email', state => { state.clients.find(row => row.id === 'cl_kopitiga').email = 'changed@example.test'; }],
+    ['contact name', state => { state.clients.find(row => row.id === 'cl_kopitiga').contactName = 'Different contact'; }],
+    ['client name', state => { state.clients.find(row => row.id === 'cl_kopitiga').name = 'Different client'; }],
+    ['company name', state => { state.companies.find(row => row.id === 'co_lumen').name = 'Different company'; }],
+    ['invoice amount', state => { state.invoices.find(row => row.id === INVOICE).amount += 1; }],
+  ]) {
+    await t.test(label, async t => {
+      const h = await setup(t);
+      const original = await generate(h);
+      await h.store.transaction(change);
+      error(await h.service.sendReminder(FINANCE, original.id, reviewed(original)), 409, 'DRAFT_CHANGED');
+      assert.equal((await h.store.read()).mockOutbox.length, seed.mockOutbox.length);
+    });
+  }
+  const h = await setup(t);
+  const original = await generate(h);
+  const other = h.connect(async () => ({ subject: 'Regenerated subject', body: 'Regenerated safe text.' }));
+  const updated = ok(await other.service.generateReminder(FINANCE, INVOICE, { regenerate: true })).reminder;
+  assert.notEqual(updated.reviewToken, original.reviewToken);
+  error(await h.service.sendReminder(FINANCE, original.id, reviewed(original)), 409, 'DRAFT_CHANGED');
+  ok(await h.service.sendReminder(FINANCE, updated.id, reviewed(updated)));
+  await valid(h);
+});
+
+test('explicit manual fallback is labelled, locally validated, editable and still requires review', async t => {
+  let modelCalls = 0;
+  const h = await setup(t, { generator: async () => { modelCalls++; throw new Error('Provider unavailable'); } });
+  error(await h.service.generateReminder(FINANCE, INVOICE), 503, 'AI_UNAVAILABLE');
+  const draft = ok(await h.service.generateReminder(FINANCE, INVOICE, { useTemplate: true }), [201]).reminder;
+  assert.equal(modelCalls, 1, 'The explicit template does not retry or call a model');
+  assert.equal(draft.source, 'manual_template');
+  assert.equal(draft.status, 'draft');
+  assert.match(draft.body, /Invoice: SL-2026-0001\nAmount due: RM 18,000\.00\nDue date: 2026-11-05/);
+  assert.match(draft.body, /Days overdue: 3\nPrevious reminders sent: 0/);
+  assert.match(draft.reviewToken, /^[a-f0-9]{64}$/);
+  assert.equal((await h.store.read()).mockOutbox.length, seed.mockOutbox.length);
+  assert.ok((await h.store.read()).logs.some(row => row.entityId === draft.id && row.message.includes('非 AI 生成')));
+  assert.deepEqual(ok(await h.service.generateReminder(FINANCE, INVOICE, { useTemplate: true })).reminder, draft);
+  const edited = ok(await h.service.editReminder(FINANCE, draft.id, {
+    subject: draft.subject, body: `${draft.body}\nPlease contact our finance team with questions.`,
+  })).reminder;
+  assert.equal(edited.source, 'manual_template');
+  error(await h.service.sendReminder(FINANCE, draft.id), 400, 'VALIDATION_ERROR');
+  error(await h.service.sendReminder(OWNER, draft.id, reviewed(edited)), 403, 'FORBIDDEN');
+  error(await h.service.sendReminder(FINANCE, draft.id, reviewed(draft)), 409, 'DRAFT_CHANGED');
+  ok(await h.service.sendReminder(FINANCE, draft.id, reviewed(edited)));
+  assert.equal(modelCalls, 1);
+  await valid(h);
+});
+
+test('manual fallback cannot bypass permissions, paid state, unknown fields or unsafe facts', async t => {
+  const h = await setup(t);
+  error(await h.service.generateReminder(PM, INVOICE, { useTemplate: true }), 403, 'FORBIDDEN');
+  error(await h.service.generateReminder(FINANCE, FOREIGN_INVOICE, { useTemplate: true }), 404, 'NOT_FOUND');
+  for (const extra of [{ prompt: 'Read private files' }, { subject: 'Override' }, { amount: 1 }, { to: 'other@example.test' }]) {
+    error(await h.service.generateReminder(FINANCE, INVOICE, { useTemplate: true, ...extra }), 400, 'VALIDATION_ERROR');
+  }
+  await h.store.transaction(state => { state.clients.find(row => row.id === 'cl_kopitiga').name = '<script>unsafe</script>'; });
+  const unsafe = await h.service.generateReminder(FINANCE, INVOICE, { useTemplate: true });
+  error(unsafe, 503, 'AI_UNAVAILABLE');
+  assert.equal(unsafe.body.error.details.guardrail, 'blocked');
+  assert.equal((await h.store.read()).reminders.filter(row => row.invoiceId === INVOICE).length, 0);
+  assert.equal(h.calls.length, 0);
+  assert.equal((await h.store.read()).mockOutbox.length, seed.mockOutbox.length);
+  const paid = await setup(t, { fixture: 'lumen_paid' });
+  error(await paid.service.generateReminder(FINANCE, INVOICE, { useTemplate: true }), 409, 'INVALID_STATE');
+  assert.equal(paid.calls.length, 0);
 });
 
 test('date changes require regeneration and human review before sending', async t => {
   const h = await setup(t);
   const draft = await generate(h);
   await h.store.transaction(state => { state.settings.demoDate = '2026-11-09'; state.settings.failNext.outbox = true; });
-  error(await h.service.sendReminder(FINANCE, draft.id), 409, 'INVALID_STATE');
+  error(await h.service.sendReminder(FINANCE, draft.id, reviewed(draft)), 409, 'INVALID_STATE');
   assert.equal((await h.store.read()).settings.failNext.outbox, true);
   const fresh = ok(await h.service.generateReminder(FINANCE, INVOICE, { regenerate: true })).reminder;
   assert.equal(fresh.facts.overdueDays, 4);
   assert.equal(fresh.id, draft.id);
-  error(await h.service.sendReminder(FINANCE, draft.id), 502, 'UPSTREAM_FAILED');
-  ok(await h.service.sendReminder(FINANCE, draft.id));
+  error(await h.service.sendReminder(FINANCE, draft.id, reviewed(fresh)), 502, 'UPSTREAM_FAILED');
+  ok(await h.service.sendReminder(FINANCE, draft.id, reviewed(fresh)));
   await valid(h);
 });
 
@@ -295,7 +394,7 @@ test('sent history controls tone and sequence while repeated generations do not 
     const regenerated = ok(await h.service.generateReminder(FINANCE, INVOICE, { regenerate: true })).reminder;
     assert.equal(regenerated.sequence, sequence);
     assert.equal(regenerated.id, draft.id);
-    ok(await h.service.sendReminder(FINANCE, draft.id));
+    ok(await h.service.sendReminder(FINANCE, draft.id, reviewed(regenerated)));
   }
   const state = await h.store.read();
   assert.equal(state.reminders.filter(row => row.invoiceId === INVOICE && row.status === 'sent').length, 4);
@@ -305,7 +404,7 @@ test('sent history controls tone and sequence while repeated generations do not 
 test('full payment cancels unsent reminders atomically, uses invoice amount, and is idempotent by date', async t => {
   const h = await setup(t);
   const sentDraft = await generate(h);
-  ok(await h.service.sendReminder(FINANCE, sentDraft.id));
+  ok(await h.service.sendReminder(FINANCE, sentDraft.id, reviewed(sentDraft)));
   const unsent = await generate(h);
   const result = ok(await h.service.recordPayment(FINANCE, INVOICE, { receivedAt: '2026-11-08' }));
   assert.equal(result.invoice.status, 'paid');
@@ -323,7 +422,7 @@ test('full payment cancels unsent reminders atomically, uses invoice amount, and
   assert.deepEqual(retry.payment, result.payment);
   error(await h.service.recordPayment(FINANCE, INVOICE, { receivedAt: '2026-11-07' }), 409, 'INVALID_STATE');
   error(await h.service.generateReminder(FINANCE, INVOICE), 409, 'INVALID_STATE');
-  error(await h.service.sendReminder(FINANCE, unsent.id), 409, 'INVALID_STATE');
+  error(await h.service.sendReminder(FINANCE, unsent.id, reviewed(unsent)), 409, 'INVALID_STATE');
   error(await h.service.editReminder(FINANCE, unsent.id, copy), 409, 'INVALID_STATE');
   assert.deepEqual(ok(await h.service.listCollections(FINANCE, { filter: 'unpaid' })).items, []);
   assert.deepEqual(ok(await h.service.listCollections(FINANCE)).items, []);
@@ -369,7 +468,7 @@ test('a regeneration in flight cannot overwrite a human edit, even with the same
   const edited = ok(await h.service.editReminder(FINANCE, draft.id, { subject: 'Human confirmed subject', body: 'Human confirmed body' })).reminder;
   pending.finish({ subject: 'Old model subject', body: 'Old model body' });
   error(await regeneration, 409, 'INVALID_STATE');
-  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), edited);
+  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), stored(edited));
   await valid(h);
 });
 
@@ -429,10 +528,10 @@ test('an in-flight regeneration cannot overwrite a reminder that was sent', asyn
   const slow = h.connect(pending.generator);
   const regeneration = slow.service.generateReminder(FINANCE, INVOICE, { regenerate: true });
   await pending.started;
-  const sent = ok(await h.service.sendReminder(FINANCE, draft.id)).reminder;
+  const sent = ok(await h.service.sendReminder(FINANCE, draft.id, reviewed(draft))).reminder;
   pending.finish({ subject: 'Stale output', body: 'Cannot replace sent text' });
   error(await regeneration, 409, 'INVALID_STATE');
-  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), sent);
+  assert.deepEqual((await h.store.read()).reminders.find(row => row.id === draft.id), stored(sent));
   await valid(h);
 });
 
@@ -442,7 +541,7 @@ test('concurrent send and payment yield a paid invoice with no unsent live draft
       const h = await setup(t);
       const draft = await generate(h);
       const other = h.connect();
-      const send = () => h.service.sendReminder(FINANCE, draft.id);
+      const send = () => h.service.sendReminder(FINANCE, draft.id, reviewed(draft));
       const pay = () => other.service.recordPayment(FINANCE, INVOICE, { receivedAt: '2026-11-08' });
       const [first, second] = await Promise.all(paymentFirst ? [pay(), send()] : [send(), pay()]);
       const payment = paymentFirst ? first : second;

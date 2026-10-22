@@ -44,7 +44,7 @@ Studio Lumen 帮 Kopi Tiga 做店面设计，合同 **RM60,000**，分三次收�
 - 实体 ID 稳定且唯一。一阶段最多一张发票；一发票最多一笔付款、一条未发送提醒。重复点击不能追加副本。
 - 公司归属以 `companyId` 为准；`Milestone` 沿 `projectId → Project.companyId` 推导。模拟回执沿请求 ID 关联发票或提醒。所有关联必须属于同一公司。
 - 每次变更保存审批、执行人、时间及成功／失败／拒绝日志。对外回执始终 `simulation: true`，前端明确显示“模拟”。
-- `mock_template` 仅是演示模板。真正调用模型成功后才可标记 `source: "ai"`；模型不计算金额或逾期天数，也不能自行批准或发送。
+- `mock_template` 仅是种子演示模板；`manual_template` 是用户明确选择的非 AI 备用模板，使用相同的事实校验和本地白名单句式。真正调用模型成功后才可标记 `source: "ai"`；模型不计算金额或逾期天数，也不能自行批准或发送。
 
 ### 状态和权限
 
@@ -87,9 +87,9 @@ Studio Lumen 帮 Kopi Tiga 做店面设计，合同 **RM60,000**，分三次收�
 | `POST /api/invoices/{id}/issue` | `{}` | `{invoice, receipt}`；仅已批准，已开票／已付款重试返回原回执 |
 | `POST /api/invoices/{id}/payments` | `{receivedAt}` | `{invoice, payment, cancelledReminders}`；仅已开票；同日期重复返回原付款，不同日期冲突 `409` |
 | `GET /api/collections` | `filter=overdue\|unpaid\|paid`，默认 `overdue` | `{items: [{invoice, client, overdueDays, reminders}]}` |
-| `POST /api/invoices/{id}/reminders` | `{regenerate?:boolean}` | `{reminder}`；仅逾期且未付款；默认返回已有草稿；`true` 更新**同一草稿**文案与事实，保留 ID 和请求 ID，不发送 |
+| `POST /api/invoices/{id}/reminders` | `{regenerate?:boolean,useTemplate?:boolean}` | `{reminder}` 含 `reviewToken`；仅逾期且未付款；默认返回已有草稿；`regenerate:true` 更新**同一草稿**；`useTemplate:true` 明确选择人工备用模板，不调用 AI、不发送 |
 | `PATCH /api/reminders/{id}` | `{subject, body}` | `{reminder}`；仅草稿；去空白后主题 1—200 字，正文 1—4000 字 |
-| `POST /api/reminders/{id}/send` | `{}` | `{reminder, outbox}`；鉴权后，已发送重试先返回原回执（即使后来已付款）；首次发送才检查仍是未付款的逾期发票，无第二条 outbox |
+| `POST /api/reminders/{id}/send` | `{reviewToken}` | `{reminder, outbox}`；服务端在同一事务内核对确认版本（正文、收件人和发票信息）；变化则 `409 DRAFT_CHANGED`，须重新加载检查。相同令牌重复发送返回原回执（即使后来已付款），首次发送仍校验未付款和逾期状态，无第二条 outbox |
 | `GET /api/forecast` | `mode=fixed\|rolling`、`scenario=on_time\|late`、`delayDays=7\|14\|beyond_window` | `ForecastResult`；默认 `fixed` + `on_time`；`late` 必须带延迟参数 |
 | `GET /api/activity` | `limit`，默认 50，范围 1—200 | `{logs}`，本公司日志按时间倒序，同时间按 ID 排序 |
 
@@ -124,6 +124,7 @@ Studio Lumen 帮 Kopi Tiga 做店面设计，合同 **RM60,000**，分三次收�
 | 403 | `FORBIDDEN` | 角色不能执行，记拒绝日志 |
 | 404 | `NOT_FOUND` | 不存在或其他公司对象，不泄露详情 |
 | 409 | `INVALID_STATE` | 状态不允许，例如未审批开票／已付款催收／历史已收款阶段完成 |
+| 409 | `DRAFT_CHANGED` | 文案、收件人或发票信息已变化；重新加载、人工检查并确认，不自动更换令牌重试 |
 | 502 | `UPSTREAM_FAILED` | 演示开票／发送失败，两者保存错误与失败日志；开票另更新 `issueAttempts`，本地状态不前进 |
 | 503 | `AI_UNAVAILABLE` | 保留原草稿，显示模型失败；如提供模板降级，须由用户选择并标明来源 |
 

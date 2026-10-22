@@ -124,6 +124,12 @@ function renderDraft(data, values, tone) {
   };
 }
 
+/** Explicit non-AI fallback. Uses the same validated facts and approved phrases. */
+export function createManualTemplate(input) {
+  const { tone, values } = prepareInput(input);
+  return renderDraft({ opening: Object.keys(OPENINGS[tone])[0], request: 'payment_status', closing: 'thanks' }, values, tone);
+}
+
 /** Returns an async generator of a plain-text draft, never a sender or a fallback template. */
 export function createDeepSeekGenerator({
   apiKey = process.env.DEEPSEEK_API_KEY,

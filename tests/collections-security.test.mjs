@@ -112,7 +112,8 @@ test('hostile model output is rejected without replacing a draft or entering per
     assertError(result, 503, 'AI_UNAVAILABLE');
     assert.equal(result.body.error.details.guardrail, 'blocked');
     const state = await h.store.read();
-    assert.deepEqual(state.reminders.find(row => row.id === original.id), original);
+    const { reviewToken, ...storedOriginal } = original;
+    assert.deepEqual(state.reminders.find(row => row.id === original.id), storedOriginal);
     assert.deepEqual(state.mockOutbox, h.initial.mockOutbox);
     const persisted = JSON.stringify(state);
     assert.ok(!persisted.includes(marker));
@@ -158,7 +159,8 @@ test('manual editing rejects active markup and invisible control characters with
     }
   }
   const state = await h.store.read();
-  assert.deepEqual(state.reminders.find(row => row.id === original.id), original);
+  const { reviewToken, ...storedOriginal } = original;
+  assert.deepEqual(state.reminders.find(row => row.id === original.id), storedOriginal);
   assert.deepEqual(state.mockOutbox, h.initial.mockOutbox);
   assert.equal(h.calls.length, 1);
   assert.deepEqual(validateState(state), []);
@@ -177,7 +179,8 @@ test('legacy unsafe drafts cannot bypass content guards by calling send directly
         reminder.body = original.body;
         reminder[field] = unsafe;
       });
-      assertError(await h.service.sendReminder(FINANCE, original.id), 409, 'INVALID_STATE');
+      const latest = (await h.service.listCollections(FINANCE)).body.items[0].reminders.find(row => row.id === original.id);
+      assertError(await h.service.sendReminder(FINANCE, original.id, { reviewToken: latest.reviewToken }), 409, 'INVALID_STATE');
       const state = await h.store.read();
       assert.deepEqual(state.mockOutbox, h.initial.mockOutbox);
       assert.equal(state.reminders.find(row => row.id === original.id).status, 'draft');

@@ -223,21 +223,22 @@ test('actual HTTP covers AI draft, review, safe failures, idempotent send and pa
   const failedAI = await fixture.request(generatePath, { method: 'POST', body: { regenerate: true } });
   assert.equal(failedAI.status, 503);
   assert.equal(failedAI.body.error.code, 'AI_UNAVAILABLE');
-  assert.deepEqual((await fixture.state()).reminders.find(row => row.id === id), reviewed.body.reminder);
+  const { reviewToken, ...storedReminder } = reviewed.body.reminder;
+  assert.deepEqual((await fixture.state()).reminders.find(row => row.id === id), storedReminder);
   fixture.failGeneration(false);
 
   await fixture.mutate(state => { state.settings.failNext.outbox = true; });
-  const failedSend = await fixture.request(sendPath, { method: 'POST' });
+  const failedSend = await fixture.request(sendPath, { method: 'POST', body: { reviewToken } });
   assert.equal(failedSend.status, 502);
   assert.equal(failedSend.body.error.code, 'UPSTREAM_FAILED');
   const retained = (await fixture.state()).reminders.find(row => row.id === id);
   assert.equal(retained.status, 'draft');
   assert.ok(retained.lastSendError);
-  const sent = await fixture.request(sendPath, { method: 'POST' });
+  const sent = await fixture.request(sendPath, { method: 'POST', body: { reviewToken } });
   assert.equal(sent.status, 200);
   assert.equal(sent.body.reminder.status, 'sent');
   assert.equal(sent.body.outbox.simulation, true);
-  const sendAgain = await fixture.request(sendPath, { method: 'POST' });
+  const sendAgain = await fixture.request(sendPath, { method: 'POST', body: { reviewToken } });
   assert.deepEqual(sendAgain, sent);
   assert.equal((await fixture.state()).mockOutbox.filter(row => row.reminderId === id).length, 1);
 
@@ -261,10 +262,47 @@ test('actual HTTP covers AI draft, review, safe failures, idempotent send and pa
   assert.equal((await fixture.state()).payments.length, 1);
   assert.deepEqual((await fixture.request('/api/collections')).body.items, []);
   assert.equal((await fixture.request('/api/collections?filter=paid')).body.items[0].invoice.id, 'inv_bd_1');
-  const cancelledSend = await fixture.request(`/api/reminders/${next.body.reminder.id}/send`, { method: 'POST' });
+  const cancelledSend = await fixture.request(`/api/reminders/${next.body.reminder.id}/send`, {
+    method: 'POST', body: { reviewToken: next.body.reminder.reviewToken },
+  });
   assert.equal(cancelledSend.status, 409);
   assert.equal(cancelledSend.body.error.code, 'INVALID_STATE');
   const paidGeneration = await fixture.request(generatePath, { method: 'POST' });
   assert.equal(paidGeneration.status, 409);
-  assert.deepEqual(await fixture.request(sendPath, { method: 'POST' }), sent);
+  assert.deepEqual(await fixture.request(sendPath, { method: 'POST', body: { reviewToken } }), sent);
+});
+
+test('HTTP exposes an explicit manual fallback and rejects a stale confirmation before sending', async t => {
+  const fixture = await httpFixture(t);
+  const path = '/api/invoices/inv_bd_1/reminders';
+  fixture.failGeneration(true);
+  assert.equal((await fixture.request(path, { method: 'POST' })).status, 503);
+  const created = await fixture.request(path, { method: 'POST', body: { useTemplate: true } });
+  assert.equal(created.status, 201);
+  const original = created.body.reminder;
+  assert.equal(original.source, 'manual_template');
+  assert.equal(fixture.generations(), 1);
+  assert.match(original.body, /RM 13,500\.00/);
+  const reminderPath = `/api/reminders/${original.id}`;
+  const edited = await fixture.request(reminderPath, {
+    method: 'PATCH', body: { subject: 'Updated in second tab', body: original.body },
+  });
+  assert.equal(edited.status, 200);
+  assert.notEqual(edited.body.reminder.reviewToken, original.reviewToken);
+  const count = (await fixture.state()).mockOutbox.length;
+  const missing = await fixture.request(`${reminderPath}/send`, { method: 'POST' });
+  assert.equal(missing.status, 400);
+  const stale = await fixture.request(`${reminderPath}/send`, {
+    method: 'POST', body: { reviewToken: original.reviewToken },
+  });
+  assert.equal(stale.status, 409);
+  assert.equal(stale.body.error.code, 'DRAFT_CHANGED');
+  assert.equal(stale.body.error.details.reviewRequired, true);
+  assert.equal((await fixture.state()).mockOutbox.length, count);
+  const accepted = await fixture.request(`${reminderPath}/send`, {
+    method: 'POST', body: { reviewToken: edited.body.reminder.reviewToken },
+  });
+  assert.equal(accepted.status, 200);
+  assert.equal(accepted.body.outbox.subject, edited.body.reminder.subject);
+  assert.equal((await fixture.state()).mockOutbox.length, count + 1);
 });

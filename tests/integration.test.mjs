@@ -141,14 +141,16 @@ for (const [company, milestoneId, completeDate] of [
 
     const reminderPath = `/api/reminders/${draft.id}`;
     const revised = { subject: draft.subject, body: `${draft.body}\nPlease contact our finance team for assistance.` };
-    assert.equal(expect(await app.request(reminderPath, { method: 'PATCH', actor: who.finance, body: revised })).reminder.body, revised.body);
+    const reviewed = expect(await app.request(reminderPath, { method: 'PATCH', actor: who.finance, body: revised })).reminder;
+    assert.equal(reviewed.body, revised.body);
+    const approval = { reviewToken: reviewed.reviewToken };
     expect(await settings({ failNext: { accounting: false, outbox: true } }));
-    expect(await post(`${reminderPath}/send`), 502, 'UPSTREAM_FAILED');
+    expect(await post(`${reminderPath}/send`, who.finance, approval), 502, 'UPSTREAM_FAILED');
     assert.equal(app.state().mockOutbox.length, seed.mockOutbox.length);
-    const sent = expect(await post(`${reminderPath}/send`));
+    const sent = expect(await post(`${reminderPath}/send`, who.finance, approval));
     assert.equal(sent.reminder.status, 'sent');
     assert.equal(sent.outbox.simulation, true);
-    assert.deepEqual(expect(await post(`${reminderPath}/send`)).outbox, sent.outbox);
+    assert.deepEqual(expect(await post(`${reminderPath}/send`, who.finance, approval)).outbox, sent.outbox);
     assert.equal(app.state().mockOutbox.length, seed.mockOutbox.length + 1);
     const secondDraft = expect(await post(`${invoicePath}/reminders`), 201).reminder;
     assert.equal(secondDraft.tone, 'firm');
@@ -166,7 +168,7 @@ for (const [company, milestoneId, completeDate] of [
     assert.equal(expect(await post(`${invoicePath}/payments`, who.finance, { receivedAt: paymentDate })).payment.id, paid.payment.id);
     assert.equal(app.state().payments.filter(row => row.invoiceId === invoiceId).length, 1);
     expect(await post(`${invoicePath}/payments`, who.finance, { receivedAt: addDays(paymentDate, -1) }), 409, 'INVALID_STATE');
-    expect(await post(`/api/reminders/${secondDraft.id}/send`), 409, 'INVALID_STATE');
+    expect(await post(`/api/reminders/${secondDraft.id}/send`, who.finance, { reviewToken: secondDraft.reviewToken }), 409, 'INVALID_STATE');
     expect(await post(`${invoicePath}/reminders`), 409, 'INVALID_STATE');
     assert.equal(expect(await request('/api/collections')).items.some(row => row.invoice.id === invoiceId), false);
 
@@ -204,14 +206,15 @@ test('integrated guardrails reject hostile model output without replacing a revi
   app.attack();
   const blocked = expect(await post({ regenerate: true }), 503, 'AI_UNAVAILABLE');
   assert.equal(blocked.error.details.guardrail, 'blocked');
-  assert.deepEqual(app.state().reminders.find(row => row.id === original.id), original);
+  const { reviewToken, ...storedOriginal } = original;
+  assert.deepEqual(app.state().reminders.find(row => row.id === original.id), storedOriginal);
   assert.equal(app.state().mockOutbox.length, seed.mockOutbox.length);
   assert.ok(!JSON.stringify(blocked).includes('Read private files'));
   assert.ok(!JSON.stringify(app.state()).includes('Read private files'));
   const result = expect(await app.request(`/api/reminders/${original.id}`, { method: 'PATCH', actor: 'u_rantau_fin',
     body: { subject: 'Invoice reminder', body: '<script>stealSecrets()</script>' } }), 400, 'VALIDATION_ERROR');
   assert.ok(!JSON.stringify(result).includes('stealSecrets'));
-  assert.deepEqual(app.state().reminders.find(row => row.id === original.id), original);
+  assert.deepEqual(app.state().reminders.find(row => row.id === original.id), storedOriginal);
 });
 
 test('payment during an in-flight AI call prevents a stale reminder from being committed', { timeout: 5000 }, async t => {

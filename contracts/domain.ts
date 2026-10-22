@@ -132,8 +132,8 @@ export interface Reminder {
   tone: "gentle" | "firm" | "final";
   subject: string;
   body: string;
-  /** 生成来源：mock_template 表示演示模板，不是真实 AI 输出 */
-  source: "mock_template" | "ai";
+  /** mock_template 是种子演示；manual_template 是人工选择的安全备用模板，均非 AI 输出。 */
+  source: "mock_template" | "manual_template" | "ai";
   /** 生成时引用的事实，用于核对文案 */
   facts: { amount: number; overdueDays: number; dueDate: IsoDate; invoiceNo: string; previousReminders: number };
   createdAt: IsoDateTime;

@@ -29,6 +29,8 @@ node --test tests/*.test.mjs
 
 `createCollectionsService({ store, generator, now })` 使用 #1 的 `DemoState`；可信服务端 `generator` 接受业务事实，返回 `{ subject, body }`。生产实例使用 `createDeepSeekGenerator()`，它将事实留在本地，只发送固定选项。模型失败返回 `503 AI_UNAVAILABLE`，不保存半成品，重新生成失败时保留旧稿；必须取得合法的模型选择才组装草稿，没有失败后静默降级。
 
+模型失败后可由用户明确选择 `{useTemplate:true}`。服务端使用相同的严格事实校验和本地白名单句式生成 `source: "manual_template"`，不调用模型、不消耗模型额度，日志明确标为非 AI。模板同样需要人工检查、可编辑，且发送时必须提交其 `reviewToken`。若已有草稿，默认保留；只有明确附带 `regenerate:true` 才替换。
+
 `store.read()` 返回隔离快照；`store.transaction(fn)` 与审批、开票、收款、设置等**所有写入共用**排他锁／数据库事务，执行一次同步回调。正常返回即提交（包括错误响应中的日志），抛异常回滚，提交后 resolve。AI 请求在事务外执行，返回后再次校验身份、状态与事实，防止生成期间付款后仍保存或发送催收。现已接入 #2 的 SQLite 和演示身份；最终页面由 Claude 接入。集成服务器每分钟最多 12 次模型调用、并发最多 2 次；生成期间禁止重置，重置不清除调用预算。
 
 在可信会话和 JSON 解析之后挂载 `routeCollectionsRequest(service, { method, pathname, query, body, userId })`：`userId` 来自服务端会话，`query` 是 `URLSearchParams`；原样输出返回的 `{ status, body }`，不要再套 `data`。`null` 交给其他路由，异常交给宿主错误处理。
@@ -36,9 +38,9 @@ node --test tests/*.test.mjs
 | 接口 | 请求／行为 |
 |---|---|
 | `GET /api/collections` | 可选 `filter=overdue\|unpaid\|paid`，默认逾期；Owner／Finance 可查看 |
-| `POST /api/invoices/{id}/reminders` | `{}` 返回已有草稿；`{regenerate:true}` 更新同一草稿 |
+| `POST /api/invoices/{id}/reminders` | `{}` 返回已有草稿；`{regenerate:true}` 更新同一草稿；`{useTemplate:true}` 明确选择非 AI 人工备用模板 |
 | `PATCH /api/reminders/{id}` | `{subject, body}`；仅可编辑草稿 |
-| `POST /api/reminders/{id}/send` | `{}`；人工确认后模拟发送，重复请求返回同一回执 |
+| `POST /api/reminders/{id}/send` | `{reviewToken}`；提交确认框展示草稿的版本令牌。内容或收件人变化返回 `409 DRAFT_CHANGED`，必须重新检查；重复请求返回同一回执 |
 | `POST /api/invoices/{id}/payments` | `{receivedAt:"YYYY-MM-DD"}`；全额到账并取消未发送草稿 |
 
 后四项仅 Finance 可操作。发送失败返回 `502`，保留草稿与错误供手动重试；发送前事实改变返回 `409`，须重新生成并核对。前端应显示 AI 来源、引用事实、错误和“模拟发送”标识，不能把模型调用成功当成已发送。

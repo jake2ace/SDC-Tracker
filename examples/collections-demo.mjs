@@ -73,7 +73,7 @@ async function main() {
     console.log('已结束，未发送。');
     return;
   }
-  const sent = await service.sendReminder(finance.id, reminder.id);
+  const sent = await service.sendReminder(finance.id, reminder.id, { reviewToken: reminder.reviewToken });
   if (sent.status >= 400) {
     console.error(`模拟发送失败（${sent.status}）：${sent.body.error.message}`);
     process.exitCode = 1;

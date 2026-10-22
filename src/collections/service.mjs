@@ -1,13 +1,14 @@
 import { isDate } from '../../contracts/validate.mjs';
+import { createHash } from 'node:crypto';
+import { createManualTemplate } from './deepseek.mjs';
 
 const STATUSES = { VALIDATION_ERROR: 400, UNAUTHENTICATED: 401, FORBIDDEN: 403,
-  NOT_FOUND: 404, INVALID_STATE: 409, UPSTREAM_FAILED: 502, AI_UNAVAILABLE: 503 };
+  NOT_FOUND: 404, INVALID_STATE: 409, DRAFT_CHANGED: 409, UPSTREAM_FAILED: 502, AI_UNAVAILABLE: 503 };
 const reply = (body, status = 200) => ({ status, body: structuredClone(body) });
 const error = (code, message, details = {}) => ({ status: STATUSES[code], body: { error: { code, message, details } } });
 const record = value => value !== null && typeof value === 'object'
   && [Object.prototype, null].includes(Object.getPrototypeOf(value));
 const fields = (body, names) => record(body) && Object.keys(body).every(key => names.includes(key));
-const empty = body => fields(body, []);
 const notFound = () => error('NOT_FOUND', '未找到记录。');
 const badInput = () => error('VALIDATION_ERROR', '请求字段或格式无效。');
 const unauthorized = () => error('UNAUTHENTICATED', '请先选择有效的演示身份。');
@@ -69,6 +70,25 @@ function content(body) {
 const sameFacts = (a, b) => a && b && ['amount', 'overdueDays', 'dueDate', 'invoiceNo', 'previousReminders']
   .every(key => a[key] === b[key]);
 
+// Response-only optimistic concurrency token: never trust a caller's copy of
+// message text or recipient. Sending and checking this digest share one lock.
+// Delivery metadata is excluded so retrying a failed/successful send is stable.
+function reviewToken(state, { reminder, invoice, client }) {
+  const company = state.companies.find(row => row.id === invoice.companyId);
+  return createHash('sha256').update(JSON.stringify({
+    version: 1,
+    reminder: [reminder.id, reminder.companyId, reminder.invoiceId, reminder.sendRequestId,
+      reminder.subject, reminder.body, reminder.source, reminder.tone, reminder.sequence,
+      reminder.facts, reminder.createdAt, reminder.editedAt],
+    invoice: [invoice.id, invoice.companyId, invoice.projectId, invoice.clientId, invoice.milestoneId,
+      invoice.invoiceNo, invoice.amount, invoice.currency, invoice.dueDate],
+    recipient: [client.id, client.companyId, client.name, client.contactName, client.email],
+    company: [company?.id, company?.name],
+  })).digest('hex');
+}
+
+const reviewed = (state, found) => ({ ...found.reminder, reviewToken: reviewToken(state, found) });
+
 /**
  * Uses the same atomic store contract as Issue #3. Authenticated user IDs come
  * from the host session; all writers (including approvals/payments) share a lock.
@@ -123,13 +143,15 @@ export function createCollectionsService({ store, generator, now = () => new Dat
             : filter === 'unpaid' ? invoice.status === 'issued' : overdueDays(invoice, state.settings.demoDate) > 0)
           .map(({ invoice, client }) => ({ invoice, client, overdueDays: overdueDays(invoice, state.settings.demoDate),
             reminders: state.reminders.filter(row => row.companyId === user.companyId && row.invoiceId === invoice.id)
-              .sort((a, b) => a.sequence - b.sequence || a.id.localeCompare(b.id)) })) });
+              .sort((a, b) => a.sequence - b.sequence || a.id.localeCompare(b.id))
+              .map(reminder => reviewed(state, { reminder, invoice, client })) })) });
       });
     },
 
     async generateReminder(userId, invoiceId, body = {}) {
       const prepared = await transaction(userId, (state, user) => {
-        if (!fields(body, ['regenerate']) || (Object.hasOwn(body, 'regenerate') && typeof body.regenerate !== 'boolean')) return badInput();
+        if (!fields(body, ['regenerate', 'useTemplate'])
+          || ['regenerate', 'useTemplate'].some(key => Object.hasOwn(body, key) && typeof body[key] !== 'boolean')) return badInput();
         const found = invoiceFor(state, user, invoiceId);
         if (!found) return notFound();
         const denied = deny(state, user, 'reminder.generate', 'invoice', invoiceId);
@@ -138,14 +160,16 @@ export function createCollectionsService({ store, generator, now = () => new Dat
         if (!facts || drafts.length > 1) return invalid(state, user, 'reminder.generate', 'invoice', invoiceId,
           '只有未付款的逾期发票可以生成提醒，并且最多保留一份草稿。');
         const draft = drafts[0];
-        if (draft && !body.regenerate) return reply({ reminder: draft });
+        if (draft && !body.regenerate) return reply({ reminder: reviewed(state, { ...found, reminder: draft }) });
         return { input: structuredClone(inputFor(state, found, facts)), draft: draft ? structuredClone(draft) : null };
       });
       if (prepared.status) return prepared;
 
       let generated, guardrailBlocked = false;
       try {
-        generated = content(await generator(structuredClone(prepared.input)));
+        generated = content(body.useTemplate
+          ? createManualTemplate(structuredClone(prepared.input))
+          : await generator(structuredClone(prepared.input)));
         guardrailBlocked = !generated;
       } catch (failure) {
         guardrailBlocked = ['AI_INVALID_RESPONSE', 'AI_INVALID_INPUT'].includes(failure?.code);
@@ -157,7 +181,8 @@ export function createCollectionsService({ store, generator, now = () => new Dat
           const denied = deny(state, user, 'reminder.generate', 'invoice', invoiceId);
           if (denied) return denied;
           if (guardrailBlocked) {
-            const message = 'AI 内容未通过安全检查，未保存新内容，原草稿已保留。';
+            const message = body.useTemplate ? '备用模板所需信息未通过安全检查，原草稿已保留。'
+              : 'AI 内容未通过安全检查，未保存新内容，原草稿已保留。';
             log(state, user, 'reminder.generate', 'invoice', invoiceId, 'failure', message);
             return error('AI_UNAVAILABLE', message, { retryable: true, guardrail: 'blocked' });
           }
@@ -176,7 +201,7 @@ export function createCollectionsService({ store, generator, now = () => new Dat
           return invalid(state, user, 'reminder.generate', 'invoice', invoiceId, '发票、付款或提醒事实已变化，请重新生成。');
         }
         const current = drafts[0];
-        if (!prepared.draft && current && !body.regenerate) return reply({ reminder: current });
+        if (!prepared.draft && current && !body.regenerate) return reply({ reminder: reviewed(state, { ...found, reminder: current }) });
         if (JSON.stringify(current ?? null) !== JSON.stringify(prepared.draft)) {
           return invalid(state, user, 'reminder.generate', 'invoice', invoiceId, '提醒草稿已由其他操作更新，请重新检查。');
         }
@@ -188,16 +213,18 @@ export function createCollectionsService({ store, generator, now = () => new Dat
             || state.mockOutbox.some(row => row.requestId === `send_${id}`));
           reminder = { id, companyId: user.companyId, invoiceId, status: 'draft',
             sequence: facts.previousReminders + 1, tone: prepared.input.tone,
-            ...generated, source: 'ai', facts: structuredClone(facts), createdAt: now().toISOString(),
+            ...generated, source: body.useTemplate ? 'manual_template' : 'ai', facts: structuredClone(facts), createdAt: now().toISOString(),
             createdBy: user.name, editedAt: null, sentAt: null, sentBy: null,
             sendRequestId: `send_${id}`, lastSendError: null, cancelReason: null };
           state.reminders.push(reminder);
         } else {
-          Object.assign(reminder, generated, { source: 'ai', facts: structuredClone(facts),
+          Object.assign(reminder, generated, { source: body.useTemplate ? 'manual_template' : 'ai', facts: structuredClone(facts),
             sequence: facts.previousReminders + 1, tone: prepared.input.tone, editedAt: now().toISOString(), lastSendError: null });
         }
-        log(state, user, 'reminder.generate', 'reminder', reminder.id, 'success', 'AI 提醒草稿已生成，等待人工检查与确认。');
-        return reply({ reminder }, current ? 200 : 201);
+        log(state, user, 'reminder.generate', 'reminder', reminder.id, 'success', body.useTemplate
+          ? '已创建人工备用模板（非 AI 生成），等待人工编辑、检查与确认。'
+          : 'AI 提醒草稿已生成，等待人工检查与确认。');
+        return reply({ reminder: reviewed(state, { ...found, reminder }) }, current ? 200 : 201);
       });
     },
 
@@ -214,19 +241,25 @@ export function createCollectionsService({ store, generator, now = () => new Dat
         }
         Object.assign(found.reminder, text, { editedAt: now().toISOString() });
         log(state, user, 'reminder.edit', 'reminder', reminderId, 'success', '提醒文案已由人工修改，尚未发送。');
-        return reply({ reminder: found.reminder });
+        return reply({ reminder: reviewed(state, found) });
       });
     },
 
     async sendReminder(userId, reminderId, body = {}) {
       return transaction(userId, (state, user) => {
-        if (!empty(body)) return badInput();
+        if (!fields(body, ['reviewToken']) || typeof body.reviewToken !== 'string'
+          || !/^[a-f0-9]{64}$/.test(body.reviewToken)) return badInput();
         const found = reminderFor(state, user, reminderId);
         if (!found) return notFound();
         const { reminder, invoice, client } = found;
         const denied = deny(state, user, 'reminder.send', 'reminder', reminderId);
         if (denied) return denied;
         const invalidSend = message => invalid(state, user, 'reminder.send', 'reminder', reminderId, message);
+        if (body.reviewToken !== reviewToken(state, found)) {
+          const message = '提醒文案、收件人或发票信息已变化，请重新加载并人工检查后再确认发送。';
+          log(state, user, 'reminder.send', 'reminder', reminderId, 'denied', message);
+          return error('DRAFT_CHANGED', message, { reviewRequired: true });
+        }
         const outboxes = state.mockOutbox.filter(row => row.requestId === reminder.sendRequestId);
         const existing = outboxes[0];
         if (outboxes.length > 1 || !reminder.sendRequestId
@@ -238,7 +271,7 @@ export function createCollectionsService({ store, generator, now = () => new Dat
             || existing.to !== client.email || existing.subject !== reminder.subject || existing.sentAt !== reminder.sentAt) {
             return invalidSend('已发送提醒缺少匹配的模拟回执。');
           }
-          return reply({ reminder, outbox: existing });
+          return reply({ reminder: reviewed(state, found), outbox: existing });
         }
         if (reminder.status !== 'draft' || existing) return invalidSend('该提醒不能发送。');
         const facts = factsFor(state, invoice);
@@ -258,7 +291,7 @@ export function createCollectionsService({ store, generator, now = () => new Dat
         state.mockOutbox.push(outbox);
         Object.assign(reminder, { status: 'sent', sentAt, sentBy: user.name, lastSendError: null });
         log(state, user, 'reminder.send', 'reminder', reminderId, 'success', '人工确认后已模拟发送提醒。');
-        return reply({ reminder, outbox });
+        return reply({ reminder: reviewed(state, found), outbox });
       });
     },
 
