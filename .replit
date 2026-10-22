@@ -1,0 +1,11 @@
+run = "npm start"
+modules = ["nodejs-22"]
+
+[env]
+HOST = "0.0.0.0"
+PORT = "3000"
+COOKIE_SECURE = "1"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

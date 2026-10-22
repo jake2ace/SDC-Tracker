@@ -1,0 +1,13 @@
+{
+  "name": "sdc-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SDC Tracker shared application foundation — synthetic demo only",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test"
+  }
+}

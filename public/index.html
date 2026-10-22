@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>SDC Tracker · Operations workspace</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to workspace</a>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Workspace navigation">
+      <a class="brand" href="/" aria-label="SDC Tracker home"><span class="brand-mark" aria-hidden="true">s</span><span>SDC<span class="brand-light">Tracker</span><small>SMALL BUSINESS, IN SYNC</small></span></a>
+      <div class="sidebar-section-label">WORKSPACE</div>
+      <nav class="primary-nav">
+        <a href="#workspace" class="nav-link"><span class="nav-symbol" aria-hidden="true">◫</span>Overview</a>
+        <a href="#operations" class="nav-link"><span class="nav-symbol" aria-hidden="true">⇄</span>Approval queue<span id="navQueueCount" class="nav-count">—</span></a>
+        <a href="#activity" class="nav-link"><span class="nav-symbol" aria-hidden="true">≡</span>Activity log</a>
+      </nav>
+      <div class="sidebar-section-label module-heading">COMING NEXT</div>
+      <div class="planned-nav"><span>01</span>Invoicing<small>Issue #3</small></div>
+      <div class="planned-nav"><span>02</span>Collections<small>Issue #4</small></div>
+      <div class="planned-nav"><span>03</span>Cash flow<small>Issue #5</small></div>
+      <div class="sidebar-note"><span class="dot" aria-hidden="true"></span><strong>Foundation preview</strong><p>Synthetic data. Simulated actions.<br>No invoices or messages are sent.</p></div>
+      <div class="sidebar-footer">LETS GO · DOMAIN 2<small>Orbyte-ready concept · independent prototype</small></div>
+    </aside>
+    <div class="workspace-shell">
+      <header class="topbar">
+        <div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Control center</strong></div>
+        <div class="session-controls">
+          <span class="demo-tag">DEMO IDENTITY</span>
+          <label class="sr-only" for="demoUserSelect">Choose a synthetic demo identity</label>
+          <select id="demoUserSelect" disabled><option>Loading identities…</option></select>
+          <button id="switchUserButton" class="button button-small button-dark" type="button" disabled>Enter workspace</button>
+          <button id="logoutButton" class="button button-small button-quiet" type="button" hidden>Sign out</button>
+        </div>
+      </header>
+      <main id="main" tabindex="-1">
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+        <section id="authView" class="auth-view" aria-labelledby="authHeading">
+          <div class="eyebrow">THE SHARED FOUNDATION</div>
+          <h1 id="authHeading">A clear trail.<br>A human in control.</h1>
+          <p class="auth-lead">Explore the workspace, request an approval, and inspect every result. This preview builds the common foundation for your team’s three business modules.</p>
+          <div id="authState" class="auth-state" role="status">Checking your session…</div>
+          <div class="auth-steps"><div><span>01</span><strong>Operator creates</strong><p>Prepare and submit a foundation check.</p></div><div><span>02</span><strong>Reviewer decides</strong><p>Approve or reject before execution.</p></div><div><span>03</span><strong>Everyone can trace</strong><p>Inspect outcomes, failures, and denied actions.</p></div></div>
+          <p class="auth-disclaimer">These selectable identities are for demonstration only. They are not production authentication. Each workspace has separate records.</p>
+        </section>
+        <div id="workspaceView" hidden>
+          <section id="workspace" class="page-heading" aria-labelledby="workspaceHeading">
+            <div><div class="eyebrow">OPERATIONS WORKSPACE</div><h1 id="workspaceHeading">Your business, in view.</h1><p id="workspaceDescription">A shared place for approvals and a dependable audit trail.</p></div>
+            <div class="identity-card"><span class="avatar" id="identityInitial" aria-hidden="true">—</span><div><strong id="identityName">—</strong><span id="identityRole">—</span></div><span class="environment-tag">SYNTHETIC</span></div>
+          </section>
+          <section class="preview-banner" aria-label="Preview scope"><span class="banner-icon" aria-hidden="true">i</span><p><strong>Foundation only.</strong> This workspace tests persistence, roles, approvals, and failure logging. Invoicing, AI collections, and cash-flow forecasting are not connected yet. Execution creates a simulated result only.</p></section>
+          <section class="stats-grid" aria-label="Current workspace operation counts">
+            <article class="stat-card"><div class="stat-label">TOTAL CHECKS<span aria-hidden="true">◫</span></div><strong id="statTotal">—</strong><p>Saved in this workspace</p></article>
+            <article class="stat-card stat-pending"><div class="stat-label">AWAITING APPROVAL<span aria-hidden="true">◷</span></div><strong id="statPending">—</strong><p>Human review comes first</p></article>
+            <article class="stat-card"><div class="stat-label">APPROVED TO RUN<span aria-hidden="true">✓</span></div><strong id="statApproved">—</strong><p>Ready for a reviewer to execute</p></article>
+            <article class="stat-card"><div class="stat-label">COMPLETED<span aria-hidden="true">↗</span></div><strong id="statExecuted">—</strong><p>Simulated results recorded</p></article>
+          </section>
+          <div class="section-heading"><div><h2>One foundation. Three next steps.</h2><p>The modules below are planned integration points.</p></div><span class="small-pill">ROADMAP</span></div>
+          <section class="module-grid" aria-label="Planned business modules">
+            <article class="module-card"><div class="module-index">01 <span>NOT CONNECTED</span></div><h3>Invoicing</h3><p>Turn agreed project milestones into invoice drafts for review.</p><span class="module-footer">Planned · Issue #3 <span aria-hidden="true">↗</span></span></article>
+            <article class="module-card"><div class="module-index">02 <span>NOT CONNECTED</span></div><h3>AI collections</h3><p>Prepare follow-up drafts with a person approving the next action.</p><span class="module-footer">Planned · Issue #4 <span aria-hidden="true">↗</span></span></article>
+            <article class="module-card"><div class="module-index">03 <span>NOT CONNECTED</span></div><h3>30-day cash flow</h3><p>Bring receivables and payments together when shared data is ready.</p><span class="module-footer">Planned · Issue #5 <span aria-hidden="true">↗</span></span></article>
+          </section>
+          <section id="operations" class="operations-section" aria-labelledby="operationsHeading">
+            <div class="section-heading"><div><div class="eyebrow">HUMAN APPROVAL</div><h2 id="operationsHeading">Operation checks</h2><p>Create a test request, hand it to a reviewer, and follow the outcome.</p></div><button id="refreshOperationsButton" class="button button-secondary" type="button">Refresh checks</button></div>
+            <div class="workflow-strip" aria-label="Approval workflow"><span>Draft</span><b aria-hidden="true">→</b><span>Pending approval</span><b aria-hidden="true">→</b><span>Approved</span><b aria-hidden="true">→</b><span>Executed</span><small>Reviewers may reject a pending request.</small></div>
+            <div class="operations-layout">
+              <form id="createOperationForm" class="panel create-panel">
+                <div class="panel-kicker">NEW REQUEST</div><h3>Start a foundation check</h3><p class="panel-description">A small, safe operation to prove the shared workflow. Use synthetic information only.</p>
+                <label for="operationTitle">Request title</label><input id="operationTitle" name="title" type="text" maxlength="100" required placeholder="e.g. Verify the approval handoff" autocomplete="off">
+                <label for="operationNote">Test note <span class="optional">optional</span></label><textarea id="operationNote" name="note" rows="4" maxlength="1000" placeholder="What should the reviewer check?"></textarea>
+                <p id="createPermission" class="field-help">Only an operator can create a request.</p><button id="createOperationButton" class="button button-dark button-wide" type="submit">Create draft <span aria-hidden="true">+</span></button>
+                <div class="role-guide"><strong>Try the handoff</strong><p>Use an <b>Operator</b> to create and submit. Switch to a <b>Reviewer in the same workspace</b> to approve and run. A <b>Viewer</b> can inspect records.</p></div>
+              </form>
+              <div class="operation-list-panel"><div class="list-heading"><h3>Request queue <span id="operationCount">0</span></h3><label for="operationStatusFilter" class="sr-only">Filter requests by status</label><select id="operationStatusFilter"><option value="all">All statuses</option><option value="draft">Draft</option><option value="pending_approval">Pending approval</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="executed">Executed</option></select></div><div id="operationState" class="state-message" role="status">Loading checks…</div><div id="operationList" class="operation-list"></div></div>
+            </div>
+          </section>
+          <section id="activity" class="activity-section" aria-labelledby="activityHeading">
+            <div class="section-heading"><div><div class="eyebrow">EVERY ACTION HAS A TRAIL</div><h2 id="activityHeading">Activity log</h2><p>Successful actions, blocked attempts, and interface failures stay traceable.</p></div><button id="refreshLogsButton" class="button button-secondary" type="button">Refresh log</button></div>
+            <div class="panel activity-panel">
+              <form id="logFilterForm" class="log-filters"><div><label for="logOutcomeFilter">Outcome</label><select id="logOutcomeFilter"><option value="all">All outcomes</option><option value="success">Success</option><option value="failure">Failure</option><option value="denied">Denied</option></select></div><div class="operation-filter"><label for="logOperationFilter">Operation ID</label><input id="logOperationFilter" type="text" placeholder="Any operation" maxlength="100" autocomplete="off"></div><button class="button button-secondary" type="submit" id="applyLogFiltersButton">Apply filters</button><button class="button button-quiet" type="button" id="clearLogFiltersButton">Clear</button></form>
+              <div id="logState" class="state-message" role="status">Loading activity…</div><div id="logList" class="log-list"></div><div class="log-footer"><span id="logCount">0 records</span><span>Newest first · current workspace only</span><button id="olderLogsButton" class="button button-small button-secondary" type="button" hidden>Load older records</button></div>
+            </div>
+          </section>
+          <footer class="page-footer"><span>SDC Tracker · Lets go</span><span>Demo sessions · synthetic data · no real financial actions</span></footer>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
