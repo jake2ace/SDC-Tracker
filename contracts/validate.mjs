@@ -134,7 +134,7 @@ export function validateState(state) {
   for (const r of state.reminders) {
     const i = maps.invoices.get(r.invoiceId); owned(r, r.id);
     check(i?.companyId === r.companyId && ['issued', 'paid'].includes(i?.status), `${r.id}: invoice company/state mismatch`);
-    check(['draft', 'sent', 'cancelled'].includes(r.status) && ['mock_template', 'ai'].includes(r.source), `${r.id}: invalid reminder state/source`);
+    check(['draft', 'sent', 'cancelled'].includes(r.status) && ['mock_template', 'manual_template', 'ai'].includes(r.source), `${r.id}: invalid reminder state/source`);
     integer(r.sequence, `${r.id}.sequence`, 1); integer(r.facts?.previousReminders, `${r.id}.previousReminders`); integer(r.facts?.overdueDays, `${r.id}.overdueDays`, 1);
     check(r.sequence === r.facts?.previousReminders + 1 && r.tone === (r.sequence === 1 ? 'gentle' : r.sequence === 2 ? 'firm' : 'final'), `${r.id}: sequence/tone mismatch`);
     check(r.facts?.amount === i?.amount && r.facts?.dueDate === i?.dueDate && r.facts?.invoiceNo === i?.invoiceNo, `${r.id}: reminder facts mismatch`);

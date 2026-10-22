@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "license": "Apache-2.0",
-  "description": "Contract-aligned backend foundation for SDC Tracker",
-  "engines": { "node": ">=22.13.0" },
+  "description": "SDC Tracker: contract-aligned backend and a no-build web frontend",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "start": "node src/server.mjs",
     "dev": "node --watch src/server.mjs",
+    "web": "node web/server.mjs",
+    "web:zh": "DEV_CHINESE=1 node web/server.mjs",
     "test": "node --test tests/*.test.mjs"
   }
 }

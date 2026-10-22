@@ -15,7 +15,7 @@ SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 | 现金流预测 | 展示未来 30 天余额、按时与延迟到账的差异、低于安全线的日期及缺口，并能追溯每笔来源。 |
 | 多案例验证 | 两家公司、正常和延迟到账、已收款、失败重试、无权限操作都能正确演示。 |
 
-**当前后端已接通 #2 的数据库、权限、审批和日志，以及 #3–#5 的业务接口。前端页面与视觉设计交给 Claude，按接口联调。** `examples/forecast-ui` 是可选的预测验证页，不是最终前端。
+**当前后端已接通 #2 的数据库、权限、审批和日志，以及 #3–#5 的业务接口。前端在 `web/`，按草图实现并接入这些接口，说明见 [docs/FRONTEND.md](docs/FRONTEND.md)。** `examples/forecast-ui` 是可选的预测验证页，不是最终前端。
 
 ## 本地启动
 
@@ -31,6 +31,22 @@ API 默认在 `http://127.0.0.1:3000`；根路径不提供网页。前端若运�
 DEMO_MODE=true CORS_ORIGINS=http://localhost:5173 node --env-file=.env src/server.mjs
 ```
 
+### 打开前端
+
+后端按上面的方式启动，`CORS_ORIGINS` 写前端地址：
+
+```sh
+DEMO_MODE=true CORS_ORIGINS=http://127.0.0.1:5173,http://localhost:5173 node --env-file=.env src/server.mjs
+```
+
+另开一个终端：
+
+```sh
+npm run web
+```
+
+浏览器打开 `http://127.0.0.1:5173`。前端不需要安装依赖，也不读取 `.env`。
+
 每次 `/api/*` 请求都要带演示角色头，如 `X-Demo-User: u_lumen_pm`。这是合成身份切换，**不是生产登录系统**。SQLite 保存到 `.local/sdc-tracker.sqlite`，重启保留数据。
 
 ```sh
@@ -44,11 +60,12 @@ npm test
 - [后端与 Claude 前端交接：启动、接口、角色、多案例验收](docs/BACKEND_HANDOFF.md)
 - [统一数据与 API 约定](docs/DATA_CONTRACT.md) · [API 类型](contracts/api.ts)
 - [开票](docs/INVOICING.md) · [AI 催收与安全边界](docs/COLLECTIONS.md) · [现金流与 8 个案例](docs/FORECAST.md)
+- [前端结构、启动与验收](docs/FRONTEND.md)
 - [初赛完成标准](docs/ACCEPTANCE.md) · [项目管理流程](docs/WORKFLOW.md)
 
 AI 只选择审核过的话术，业务事实在本地组装；客户资料不进入模型请求。预测由确定的账本规则计算，不调用 AI，也不代表银行已到账。前端必须使用接口返回的数据，不能另造一套固定数值。
 
-**接下来：Claude 完成前端接入 → 录制多案例完整流程 → 部署验证 → 整理初赛材料。**
+**接下来：用真实密钥在本机走一遍前端 → 录制多案例完整流程 → 部署验证 → 整理初赛材料。**
 
 ## 交付与声明
 

@@ -66,21 +66,23 @@ export interface Session {
   companies: Company[];
   users: DemoUser[];
 }
+/** Response-only digest. Send exactly the token captured when the user reviews this draft. */
+export interface ReviewedReminder extends Reminder { reviewToken: string }
 export interface CollectionItem {
   invoice: Invoice;
   client: Client;
   overdueDays: number;
-  reminders: Reminder[];
+  reminders: ReviewedReminder[];
 }
 export type ErrorCode =
   | "VALIDATION_ERROR" | "UNAUTHENTICATED" | "FORBIDDEN" | "NOT_FOUND"
-  | "INVALID_STATE" | "UPSTREAM_FAILED" | "AI_UNAVAILABLE";
+  | "INVALID_STATE" | "DRAFT_CHANGED" | "UPSTREAM_FAILED" | "AI_UNAVAILABLE";
 export interface ApiError {
   error: { code: ErrorCode; message: string; details: Record<string, unknown> };
 }
 export const ERROR_STATUS: Record<ErrorCode, number> = {
   VALIDATION_ERROR: 400, UNAUTHENTICATED: 401, FORBIDDEN: 403, NOT_FOUND: 404,
-  INVALID_STATE: 409, UPSTREAM_FAILED: 502, AI_UNAVAILABLE: 503,
+  INVALID_STATE: 409, DRAFT_CHANGED: 409, UPSTREAM_FAILED: 502, AI_UNAVAILABLE: 503,
 };
 
 type Empty = Record<string, never>;
@@ -116,10 +118,10 @@ export interface ApiContract {
   "GET /api/collections": Operation<Empty, Empty, { filter?: "overdue" | "unpaid" | "paid" }, {
     items: CollectionItem[];
   }>;
-  "POST /api/invoices/{id}/reminders": Operation<Id, { regenerate?: boolean }, Empty, { reminder: Reminder }>;
-  "PATCH /api/reminders/{id}": Operation<Id, { subject: string; body: string }, Empty, { reminder: Reminder }>;
-  "POST /api/reminders/{id}/send": Operation<Id, Empty, Empty, {
-    reminder: Reminder; outbox: MockOutboxMessage;
+  "POST /api/invoices/{id}/reminders": Operation<Id, { regenerate?: boolean; useTemplate?: boolean }, Empty, { reminder: ReviewedReminder }>;
+  "PATCH /api/reminders/{id}": Operation<Id, { subject: string; body: string }, Empty, { reminder: ReviewedReminder }>;
+  "POST /api/reminders/{id}/send": Operation<Id, { reviewToken: string }, Empty, {
+    reminder: ReviewedReminder; outbox: MockOutboxMessage;
   }>;
   "GET /api/forecast": Operation<Empty, Empty, ForecastQuery, ForecastResult>;
   "GET /api/activity": Operation<Empty, Empty, { limit?: number }, { logs: ActivityLog[] }>;

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDC Tracker</title>
+<meta name="referrer" content="no-referrer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+
+<!-- Intro page. The story text is fixed copy; every number inside the app comes from the backend. -->
+<section class="landing" id="landing">
+  <div class="l-wrap">
+    <div class="l-top">
+      <div class="mark">
+        <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="5" fill="#e3f1e9"/><path d="M6 8h10M6 11.5h6M6 15h4" stroke="#1f7a55" stroke-width="1.8" stroke-linecap="round"/><path d="M13 14.5l1.6 1.6L17.5 13" stroke="#1f7a55" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        SDC Tracker
+      </div>
+      <div class="meta"><span data-l="en">Demo build, all data is made up</span><span data-l="zh">演示版本，数据均为虚构</span><button type="button" class="lang-toggle" data-lang-toggle hidden>中文</button></div>
+    </div>
+  </div>
+
+  <div class="l-wrap">
+    <div class="l-main">
+      <div>
+        <p class="l-eyebrow"><span data-l="en">A small design studio, <b>Studio Lumen</b></span><span data-l="zh"><b>Studio Lumen</b>，一家做店面设计的小工作室</span></p>
+        <h1><span data-l="en">The client signed off the design. When does the <em>RM18,000</em> arrive?</span><span data-l="zh">设计稿客户已经确认了，<em>RM18,000</em> 什么时候能到账？</span></h1>
+        <p class="l-lead"><span data-l="en">SDC Tracker turns a finished milestone into an approved invoice, helps you follow up when it runs late, and shows what a late payment does to the next 30 days of cash.</span><span data-l="zh">SDC Tracker 把做完的阶段变成一张经过审批的发票，逾期了帮你准备好提醒，再告诉你这笔钱晚到会让未来 30 天的现金变成什么样。</span></p>
+        <div class="l-actions">
+          <button class="btn primary" data-enter="invoicing"><span data-l="en">Walk through the demo</span><span data-l="zh">跟着流程走一遍</span></button>
+          <button class="btn quiet" data-enter="cashflow"><span data-l="en">Jump to cash flow</span><span data-l="zh">直接看现金流</span></button>
+        </div>
+        <ul class="l-points">
+          <li><span data-l="en">Nothing is invoiced or sent until a person approves it</span><span data-l="zh">开票和发送提醒之前，一定有人确认过</span></li>
+          <li><span data-l="en">Clicking twice never creates a second invoice or reminder</span><span data-l="zh">点两次也只会开一张发票、发一次提醒</span></li>
+          <li><span data-l="en">Every number traces back to a line you can check</span><span data-l="zh">每个数字都能在收支明细里对上</span></li>
+        </ul>
+      </div>
+
+      <aside class="story" aria-labelledby="story-h">
+        <h2 id="story-h"><span data-l="en">What happens in the demo</span><span data-l="zh">这次演示的经过</span></h2>
+        <ol>
+          <li class="done"><span class="d"><span data-l="en">22 Oct</span><span data-l="zh">10月22日</span></span><span class="t"><span data-l="en">Wei Ling marks M2 Design sign-off as done<small>Kopi Tiga store design, contract RM60,000</small></span><span data-l="zh">Wei Ling 把 M2 设计定稿标为完成<small>Kopi Tiga 店面设计，合同 RM60,000</small></span></span></li>
+          <li class="done"><span class="d"><span data-l="en">22 Oct</span><span data-l="zh">10月22日</span></span><span class="t"><span data-l="en">Daniel approves the invoice, Priya issues it<small>RM18,000, payable within 14 days</small></span><span data-l="zh">Daniel 批准发票，Priya 模拟开票<small>RM18,000，开票后 14 天付款</small></span></span></li>
+          <li><span class="d"><span data-l="en">5 Nov</span><span data-l="zh">11月5日</span></span><span class="t"><span data-l="en">Payment due</span><span data-l="zh">付款到期</span></span></li>
+          <li class="hot"><span class="d"><span data-l="en">8 Nov</span><span data-l="zh">11月8日</span></span><span class="t"><span data-l="en">Still unpaid, 3 days overdue<small>A reminder is drafted for Priya to review</small></span><span data-l="zh">还没收到，已逾期 3 天<small>准备好一封提醒，等 Priya 确认</small></span></span></li>
+          <li><span class="d"><span data-l="en">10 Nov</span><span data-l="zh">11月10日</span></span><span class="t"><span data-l="en">RM25,000 goes out for fabrication and rent</span><span data-l="zh">要付 RM25,000 的制作费和租金</span></span></li>
+        </ol>
+        <div class="spark">
+          <svg viewBox="0 0 300 64" width="100%" height="64" aria-hidden="true">
+            <line x1="0" x2="300" y1="38" y2="38" stroke="#b23a3a" stroke-dasharray="3 3" stroke-width="1"/>
+            <line x1="0" x2="300" y1="50" y2="50" stroke="#cfd9d2" stroke-width="1"/>
+            <path d="M0 28 L140 28 L146 8 L200 8 L206 33 L300 33" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M0 28 L200 28 L206 56 L300 56" fill="none" stroke="#eb6834" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+          <span data-l="en">If Kopi Tiga pays late, the balance falls to <b>RM−5,000</b> on 10 Nov, RM15,000 under the safety line.</span><span data-l="zh">如果 Kopi Tiga 晚付款，11月10日余额会跌到 <b>RM−5,000</b>，比安全线低 RM15,000。</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="l-foot"><div class="l-wrap"><span>Lets go · SDC Hackathon 2026 · Domain 2, Orbyte Smart SME Challenge</span><span><span data-l="en">Invoicing and sending are simulated. No real payments.</span><span data-l="zh">开票和发送均为模拟，不涉及真实付款</span></span></div></footer>
+</section>
+
+<div id="app" hidden>
+  <div class="demo-bar" role="region" aria-label="Demo controls">
+    <span class="tag"><span data-l="en">DEMO</span><span data-l="zh">演示</span></span>
+    <label><span data-l="en">Company</span><span data-l="zh">公司</span> <select id="company"></select></label>
+    <label><span data-l="en">Acting as</span><span data-l="zh">身份</span> <select id="user"></select></label>
+    <label><span data-l="en">Demo date</span><span data-l="zh">演示日期</span> <input type="date" id="demo-date"></label>
+    <span class="fail-group"><span data-l="en">Fail next:</span><span data-l="zh">让下一次失败：</span>
+      <label><input type="checkbox" id="fail-accounting"> <span data-l="en">invoicing</span><span data-l="zh">开票</span></label>
+      <label><input type="checkbox" id="fail-outbox"> <span data-l="en">sending</span><span data-l="zh">发送</span></label>
+    </span>
+    <span class="spacer"></span>
+    <span class="api-state" id="api-state"></span>
+    <button type="button" class="btn slim" id="reset"><span data-l="en">Reset data</span><span data-l="zh">重置数据</span></button>
+    <button type="button" class="lang-toggle" data-lang-toggle hidden>中文</button>
+  </div>
+  <div id="demo-msg" class="demo-msg" aria-live="polite"></div>
+
+  <nav class="mobile-nav" aria-label="Main">
+    <button type="button" data-go="overview"><span data-l="en">Overview</span><span data-l="zh">总览</span></button>
+    <button type="button" data-go="invoicing"><span data-l="en">Invoicing</span><span data-l="zh">开票</span></button>
+    <button type="button" data-go="collections"><span data-l="en">Collections</span><span data-l="zh">催收</span></button>
+    <button type="button" data-go="cashflow"><span data-l="en">Cash flow</span><span data-l="zh">现金流</span></button>
+  </nav>
+
+  <div class="shell">
+    <nav class="side" aria-label="Main">
+      <a class="mark" href="#/" data-home>
+        <svg width="20" height="20" viewBox="0 0 22 22" aria-hidden="true"><rect x="1" y="1" width="20" height="20" rx="5" fill="#e3f1e9"/><path d="M6 8h10M6 11.5h6M6 15h4" stroke="#1f7a55" stroke-width="1.8" stroke-linecap="round"/><path d="M13 14.5l1.6 1.6L17.5 13" stroke="#1f7a55" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        SDC Tracker
+      </a>
+      <div class="co" id="company-line"></div>
+      <button type="button" data-go="overview"><span data-l="en">Overview</span><span data-l="zh">总览</span></button>
+      <button type="button" data-go="invoicing"><span class="step-no">1</span><span data-l="en">Projects &amp; invoicing</span><span data-l="zh">项目与开票</span></button>
+      <button type="button" data-go="collections"><span class="step-no">2</span><span data-l="en">AI collections</span><span data-l="zh">AI 催收</span></button>
+      <button type="button" data-go="cashflow"><span class="step-no">3</span><span data-l="en">Cash flow</span><span data-l="zh">现金流</span></button>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <div id="next-step"></div>
+      <div id="view"></div>
+    </main>
+  </div>
+</div>
+
+<dialog id="confirm" aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title"></h2>
+    <div id="confirm-body"></div>
+    <div class="row end">
+      <button value="cancel" class="btn" type="submit" id="confirm-cancel">Cancel</button>
+      <button value="ok" class="btn primary" type="submit" id="confirm-ok">OK</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="/config.js"></script>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>
