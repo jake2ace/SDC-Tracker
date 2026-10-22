@@ -4,7 +4,7 @@
 
 SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 
-> 当前分支：Issue #1 的共享数据已落地；Issue #3 已有自动开票模块、测试和命令行演示，等待接入 Issue #2 的会话、审批和数据库。以下是完整初赛目标。
+> 当前分支：Issue #1 共享数据、Issue #3 自动开票、Issue #4 AI 催收模块及测试已落地；等待接入 Issue #2 的页面、会话、审批和数据库。以下是完整初赛目标。
 
 ## 初赛必须完成
 
@@ -19,6 +19,7 @@ SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
 - [完成标准](docs/ACCEPTANCE.md)
 - [Issue #1：故事、数据与接口约定](docs/DATA_CONTRACT.md)
 - [Issue #3：自动开票运行与接入](docs/INVOICING.md)
+- [Issue #4：DeepSeek AI 催收运行与接入](docs/COLLECTIONS.md)
 - [故事与完成标准 PDF（前期方案名：Milestone2Cash）](docs/Milestone2Cash_初赛故事与完成标准.pdf)
 - [GitHub 项目管理流程](docs/WORKFLOW.md)
 
@@ -49,7 +50,15 @@ node examples/invoicing-demo.mjs
 node --test tests/*.test.mjs
 ```
 
-演示会依次显示生成草稿、未批准阻断、模拟失败、重试成功与重复开票保护。审批使用明确标注的测试占位，数据仅保存在内存；应用启动命令将在基础工程接入后补充。检查通过不代表完整应用或真实 AI 已接入。
+演示会依次显示生成草稿、未批准阻断、模拟失败、重试成功与重复开票保护。审批使用明确标注的测试占位，数据仅保存在内存；应用启动命令将在基础工程接入后补充。
+
+AI 催收：首次使用将 `.env.example` 复制为 `.env`，只填写 `DEEPSEEK_API_KEY=` 右侧，再运行：
+
+```sh
+node --env-file=.env examples/collections-demo.mjs
+```
+
+这会请求一次 DeepSeek 话术选择并在本地组装草稿，输入 `SEND` 才模拟发送。AI 只能选择审核过的催收话术，无权读文件或执行命令；事实和客户资料不进入模型请求。地址与模型已配置；`.env` 不上传 Git。自动测试使用模型替身，完整应用仍待联调。详见 [AI 安全边界](docs/COLLECTIONS.md#ai-安全边界)。
 
 ## 交付与声明
 
