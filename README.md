@@ -1,54 +1,83 @@
 # SDC Tracker
 
-**项目交付 → 自动开票 → AI 催收 → 30 天现金流预测。**
+**Project delivery → automated invoicing → AI-assisted collections → a 30-day cash-flow forecast.**
 
-SDC Hackathon 2026 · Domain 2 · 队伍 Lets go
+SDC Hackathon 2026 · Domain 2 · Team Lets go
 
-> 当前状态：Issue #1 的共享数据、接口类型和验收样例已落地。页面、数据库和业务接口仍需实现；以下是完整初赛目标。
+The shared story, data, API types, and acceptance examples from Issue #1 are the source of truth. Issue #2 adds a local backend foundation: SQLite persistence, explicit demo identities, company isolation, invoice approval guards, and activity logs. The frontend is owned by another teammate and is not included in this backend implementation.
 
-## 初赛必须完成
+## Preliminary-round product goals
 
-| 功能 | 最终效果 |
+| Feature | Intended result |
 |---|---|
-| 自动开票 | 项目阶段完成后生成正确的发票草稿；人工批准后模拟开票，保存结果。 |
-| AI 催收 | 识别逾期欠款，AI 生成可修改的提醒；人工确认后模拟发送，付款后停止催收。 |
-| 现金流预测 | 展示未来 30 天预计余额，对比按时与延迟到账，标出低于安全线的日期和金额。 |
+| Automated invoicing | Generate a correct invoice draft when a project milestone is completed; simulate issuing it only after human approval and retain the result. |
+| AI-assisted collections | Identify overdue balances, generate an editable reminder, simulate sending it after human confirmation, and stop reminders after payment. |
+| Cash-flow forecast | Show the next 30 days of expected balances, compare on-time and delayed receipts, and identify dates and amounts below the safety line. |
 
-三个功能共用数据，必须能演示一次完整流程。使用团队自建合成数据和模拟外部接口，业务逻辑真正运行。
+These features must share data and support one complete demonstration. Use team-created synthetic data and simulated external integrations while implementing the actual business rules. These are the full product goals; the current backend foundation does not implement all three features.
 
-- [完成标准](docs/ACCEPTANCE.md)
-- [Issue #1：故事、数据与接口约定](docs/DATA_CONTRACT.md)
-- [故事与完成标准 PDF（前期方案名：Milestone2Cash）](docs/Milestone2Cash_初赛故事与完成标准.pdf)
-- [GitHub 项目管理流程](docs/WORKFLOW.md)
+## Documentation and shared contracts
 
-## 做事顺序
+- [Acceptance criteria](docs/ACCEPTANCE.md)
+- [Issue #1 story, data, and API agreement](docs/DATA_CONTRACT.md)
+- [Story and acceptance PDF, originally named Milestone2Cash](docs/Milestone2Cash_初赛故事与完成标准.pdf)
+- [GitHub project workflow](docs/WORKFLOW.md)
+- [Backend setup and implemented endpoints](docs/BACKEND.md)
+- [Frontend and business-feature handoff](docs/BACKEND_HANDOFF.md)
+- [Shared domain types](contracts/domain.ts) and [API types](contracts/api.ts)
+- [Synthetic seed](data/demo.json) and [expected results](data/expected-results.json)
 
-1. 统一演示案例、数据字段和接口约定。
-2. 搭建数据库、页面、权限、审批和日志。
-3. 开发开票、AI 催收与现金流三个功能，持续联调。
-4. 按完成标准验收，部署后再验证一次。
-5. 完成提交材料，检查链接和可复现性。
+The existing Issue #1 documents and contracts retain their original content. New backend documentation and API messages are in English.
 
-用 Issues 记录任务，用看板跟踪状态，用 Pull Request 合并修改。人员由团队自行认领与安排。
+## Run the backend
 
-## 如何运行
-
-当前先检查 Issue #1 的共享契约（Node.js 20 或以上，无需安装依赖）：
+Requirements: **Node.js 22.13 or later**. No third-party runtime packages or dependency installation are required. SQLite uses Node's built-in `node:sqlite` module; supported Node versions may print an experimental-feature warning.
 
 ```sh
-node --test tests/contract.test.mjs
+npm start
 ```
 
-前端与后端从同一份 [demo.json](data/demo.json) 初始化；字段使用 [domain.ts](contracts/domain.ts)，接口使用 [api.ts](contracts/api.ts)。测试预期在 [expected-results.json](data/expected-results.json)。JSON 数据可直接复制进 mock adapter；不得硬编码另一套金额或日期。
+The service listens on `http://127.0.0.1:3000` by default. `GET /health` exposes service metadata. Demo APIs are disabled by default, and `/` does not serve a webpage.
 
-应用启动命令将在基础工程完成后补充。检查契约通过不代表接口已经可访问，也不代表真实 AI 已接入。
+For local integration with the synthetic demo:
 
-## 交付与声明
+```sh
+DEMO_MODE=true npm start
+```
 
-初赛交付包括原型、公开 GitHub / README、官方 PRD、PPTX、技术工具声明及 5–7 分钟演示视频。开发期仓库保持 private，提交前按规则公开并核对访问权限。
+Then use an explicit synthetic identity:
 
-实际使用的 AI、第三方代码、模型和服务均须记录；Replit 使用证据及适用的 RunPod 证据随声明整理。提交前确认官方格式、截止时间和 API sponsor 声明的具体要求。
+```sh
+curl -H 'X-Demo-User: u_lumen_pm' \
+  http://127.0.0.1:3000/api/demo/session
+```
 
-参考：[Domain 2 正式赛题](https://drive.google.com/file/d/11wqbeO-HYep-DJPQ-LPZnrZfQvCgr5BU/view) · [Participant Handbook](https://drive.google.com/file/d/1fGBS-jevDj_FrF8wsbYNPzyU5TTrfk1V/view)
+Data is persisted in `.local/sdc-tracker.sqlite`, which is not committed. Environment files are not loaded automatically. See [backend setup](docs/BACKEND.md) for environment variables, CORS, reset behavior, and API examples.
 
-代码采用 Apache-2.0；第三方内容保留各自许可与署名。
+## Validate
+
+```sh
+npm test
+```
+
+The test suite includes the shared-contract checks and backend checks. Passing these checks does not establish that the remaining business features, real AI, a frontend, or a deployed application are complete.
+
+## Development order
+
+1. Agree on the demonstration story, fields, and API contract.
+2. Integrate the independently developed frontend with the backend persistence, permissions, approvals, and logs.
+3. Implement invoicing, AI-assisted collections, and the cash-flow forecast against the shared contracts.
+4. Verify the acceptance criteria and repeat the checks against the deployed environment.
+5. Prepare submission materials and check every link and reproduction instruction.
+
+Track tasks in Issues and the project board. Review local changes before publishing them. **Ask the repository owner before pushing commits or creating a pull request.** Issue #2 requires another team member's review before it is closed.
+
+## Delivery and disclosure
+
+Prepare the working prototype, public GitHub repository and README, official PRD, pitch deck, Technical & Tools Declaration, and 5–7-minute pitch/demo video. Verify the current official format and deadline before submission. Keep the development repository private until the team is ready to publish the submission version under the rules.
+
+Record actual use of AI development tools, runtime models, third-party code, and services. Collect Replit evidence and RunPod evidence where applicable. This backend does not claim real AI integration, Replit deployment, or a connection to a live Orbyte system.
+
+References: [Official Domain 2 brief](https://drive.google.com/file/d/11wqbeO-HYep-DJPQ-LPZnrZfQvCgr5BU/view) · [Participant Handbook](https://drive.google.com/file/d/1fGBS-jevDj_FrF8wsbYNPzyU5TTrfk1V/view)
+
+Code is licensed under Apache-2.0. Third-party material retains its own license and attribution.
