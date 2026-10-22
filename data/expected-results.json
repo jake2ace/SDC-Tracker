@@ -1,0 +1,717 @@
+{
+  "schemaVersion": 1,
+  "baseFixture": "demo.json",
+  "currency": "MYR",
+  "moneyUnit": "sen",
+  "conventions": {
+    "stateFixtures": "Start from baseFixture for seed. Resolve extends recursively; merge optional settings; apply updates by collection and id, merging set; then append records. These are test arrangements, not API commands.",
+    "ownership": "Select company records before calculation. Milestones belong to a company through projectId -> projects.companyId.",
+    "dates": "All dates are YYYY-MM-DD in the Asia/Kuala_Lumpur business calendar. Each forecast contains 30 inclusive dates; endDate = baseDate + 29 days.",
+    "amounts": "All money values are integer sen. Opening balance is before transactions on baseDate; checkpoints and summary use daily closing balances.",
+    "cashAssumptions": "M1 at Studio Lumen was settled before the demo and is included in opening cash. No extra receipt is created for it. Outstanding overdue receipts in an on_time scenario are assumed on baseDate, not asserted to have arrived.",
+    "overview": "Amounts cover only the selected company. Planned milestones are excluded from unpaidAmount and pendingIssueAmount. pendingIssueAmount combines pending_approval and approved invoice amounts.",
+    "summary": "minDate is the first date at the minimum daily closing balance; firstBreachDate and breachDays use balance < safetyLine.",
+    "excludedScope": "No rejected-draft or partial-payment golden cases are introduced here."
+  },
+  "stateFixtures": {
+    "seed": {
+      "description": "Unmodified demo.json: Lumen M2 is pending; Rantau has one issued unpaid invoice.",
+      "updates": [],
+      "appends": []
+    },
+    "lumen_draft": {
+      "extends": "seed",
+      "description": "M2 completed on 22 Oct and one RM18,000 invoice draft created; not approved or issued.",
+      "updates": [
+        {
+          "collection": "milestones",
+          "id": "ms_kt_2",
+          "set": {
+            "status": "completed",
+            "completedAt": "2026-10-22",
+            "completedBy": "Wei Ling"
+          }
+        }
+      ],
+      "appends": [
+        {
+          "collection": "invoices",
+          "record": {
+            "id": "inv_kt_2",
+            "companyId": "co_lumen",
+            "projectId": "pr_kopitiga_store",
+            "milestoneId": "ms_kt_2",
+            "clientId": "cl_kopitiga",
+            "currency": "MYR",
+            "amount": 1800000,
+            "netDays": 14,
+            "draftedAt": "2026-10-22",
+            "expectedDueDate": "2026-11-05",
+            "status": "pending_approval",
+            "basis": {
+              "projectName": "Kopi Tiga store design",
+              "milestoneName": "Design sign-off",
+              "termNote": "30% on design sign-off, due 14 days after invoice date",
+              "contractTotal": 6000000
+            },
+            "approval": null,
+            "issueRequestId": "issue_inv_kt_2",
+            "issueAttempts": 0,
+            "lastIssueError": null,
+            "invoiceNo": null,
+            "issuedAt": null,
+            "dueDate": null,
+            "paidAt": null
+          }
+        }
+      ]
+    },
+    "lumen_issued": {
+      "extends": "lumen_draft",
+      "description": "Owner approved and Finance successfully simulated issuance on 22 Oct, due 5 Nov; unpaid.",
+      "updates": [
+        {
+          "collection": "invoices",
+          "id": "inv_kt_2",
+          "set": {
+            "status": "issued",
+            "approval": {
+              "by": "Daniel Tan",
+              "role": "owner",
+              "at": "2026-10-22T10:00:00+08:00"
+            },
+            "issueAttempts": 1,
+            "invoiceNo": "SL-2026-0001",
+            "issuedAt": "2026-10-22",
+            "dueDate": "2026-11-05"
+          }
+        }
+      ],
+      "appends": [
+        {
+          "collection": "mockAccounting",
+          "record": {
+            "requestId": "issue_inv_kt_2",
+            "invoiceNo": "SL-2026-0001",
+            "issuedAt": "2026-10-22",
+            "dueDate": "2026-11-05",
+            "simulation": true
+          }
+        }
+      ]
+    },
+    "lumen_paid": {
+      "extends": "lumen_issued",
+      "settings": { "demoDate": "2026-11-08" },
+      "description": "Finance records the full RM18,000 receipt on 8 Nov. No other Lumen receipt exists.",
+      "updates": [
+        {
+          "collection": "invoices",
+          "id": "inv_kt_2",
+          "set": {
+            "status": "paid",
+            "paidAt": "2026-11-08"
+          }
+        }
+      ],
+      "appends": [
+        {
+          "collection": "payments",
+          "record": {
+            "id": "pay_kt_2",
+            "companyId": "co_lumen",
+            "invoiceId": "inv_kt_2",
+            "amount": 1800000,
+            "receivedAt": "2026-11-08",
+            "recordedBy": "Priya Nair"
+          }
+        }
+      ]
+    },
+    "rantau_paid": {
+      "extends": "seed",
+      "description": "Finance records the full RM13,500 receipt on 22 Oct. Its already-sent reminder stays in history.",
+      "updates": [
+        {
+          "collection": "invoices",
+          "id": "inv_bd_1",
+          "set": {
+            "status": "paid",
+            "paidAt": "2026-10-22"
+          }
+        }
+      ],
+      "appends": [
+        {
+          "collection": "payments",
+          "record": {
+            "id": "pay_bd_1",
+            "companyId": "co_rantau",
+            "invoiceId": "inv_bd_1",
+            "amount": 1350000,
+            "receivedAt": "2026-10-22",
+            "recordedBy": "Siti Aminah"
+          }
+        }
+      ]
+    }
+  },
+  "dateRuleCases": [
+    {
+      "id": "lumen_due",
+      "input": {
+        "issuedAt": "2026-10-22",
+        "netDays": 14
+      },
+      "expected": {
+        "dueDate": "2026-11-05"
+      }
+    },
+    {
+      "id": "lumen_issued_one_day_later",
+      "input": {
+        "issuedAt": "2026-10-23",
+        "netDays": 14
+      },
+      "expected": {
+        "dueDate": "2026-11-06"
+      }
+    },
+    {
+      "id": "lumen_due_day",
+      "input": {
+        "state": "lumen_issued",
+        "invoiceId": "inv_kt_2",
+        "demoDate": "2026-11-05"
+      },
+      "expected": {
+        "overdueDays": 0
+      }
+    },
+    {
+      "id": "lumen_three_days_overdue",
+      "input": {
+        "state": "lumen_issued",
+        "invoiceId": "inv_kt_2",
+        "demoDate": "2026-11-08"
+      },
+      "expected": {
+        "overdueDays": 3
+      }
+    },
+    {
+      "id": "lumen_paid_not_overdue",
+      "input": {
+        "state": "lumen_paid",
+        "invoiceId": "inv_kt_2",
+        "demoDate": "2026-11-08"
+      },
+      "expected": {
+        "overdueDays": 0
+      }
+    },
+    {
+      "id": "rantau_two_days_overdue",
+      "input": {
+        "state": "seed",
+        "invoiceId": "inv_bd_1",
+        "demoDate": "2026-10-22"
+      },
+      "expected": {
+        "overdueDays": 2
+      }
+    }
+  ],
+  "overviewCases": [
+    {
+      "id": "lumen_before_work",
+      "input": {
+        "state": "seed",
+        "companyId": "co_lumen",
+        "demoDate": "2026-10-22"
+      },
+      "expected": {
+        "unpaidAmount": 0,
+        "overdueAmount": 0,
+        "pendingApprovalCount": 0,
+        "pendingIssueAmount": 0,
+        "overdueCount": 0
+      }
+    },
+    {
+      "id": "lumen_awaiting_approval",
+      "input": {
+        "state": "lumen_draft",
+        "companyId": "co_lumen",
+        "demoDate": "2026-10-22"
+      },
+      "expected": {
+        "unpaidAmount": 0,
+        "overdueAmount": 0,
+        "pendingApprovalCount": 1,
+        "pendingIssueAmount": 1800000,
+        "overdueCount": 0
+      }
+    },
+    {
+      "id": "lumen_issued_overdue",
+      "input": {
+        "state": "lumen_issued",
+        "companyId": "co_lumen",
+        "demoDate": "2026-11-08"
+      },
+      "expected": {
+        "unpaidAmount": 1800000,
+        "overdueAmount": 1800000,
+        "pendingApprovalCount": 0,
+        "pendingIssueAmount": 0,
+        "overdueCount": 1
+      },
+      "forecastReference": "lumen_fixed_on_time"
+    },
+    {
+      "id": "lumen_after_payment",
+      "input": {
+        "state": "lumen_paid",
+        "companyId": "co_lumen",
+        "demoDate": "2026-11-08"
+      },
+      "expected": {
+        "unpaidAmount": 0,
+        "overdueAmount": 0,
+        "pendingApprovalCount": 0,
+        "pendingIssueAmount": 0,
+        "overdueCount": 0
+      },
+      "forecastReference": "lumen_paid_fixed_on_time"
+    },
+    {
+      "id": "rantau_before_payment",
+      "input": {
+        "state": "seed",
+        "companyId": "co_rantau",
+        "demoDate": "2026-10-22"
+      },
+      "expected": {
+        "unpaidAmount": 1350000,
+        "overdueAmount": 1350000,
+        "pendingApprovalCount": 0,
+        "pendingIssueAmount": 0,
+        "overdueCount": 1
+      },
+      "forecastReference": "rantau_fixed_on_time"
+    },
+    {
+      "id": "rantau_after_payment",
+      "input": {
+        "state": "rantau_paid",
+        "companyId": "co_rantau",
+        "demoDate": "2026-11-08"
+      },
+      "expected": {
+        "unpaidAmount": 0,
+        "overdueAmount": 0,
+        "pendingApprovalCount": 0,
+        "pendingIssueAmount": 0,
+        "overdueCount": 0
+      }
+    }
+  ],
+  "forecastCases": [
+    {
+      "id": "lumen_fixed_on_time",
+      "input": {
+        "state": "lumen_issued",
+        "companyId": "co_lumen",
+        "mode": "fixed",
+        "baseDate": "2026-10-22",
+        "days": 30,
+        "scenario": {
+          "kind": "on_time"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-10-22",
+        "endDate": "2026-11-20",
+        "dayCount": 30,
+        "openingBalance": 2000000,
+        "safetyLine": 1000000,
+        "summary": {
+          "endBalance": 1300000,
+          "minBalance": 1300000,
+          "minDate": "2026-11-10",
+          "firstBreachDate": null,
+          "breachDays": 0,
+          "maxGapToSafety": 0,
+          "maxShortfallBelowZero": 0
+        },
+        "checkpoints": [
+          {
+            "date": "2026-10-22",
+            "balance": 2000000
+          },
+          {
+            "date": "2026-11-05",
+            "balance": 3800000
+          },
+          {
+            "date": "2026-11-10",
+            "balance": 1300000
+          }
+        ],
+        "includedReceipts": [
+          {
+            "kind": "expected_receipt",
+            "invoiceId": "inv_kt_2",
+            "date": "2026-11-05",
+            "amount": 1800000,
+            "assumedToday": false
+          }
+        ],
+        "includedExpenseCount": 1
+      }
+    },
+    {
+      "id": "lumen_fixed_late",
+      "input": {
+        "state": "lumen_issued",
+        "companyId": "co_lumen",
+        "mode": "fixed",
+        "baseDate": "2026-10-22",
+        "days": 30,
+        "scenario": {
+          "kind": "late",
+          "delayDays": "beyond_window"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-10-22",
+        "endDate": "2026-11-20",
+        "dayCount": 30,
+        "openingBalance": 2000000,
+        "safetyLine": 1000000,
+        "summary": {
+          "endBalance": -500000,
+          "minBalance": -500000,
+          "minDate": "2026-11-10",
+          "firstBreachDate": "2026-11-10",
+          "breachDays": 11,
+          "maxGapToSafety": 1500000,
+          "maxShortfallBelowZero": 500000
+        },
+        "checkpoints": [
+          {
+            "date": "2026-11-05",
+            "balance": 2000000
+          },
+          {
+            "date": "2026-11-10",
+            "balance": -500000
+          }
+        ],
+        "includedReceipts": [],
+        "includedExpenseCount": 1
+      }
+    },
+    {
+      "id": "lumen_paid_fixed_on_time",
+      "input": {
+        "state": "lumen_paid",
+        "companyId": "co_lumen",
+        "mode": "fixed",
+        "baseDate": "2026-10-22",
+        "days": 30,
+        "scenario": {
+          "kind": "on_time"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-10-22",
+        "endDate": "2026-11-20",
+        "dayCount": 30,
+        "openingBalance": 2000000,
+        "safetyLine": 1000000,
+        "summary": {
+          "endBalance": 1300000,
+          "minBalance": 1300000,
+          "minDate": "2026-11-10",
+          "firstBreachDate": null,
+          "breachDays": 0,
+          "maxGapToSafety": 0,
+          "maxShortfallBelowZero": 0
+        },
+        "checkpoints": [
+          {
+            "date": "2026-11-05",
+            "balance": 2000000
+          },
+          {
+            "date": "2026-11-08",
+            "balance": 3800000
+          },
+          {
+            "date": "2026-11-10",
+            "balance": 1300000
+          }
+        ],
+        "includedReceipts": [
+          {
+            "kind": "actual_receipt",
+            "invoiceId": "inv_kt_2",
+            "date": "2026-11-08",
+            "amount": 1800000,
+            "assumedToday": false
+          }
+        ],
+        "includedExpenseCount": 1
+      }
+    },
+    {
+      "id": "lumen_paid_fixed_late",
+      "input": {
+        "state": "lumen_paid",
+        "companyId": "co_lumen",
+        "mode": "fixed",
+        "baseDate": "2026-10-22",
+        "days": 30,
+        "scenario": {
+          "kind": "late",
+          "delayDays": "beyond_window"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-10-22",
+        "endDate": "2026-11-20",
+        "dayCount": 30,
+        "openingBalance": 2000000,
+        "safetyLine": 1000000,
+        "summary": {
+          "endBalance": 1300000,
+          "minBalance": 1300000,
+          "minDate": "2026-11-10",
+          "firstBreachDate": null,
+          "breachDays": 0,
+          "maxGapToSafety": 0,
+          "maxShortfallBelowZero": 0
+        },
+        "checkpoints": [
+          {
+            "date": "2026-11-05",
+            "balance": 2000000
+          },
+          {
+            "date": "2026-11-08",
+            "balance": 3800000
+          },
+          {
+            "date": "2026-11-10",
+            "balance": 1300000
+          }
+        ],
+        "includedReceipts": [
+          {
+            "kind": "actual_receipt",
+            "invoiceId": "inv_kt_2",
+            "date": "2026-11-08",
+            "amount": 1800000,
+            "assumedToday": false
+          }
+        ],
+        "includedExpenseCount": 1
+      }
+    },
+    {
+      "id": "lumen_paid_rolling",
+      "input": {
+        "state": "lumen_paid",
+        "companyId": "co_lumen",
+        "mode": "rolling",
+        "baseDate": "2026-11-09",
+        "days": 30,
+        "scenario": {
+          "kind": "on_time"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-11-09",
+        "endDate": "2026-12-08",
+        "dayCount": 30,
+        "openingBalance": 3800000,
+        "safetyLine": 1000000,
+        "summary": {
+          "endBalance": 1300000,
+          "minBalance": 1300000,
+          "minDate": "2026-11-10",
+          "firstBreachDate": null,
+          "breachDays": 0,
+          "maxGapToSafety": 0,
+          "maxShortfallBelowZero": 0
+        },
+        "checkpoints": [
+          {
+            "date": "2026-11-09",
+            "balance": 3800000
+          },
+          {
+            "date": "2026-11-10",
+            "balance": 1300000
+          }
+        ],
+        "includedReceipts": [],
+        "includedExpenseCount": 1
+      }
+    },
+    {
+      "id": "rantau_fixed_on_time",
+      "input": {
+        "state": "seed",
+        "companyId": "co_rantau",
+        "mode": "fixed",
+        "baseDate": "2026-10-22",
+        "days": 30,
+        "scenario": {
+          "kind": "on_time"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-10-22",
+        "endDate": "2026-11-20",
+        "dayCount": 30,
+        "openingBalance": 1200000,
+        "safetyLine": 800000,
+        "summary": {
+          "endBalance": 1050000,
+          "minBalance": 1050000,
+          "minDate": "2026-11-15",
+          "firstBreachDate": null,
+          "breachDays": 0,
+          "maxGapToSafety": 0,
+          "maxShortfallBelowZero": 0
+        },
+        "checkpoints": [
+          {
+            "date": "2026-10-22",
+            "balance": 2550000
+          },
+          {
+            "date": "2026-10-30",
+            "balance": 1950000
+          },
+          {
+            "date": "2026-11-15",
+            "balance": 1050000
+          }
+        ],
+        "includedReceipts": [
+          {
+            "kind": "expected_receipt",
+            "invoiceId": "inv_bd_1",
+            "date": "2026-10-22",
+            "amount": 1350000,
+            "assumedToday": true
+          }
+        ],
+        "includedExpenseCount": 2
+      }
+    },
+    {
+      "id": "rantau_fixed_late",
+      "input": {
+        "state": "seed",
+        "companyId": "co_rantau",
+        "mode": "fixed",
+        "baseDate": "2026-10-22",
+        "days": 30,
+        "scenario": {
+          "kind": "late",
+          "delayDays": "beyond_window"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-10-22",
+        "endDate": "2026-11-20",
+        "dayCount": 30,
+        "openingBalance": 1200000,
+        "safetyLine": 800000,
+        "summary": {
+          "endBalance": -300000,
+          "minBalance": -300000,
+          "minDate": "2026-11-15",
+          "firstBreachDate": "2026-10-30",
+          "breachDays": 22,
+          "maxGapToSafety": 1100000,
+          "maxShortfallBelowZero": 300000
+        },
+        "checkpoints": [
+          {
+            "date": "2026-10-22",
+            "balance": 1200000
+          },
+          {
+            "date": "2026-10-30",
+            "balance": 600000
+          },
+          {
+            "date": "2026-11-15",
+            "balance": -300000
+          }
+        ],
+        "includedReceipts": [],
+        "includedExpenseCount": 2
+      }
+    },
+    {
+      "id": "rantau_paid_rolling",
+      "input": {
+        "state": "rantau_paid",
+        "companyId": "co_rantau",
+        "mode": "rolling",
+        "baseDate": "2026-11-08",
+        "days": 30,
+        "scenario": {
+          "kind": "on_time"
+        }
+      },
+      "expected": {
+        "baseDate": "2026-11-08",
+        "endDate": "2026-12-07",
+        "dayCount": 30,
+        "openingBalance": 1950000,
+        "safetyLine": 800000,
+        "summary": {
+          "endBalance": 2850000,
+          "minBalance": 1050000,
+          "minDate": "2026-11-15",
+          "firstBreachDate": null,
+          "breachDays": 0,
+          "maxGapToSafety": 0,
+          "maxShortfallBelowZero": 0
+        },
+        "checkpoints": [
+          {
+            "date": "2026-11-08",
+            "balance": 1950000
+          },
+          {
+            "date": "2026-11-15",
+            "balance": 1050000
+          },
+          {
+            "date": "2026-11-27",
+            "balance": 2850000
+          }
+        ],
+        "includedReceipts": [
+          {
+            "kind": "expected_receipt",
+            "invoiceId": null,
+            "date": "2026-11-27",
+            "amount": 1800000,
+            "assumedToday": false
+          }
+        ],
+        "includedExpenseCount": 1
+      }
+    }
+  ]
+}
