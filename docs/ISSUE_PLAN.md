@@ -1,11 +1,11 @@
 # Milestone2Cash Proof-to-Cash 开发计划
 
-依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1 的契约与数据已准备，等待团队复核；其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
+依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1、STEP-2 已完成；其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
 
 | 步骤 | 交付 | 职责 | 依赖 | 状态 |
 | --- | --- | --- | --- | --- |
-| STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | 项目协调与后端开发；团队确认业务 | 无 | IN REVIEW |
-| STEP-2 | [核心底座、开票、催收、权限与日志](issues/02-foundation.md) | 后端开发 | STEP-1 | TODO |
+| STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | 项目协调与后端开发；团队确认业务 | 无 | DONE |
+| STEP-2 | [核心底座、开票、催收、权限与日志](issues/02-foundation.md) | 后端开发 | STEP-1 | DONE |
 | STEP-3 | [前端设计、开发与 API 对接](issues/03-frontend.md) | 前端开发；前后端共同联调验收 | STEP-1；联调依赖 STEP-2/4/5/6 | TODO |
 | STEP-4 | [银行 CSV 与确定性匹配](issues/04-matching.md) | 后端开发 | STEP-1、STEP-2 | TODO |
 | STEP-5 | [本地 OCR、DeepSeek 结构化与 fallback](issues/05-ai-extraction.md) | 后端开发与 AI 集成 | STEP-1、STEP-2 | TODO |
@@ -37,7 +37,7 @@
 
 前端开发维护 `web/`；后端开发维护 `src/`、`contracts/` 和 `scripts/`；测试与数据任务覆盖 `data/`、`eval/` 和相应测试。共享接口、依赖配置由后端任务负责人和项目协调人员共同确认。前端若发现缺接口，先记录到对应 Issue，不自行改变后端规则。UI 文案使用英文。具体成员通过 Issue 认领，不预先假定人员分配。
 
-每步沿用 **Issue → Todo → In progress → In review → Done**：写清目标和依赖，单独分支，PR 关联 Issue，附验证证据，经团队或另一位成员复核后关闭。不要虚构成员认领、会议或验收记录。
+每步沿用 **Issue → Todo → In progress → In review → Done**：写清目标和依赖，单独分支，PR 关联 Issue，附验证证据。用户已授权本轮完成后直接合并，不等待另一次人工复核；保留必要的类型和关键行为验证。不要虚构成员认领、会议或验收记录。
 
 ## 所有步骤共同遵守
 
@@ -53,5 +53,6 @@
 | --- | --- | --- |
 | 2026-10-23 | 按团队定稿从头建立新基线；旧方案先本地备份，再清理活动工作区；保留仓库身份和 Git 历史 | 本计划全部 TODO；备份及清理结果由主协调记录 |
 | 2026-10-23 | 同一仓库更新双语 README 与常规开发分工；完成契约 v1.0.0、两公司 seed 与合成评测清单 | STEP-1 IN REVIEW；见[契约](CONTRACT.md)与[校验记录](CONTRACT_VALIDATION.md)，应用尚未实现 |
+| 2026-10-23 | 用户批准直接合并第一步并开始第二步；已实现 SQLite 后端、角色隔离、发票和人工确认催收 | STEP-1 / STEP-2 DONE；见[后端运行与验证](BACKEND.md)，前端与付款核对仍待实施 |
 
 后续范围、接口、指标或分工变化追加记录，并关联 Issue/PR；保留旧决定及取代原因，不覆盖历史。

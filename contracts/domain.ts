@@ -1,4 +1,4 @@
-/** Contract v1.0.0. All services are planned; these are DTOs, not implementations. */
+/** Contract v1.0.0 shared DTOs. See api.ts for implemented endpoint status. */
 export type Id = string;
 /** Safe integer MYR minor units. Financial entity amounts are positive unless stated. */
 export type Sen = number;

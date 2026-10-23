@@ -4,7 +4,7 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**契约 v1.0.0 已形成，等待团队在 [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) 复核；应用尚未实现，目前不可运行。** 旧实现已在本地备份并从 `main` 移除；旧版测试结果不能证明重建版可用。
+**第一、二步已完成：契约 v1.0.0，以及可运行的开票／催收 API 和 SQLite 持久化。** 前端、凭证匹配、提取和现金流实现仍待开发。旧实现已在本地备份；旧版测试结果不能证明重建版可用。
 
 本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
 
@@ -25,6 +25,7 @@
 | --- | --- |
 | GitHub 仓库 | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
 | 共享契约 | [契约说明](docs/CONTRACT.md) · [类型、规则与样例](contracts/) |
+| 后端 API | [启动、配置与已实现接口](docs/BACKEND.md) |
 | 合成数据 | [演示 seed](data/seed/README.md) · [评测输入与独立 gold](data/eval/README.md) |
 | Replit 项目 | 待补充 |
 | 在线演示 | 待补充 |
@@ -50,32 +51,35 @@
 - **凭证审核：** 展示提取字段、银行入账候选、重复与不一致情况，并提供人工降级入口。
 - **收款跟踪：** 经批准的部分／全额付款分配、剩余欠款及可追溯的现金流预测。
 
-以上功能均处于规划阶段，尚未完成实现验证。
+开票与催收 API 已实现；凭证审核、付款分配、预测及前端仍待开发。
 
 ### 技术栈
 
-| 层级 | 计划采用的技术 |
+| 层级 | 技术／状态 |
 | --- | --- |
 | 前端 | React + TypeScript + Vite；实现在 `web/` 中 |
-| 后端 | Node.js 22.13+ |
-| 数据库 | SQLite |
-| AI／计算 | 本地 OCR 与服务端 DeepSeek；具体版本和能力待验证 |
+| 后端 | Node.js 22.13+；HTTP API 可运行 |
+| 数据库 | SQLite；演示数据持久化与事务 |
+| AI／计算 | 无密钥可用催款模板；可选服务端 DeepSeek 适配器，真实调用未验证；OCR 待开发 |
 | 托管／开发 | Replit 使用与部署待验证 |
 
 ## 项目结构
 
-现有契约、数据和文档入口：
+现有实现、数据和文档入口：
 
 ```text
 .
 ├── README.md / README.zh-CN.md
 ├── CONTRIBUTING.md
+├── src/                        # HTTP API、业务操作与 SQLite 存储
+├── scripts/                    # 数据库初始化与重置
+├── tests/                      # HTTP 与持久化测试
 ├── contracts/                  # v1.0.0 类型、规则、样例与校验
 ├── data/seed/                  # 合成演示状态与银行 CSV
 ├── data/eval/                  # 评测输入及独立 gold 标签
 ├── docs/
 │   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
-│   ├── CONTRACT.md
+│   ├── CONTRACT.md / BACKEND.md
 │   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # 八个实施任务
@@ -83,7 +87,7 @@
 └── LICENSE
 ```
 
-应用实现目录 `src/`、`web/` 及后续实现测试／评测工具目前尚不可运行。计划文件名见[提交材料清单](submission/README.md)；PDF 只会在完成并核查后加入。
+`src/` 中的 API 可在本地运行；`web/` 前端是下一步开发任务。计划提交文件见[提交材料清单](submission/README.md)。
 
 ### 架构
 
@@ -102,20 +106,33 @@
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
+npm ci
+cp .env.example .env
+npm run db:init
+npm start
 ```
 
-目前没有应用启动命令。可以先阅读共享契约和合成数据，并执行下方校验；应用安装和配置说明会随可运行的实现补充。
+访问 `http://localhost:3000/health` 检查服务。以下七个操作已实现；请求头和调用示例见[后端说明](docs/BACKEND.md)：
+
+- `GET /api/demo-users`、`GET /api/workspace`
+- `POST /api/milestones/:id/complete`、`POST /api/milestones/:id/invoice-draft`
+- `POST /api/invoices/:id/decision`
+- `POST /api/invoices/:id/reminders`、`POST /api/reminders/:id/send`
+
+消息发送为模拟。其余契约端点仍待实现，前端和部署尚未完成；没有 API 密钥也可使用催款模板。
 
 ### 运行测试
 
 在仓库根目录执行：
 
 ```bash
+npm run check
+npm test
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-该命令检查 TypeScript 契约，并执行 13 组结构／数据一致性校验。它**不是应用实现测试**，不会运行 OCR、DeepSeek，也不能证明 matcher 或现金流预测已实现、达到准确率目标。实现测试与量化评测将在对应 Issue 中补充。
+类型检查、8 项 HTTP／SQLite 测试和 13 组契约／数据校验已通过。这些检查不代表真实 DeepSeek 调用、OCR、匹配、预测、前端或部署已经验证。
 
 ## 我们如何使用 Replit
 
@@ -140,7 +157,7 @@ npm --prefix contracts run check
 | --- | --- | --- |
 | 正式注册名单待确认 | 任务认领待确认 | 待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。先在 #17 复核 v1.0.0 契约与数据；团队确认共同基线后，前端 mock 与后端实现可以并行。线框设计和复核现在就可以开始。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。共享契约与后端基础已就绪：前端可以对接七个已实现操作，剩余流程使用同一契约的 fixtures。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
@@ -148,8 +165,8 @@ npm --prefix contracts run check
 
 | 步骤 | Issue | 交付内容 |
 | --- | --- | --- |
-| 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | 范围、数据、API 契约与测试样例 |
-| 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | 后端、开票、催收与权限 |
+| 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | 已完成 — 范围、数据、API 契约与测试样例 |
+| 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | 已完成 — 后端、开票、催收与权限 |
 | 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | 前端设计、开发与 API 对接 |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 银行 CSV 与确定性匹配 |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | OCR、AI 提取及人工降级 |

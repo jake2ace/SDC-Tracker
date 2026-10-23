@@ -1,11 +1,11 @@
 # Proof-to-Cash contract v1.0.0
 
-对应 [STEP-1 / #17](https://github.com/jake2ace/SDC-Tracker/issues/17)。**所有端点均为 planned，当前只有共享类型、规则和合成 fixtures，没有可运行后端或前端。** 本文中的阈值、接口和技术栈是团队可复核的工程约定，不是 PDF 原文规定，也不是功能已通过验证的声明。
+对应 [STEP-1 / #17](https://github.com/jake2ace/SDC-Tracker/issues/17)。**STEP-2 已实现身份列表、工作区和五个开票／催收写接口；其余十个接口仍为 planned，前端尚未实现。** 按 `contracts/api.ts` 的逐端点 status 区分能力；后端运行方式见[运行说明](BACKEND.md)。本文中的阈值、接口和技术栈是工程约定，不是 PDF 原文规定。
 
 ## 文件与版本
 
 - `contracts/domain.ts`：实体、AI 输入输出、matcher 与 forecast 输入输出类型。
-- `contracts/api.ts`：请求、响应、错误、端点及角色矩阵，`ENDPOINTS[*].status = planned`。
+- `contracts/api.ts`：请求、响应、错误、端点及角色矩阵，逐项标注 implemented 或 planned。
 - `contracts/rules.json`：金额、时间、幂等、匹配、CSV、上传、AI 和预测规则。
 - `contracts/ai.schema.json`：JSON Schema 2020-12；根校验 `aiInput`，`$defs` 分别校验三类模型输出。
 - `contracts/fixtures.json`：独立场景和完整 `Workspace` 快照。`stateId` 是场景前置，`nextStateId` 是成功后状态；失败不得改变业务状态。成功写操作的后置快照继承前置日志并追加审计事件；错误样例保留业务快照，实际服务可另外追加拒绝尝试日志。
@@ -50,7 +50,7 @@ Match 本版没有独立的“保存拒绝”操作；不批准／关闭核对�
 
 默认 JSON 请求／响应使用 `application/json`，写请求必须有 `X-Demo-User` 和 `Idempotency-Key`。multipart 的数值和 ID 是字符串表单项，由服务器严格解析。所有列表对当前合成演示提供完整公司快照，不另造分页 API。
 
-| Operation ID | Planned endpoint | 写角色／读取 | 成功数据与 HTTP |
+| Operation ID | Contract endpoint | 写角色／读取 | 成功数据与 HTTP |
 | --- | --- | --- | --- |
 | listDemoUsers | GET `/api/demo-users` | 公开合成身份项 | `{users}`，200 |
 | getWorkspace | GET `/api/workspace` | 全角色／当前公司 | Workspace，200 |
@@ -173,4 +173,4 @@ Lumen 主例：发票 1,800,000 sen；确认 900,000 sen 后余款 900,000 sen�
 
 multipart fixture 使用文件描述符代替 JSON 假 Blob。截图二进制尚未生成，标为 planned_not_generated；图像生成与 OCR 实测属于后续步骤。不能用占位 hash 或文件名声称已经跑通 OCR。
 
-当前可验收的是契约类型、格式、场景一致性和独立 gold 算术。实际匹配率、OCR 准确率、真实 AI 调用、人工耗时、部署及端到端行为必须由后续实现另行验证，不能把 contract fixtures 当作通过结果。
+契约样例可验收类型、格式、场景一致性和独立 gold 算术。STEP-2 的运行结果单独记录在[后端说明](BACKEND.md)。实际匹配率、OCR 准确率、真实 AI 调用、人工耗时、部署及完整端到端行为必须由后续实现另行验证，不能把 contract fixtures 当作通过结果。

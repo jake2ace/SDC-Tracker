@@ -1,10 +1,10 @@
 # STEP-1 contract validation
 
-Date: 2026-10-23 · Contract: v1.0.0 · Status: ready for team review
+Date: 2026-10-23 · Contract: v1.0.0 · Historical STEP-1 validation snapshot
 
 ## Scope
 
-This check covers shared types, static fixtures and synthetic evaluation data. All API endpoints are planned. No application, OCR engine, external model, matcher implementation or deployment was executed.
+This check covered shared types, static fixtures and synthetic evaluation data before STEP-2 implementation. All API endpoints were planned at that point. No application, OCR engine, external model, matcher implementation or deployment was executed by this check. Current backend evidence is recorded separately in [BACKEND.md](BACKEND.md).
 
 ## Reproduce
 
@@ -35,4 +35,4 @@ The recorded run used Node.js 25.8.1, npm 11.11.0, TypeScript 5.9.3 and Ajv 8.20
 | Matcher | 30 independent inputs and gold labels, including future bank posting | Actual matcher implementation and execution against gold |
 | Forecast | Four input scenarios and 40 daily gold rows | Actual forecast service and comparison against gold |
 
-No extraction accuracy, matcher pass rate, time saved or deployed availability is claimed. Team review of scope and examples remains pending in [#17](https://github.com/jake2ace/SDC-Tracker/issues/17); frontend and backend implementation follow that review.
+No extraction accuracy, matcher pass rate, time saved or deployed availability is claimed. The user subsequently authorized merging [PR #28](https://github.com/jake2ace/SDC-Tracker/pull/28) and continuing implementation without waiting for an additional review. [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) is complete; this does not claim that another team member reviewed it.

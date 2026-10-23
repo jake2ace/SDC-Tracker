@@ -40,7 +40,7 @@ git switch -c work/issue-17-payment-cases
 
 Keep the change focused. Commit only the files you intend to share, push your branch and open a pull request targeting `main`. Link the issue with `Refs #17` (replace the number as appropriate), explain what changed and include what you checked. Use `Closes #17` only when the PR completes the entire issue's acceptance criteria.
 
-Request review from the team before merging. Keep work marked as in progress until the relevant checks and review are complete. Do not push unfinished work directly to `main`.
+Use a focused PR with the relevant validation evidence. Keep incomplete work marked as in progress. The current STEP-1/STEP-2 delivery is authorized to merge after implementation and essential checks without an additional review gate; record actual reviews only when they happen.
 
 ## Useful work you can start now
 
@@ -50,7 +50,7 @@ Request review from the team before merging. Keep work marked as in progress unt
 | Independent calculations | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17), [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Hand-calculated invoice balances and cash forecasts with clear assumptions |
 | Test preparation and review | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Test scenarios now; actual observations, timings, failures and evidence once the relevant feature runs |
 | Documentation and demo preparation | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Product explanation, submission checklist, slide outline or demo script that distinguishes planned and working features |
-| Frontend design | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Agree wireframes and UI states with the frontend task owner; functional mock/API work waits for #17's shared contract to freeze |
+| Frontend design | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Use the frozen shared contract, build UI states, and integrate the seven working backend endpoints; keep later endpoints explicitly mocked |
 
 You do not need to code to prepare cases, check calculations, review test evidence or help explain the product. Draft cases can begin now; machine-readable fixtures must follow the agreed contract. Record only work actually performed and results actually observed.
 

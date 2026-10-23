@@ -1,0 +1,19 @@
+{
+  "name": "milestone2cash-proof-to-cash",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "start": "node --experimental-strip-types --env-file-if-exists=.env src/server.ts",
+    "dev": "node --watch --experimental-strip-types --env-file-if-exists=.env src/server.ts",
+    "db:init": "node --experimental-strip-types --env-file-if-exists=.env scripts/database.ts",
+    "db:reset": "node --experimental-strip-types --env-file-if-exists=.env scripts/database.ts --reset",
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3"
+  }
+}
