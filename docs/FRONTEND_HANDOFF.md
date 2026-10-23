@@ -1,6 +1,6 @@
 # 前端设计与开发：Milestone2Cash Proof-to-Cash
 
-状态：STEP-1、STEP-2、STEP-4 已完成；前端可开始 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。九个身份、开票、催收、CSV 与匹配接口已实现；凭证录入等其余流程使用契约 fixtures。接口详情见[后端说明](BACKEND.md)。
+状态：STEP-1、STEP-2、STEP-4、STEP-5 已实现；前端继续 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。十四个接口可用，现已支持客户回复、凭证上传、原图查看与人工修正。付款审批、承诺确认和预测继续使用契约 fixtures。接口详情见[后端说明](BACKEND.md)与[第五步说明](EXTRACTION.md)。
 
 ## 开发任务
 
@@ -33,7 +33,7 @@ npm run db:init
 npm start
 ```
 
-服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。另外已实现 `POST /api/bank-statements` 和 `POST /api/receipts/:id/match`，使用说明见 [BANK_MATCHING.md](BANK_MATCHING.md)。凭证上传、提取及付款审批等端点仍为 planned。无密钥可用模板 fallback，真实 DeepSeek 调用与部署尚未验证。
+服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。另外已实现 `POST /api/bank-statements` 和 `POST /api/receipts/:id/match`，使用说明见 [BANK_MATCHING.md](BANK_MATCHING.md)。现已增加回复创建与修正、凭证上传与修正、原图读取五个端点。无密钥时回复／凭证转人工审核；付款审批、承诺确认和预测仍为 planned。提取证据和调用例子见 [EXTRACTION.md](EXTRACTION.md)。
 
 - `mock` 与 `api` 使用同一套已冻结 DTO 和前端访问接口；替换数据来源不应改页面业务逻辑。
 - mock 数据必须来自团队批准的合成 fixtures，覆盖正常和异常情形；不要用另一套更“方便”的字段隐藏集成问题。
@@ -83,7 +83,7 @@ npm start
 5. 录入并确认余款付款承诺，查看现金流变化及活动日志。
 6. 切换第二家公司，证明同一套界面和逻辑可复用。
 
-演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。匹配 API 需要已存在的收据；收据上传尚未实现，当前 seed 没有收据，凭证录入、付款审批和现金流继续使用 mock。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
+演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。当前 seed 没有收据；先上传 `data/eval/images/` 中的合成图片，或通过人工修正补全字段，再调用匹配 API。付款审批、承诺确认和现金流继续使用 mock。原图端点需要 `X-Demo-User`，请先带身份 fetch 后创建 Blob URL，并在切换公司时撤销 URL。上传或提取可能耗时，应保留进度和可重试状态；重复请求复用原幂等 key。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
 
 ## 前端交付标准
 

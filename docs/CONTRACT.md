@@ -1,6 +1,6 @@
 # Proof-to-Cash contract v1.0.0
 
-对应 [STEP-1 / #17](https://github.com/jake2ace/SDC-Tracker/issues/17)。**STEP-2 的七个接口与 STEP-4 的 CSV 导入、匹配接口已实现；其余八个接口仍为 planned。** 按 `contracts/api.ts` 的逐端点 status 区分能力；后端运行方式见[运行说明](BACKEND.md)，导入和匹配见[第四步说明](BANK_MATCHING.md)。本文中的阈值、接口和技术栈是工程约定，不是 PDF 原文规定。
+对应 [STEP-1 / #17](https://github.com/jake2ace/SDC-Tracker/issues/17)。**STEP-2、STEP-4 和 STEP-5 共十四个接口已实现；付款审批、承诺确认及预测三个接口仍为 planned。** 按 `contracts/api.ts` 的逐端点 status 区分能力；后端运行方式见[运行说明](BACKEND.md)，导入和匹配见[第四步说明](BANK_MATCHING.md)。本文中的阈值、接口和技术栈是工程约定，不是 PDF 原文规定。
 
 ## 文件与版本
 
@@ -171,6 +171,6 @@ Lumen 主例：发票 1,800,000 sen；确认 900,000 sen 后余款 900,000 sen�
 
 前端数据访问层用同一 `ApiOperations` DTO 对接 mock/api。fixtures 场景必须独立重置或按指定 nextStateId 过渡；不能把相互独立的全额与部分付款场景连起来。同公司换角色可在验证身份后替换 actor；**跨公司切换必须载入对应公司的整份 Workspace**，清理旧详情、上传、选中项和缓存，不能只替换 actor。actor.companyId 必须与 workspace.company.id 一致；fixtures 提供 Lumen 与 Rantau 两份完整工作区，不能把 Lumen 账本挂到 Rantau 身份下，也不能把 fixture 内的 Finance actor 当作实际权限。
 
-multipart fixture 使用文件描述符代替 JSON 假 Blob。截图二进制尚未生成，标为 planned_not_generated；图像生成与 OCR 实测属于后续步骤。不能用占位 hash 或文件名声称已经跑通 OCR。
+multipart fixture 使用文件描述符代替 JSON 假 Blob。原始图片计划保持冻结；第五步生成的 40 张实际图片及 hash 单独记录在 `data/eval/receipts.generated.json`，运行证据见[第五步说明](EXTRACTION.md)。不能用占位 hash 或文件名声称已经跑通 OCR。
 
 契约样例可验收类型、格式、场景一致性和独立 gold 算术。STEP-2 的运行结果单独记录在[后端说明](BACKEND.md)。实际匹配率、OCR 准确率、真实 AI 调用、人工耗时、部署及完整端到端行为必须由后续实现另行验证，不能把 contract fixtures 当作通过结果。

@@ -1,6 +1,6 @@
 # Milestone2Cash Proof-to-Cash 产品规格
 
-状态：STEP-1、STEP-2、STEP-4 已完成，开票／催收、CSV 导入与匹配建议 API 可在本地运行；前端独立开发，凭证录入、付款与预测仍待实施。实现规则见[契约说明](CONTRACT.md)，运行和已实现操作见[后端说明](BACKEND.md)。完整任务为 #17–#24，见[八步计划](ISSUE_PLAN.md)。
+状态：STEP-1、STEP-2、STEP-4、STEP-5 已实现，开票／催收、CSV 导入、匹配建议、凭证上传和回复提取 API 可在本地运行；前端独立开发，付款审批与预测仍待实施。实现规则见[契约说明](CONTRACT.md)，运行和已实现操作见[后端说明](BACKEND.md)。完整任务为 #17–#24，见[八步计划](ISSUE_PLAN.md)。
 
 ## 决策与来源
 

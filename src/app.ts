@@ -1,7 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { createHash, randomUUID } from "node:crypto";
 import { CONTRACT_VERSION, DEMO_CLOCK, ENDPOINTS } from "../contracts/api.ts";
-import type { DemoUser } from "../contracts/domain.ts";
+import type { DemoUser, Receipt } from "../contracts/domain.ts";
 import { Store, type EntityKind } from "./store.ts";
 import { AppError } from "./errors.ts";
 import { executeOperation, prepareReminder, type Context, type Operation } from "./operations.ts";
@@ -9,15 +9,21 @@ import { createReminderProvider, type ReminderProvider } from "./reminder-provid
 import { readBankUpload, type BankUpload } from "./multipart.ts";
 import { importBankStatement } from "./bank-import.ts";
 import { runReceiptMatch } from "./reconciliation-match.ts";
+import { readReceiptUpload, type ReceiptUpload } from "./receipt-upload.ts";
+import { createExtractionProvider, type ExtractionProvider } from "./extraction-provider.ts";
+import { createLocalOcrProvider, type OcrProvider } from "./receipt-image.ts";
+import { prepareReply, createReply, prepareReceipt, saveReceipt, correctReply, correctReceipt } from "./evidence-operations.ts";
 
 interface AppOptions {
   dbPath: string;
   clock?: string;
   reminderProvider?: ReminderProvider;
   frontendOrigin?: string;
+  extractionProvider?: ExtractionProvider;
+  ocrProvider?: OcrProvider;
 }
 
-type WriteOperation = Operation | "importBankStatement" | "runMatch";
+type WriteOperation = Operation | "importBankStatement" | "runMatch" | "createReply" | "correctReply" | "uploadReceipt" | "correctReceipt";
 const writes: { operation: WriteOperation; route: RegExp; kind: EntityKind | "company" }[] = [
   { operation: "completeMilestone", route: /^\/api\/milestones\/([^/]+)\/complete$/, kind: "milestones" },
   { operation: "createInvoiceDraft", route: /^\/api\/milestones\/([^/]+)\/invoice-draft$/, kind: "milestones" },
@@ -26,6 +32,10 @@ const writes: { operation: WriteOperation; route: RegExp; kind: EntityKind | "co
   { operation: "sendReminder", route: /^\/api\/reminders\/([^/]+)\/send$/, kind: "reminders" },
   { operation: "importBankStatement", route: /^\/api\/bank-statements$/, kind: "company" },
   { operation: "runMatch", route: /^\/api\/receipts\/([^/]+)\/match$/, kind: "receipts" },
+  { operation: "createReply", route: /^\/api\/invoices\/([^/]+)\/replies$/, kind: "invoices" },
+  { operation: "correctReply", route: /^\/api\/replies\/([^/]+)\/extraction$/, kind: "replies" },
+  { operation: "uploadReceipt", route: /^\/api\/invoices\/([^/]+)\/receipts$/, kind: "invoices" },
+  { operation: "correctReceipt", route: /^\/api\/receipts\/([^/]+)\/evidence$/, kind: "receipts" },
 ];
 
 // JSON values parsed by this service use ECMAScript number/string serialization;
@@ -83,6 +93,11 @@ export async function createApp(options: AppOptions) {
     timeoutMs: Number(process.env.DEEPSEEK_TIMEOUT_MS ?? 10000),
   });
   const pending = new Set<string>();
+  const extractionProvider = options.extractionProvider ?? createExtractionProvider({
+    apiKey: process.env.DEEPSEEK_API_KEY, baseUrl: process.env.DEEPSEEK_BASE_URL,
+    model: process.env.DEEPSEEK_MODEL, timeoutMs: Number(process.env.DEEPSEEK_TIMEOUT_MS ?? 10000),
+  });
+  const ocrProvider = options.ocrProvider ?? createLocalOcrProvider();
   const frontendOrigin = options.frontendOrigin ?? process.env.FRONTEND_ORIGIN;
   const server = createServer((req, res) => { void handle(req, res); });
 
@@ -104,7 +119,7 @@ export async function createApp(options: AppOptions) {
         res.setHeader("Access-Control-Allow-Origin", origin);
         res.setHeader("Vary", "Origin");
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-Demo-User, Idempotency-Key");
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, OPTIONS");
       }
       if (req.method === "OPTIONS") {
         if (!origin || origin !== frontendOrigin) throw new AppError(403, "FORBIDDEN", "Origin is not enabled.");
@@ -126,7 +141,16 @@ export async function createApp(options: AppOptions) {
       if (req.method === "GET" && path === ENDPOINTS.getWorkspace.path) {
         success(200, store.getWorkspace(actor)); return;
       }
-      const route = req.method === "POST" ? writes.find((x) => x.route.test(path)) : undefined;
+      const imageRoute = /^\/api\/receipts\/([^/]+)\/image$/.exec(path);
+      if (req.method === "GET" && imageRoute) {
+        const receipt = store.get<Receipt>("receipts", imageRoute[1], actor.companyId);
+        const image = receipt && store.getReceiptArtifact(receipt.id, actor.companyId);
+        if (!image) throw new AppError(404, "NOT_FOUND", "Image not found.");
+        res.writeHead(200, { "Content-Type": image.mimeType, "Content-Length": image.bytes.byteLength,
+          "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Content-Disposition": "inline" });
+        res.end(image.bytes); return;
+      }
+      const route = writes.find(x => ENDPOINTS[x.operation].method === req.method && x.route.test(path));
       if (!route) throw new AppError(404, "NOT_FOUND", "Endpoint not found.");
       operation = route.operation;
       const id = route.kind === "company" ? actor.companyId : route.route.exec(path)![1];
@@ -139,13 +163,17 @@ export async function createApp(options: AppOptions) {
       if (typeof key !== "string" || !/^[A-Za-z0-9._:-]{8,128}$/.test(key)) {
         throw new AppError(422, "IDEMPOTENCY_KEY_REQUIRED", "Provide an Idempotency-Key of 8–128 allowed characters.");
       }
-      const body = route.operation === "importBankStatement" ? await readBankUpload(req) : await bodyFrom(req);
+      const body = route.operation === "importBankStatement" ? await readBankUpload(req)
+        : route.operation === "uploadReceipt" ? await readReceiptUpload(req) : await bodyFrom(req);
       const upload = route.operation === "importBankStatement" ? body as BankUpload : undefined;
-      const canonicalBody = upload ? canonical({
-        expectedVersion: String(upload.expectedVersion), mimeType: upload.file.mimeType,
-        fileSha256: createHash("sha256").update(upload.file.bytes).digest("hex"),
+      const receiptUpload = route.operation === "uploadReceipt" ? body as ReceiptUpload : undefined;
+      const fileUpload = upload ?? receiptUpload;
+      const canonicalBody = fileUpload ? canonical({
+        expectedVersion: String(fileUpload.expectedVersion), mimeType: fileUpload.file.mimeType,
+        fileSha256: createHash("sha256").update(fileUpload.file.bytes).digest("hex"),
+        ...(receiptUpload?.replyId ? { replyId: receiptUpload.replyId, expectedReplyVersion: String(receiptUpload.expectedReplyVersion) } : {}),
       }) : canonical(body);
-      const fingerprint = createHash("sha256").update(`POST\n${path}\n${canonicalBody}`).digest("hex");
+      const fingerprint = createHash("sha256").update(`${req.method}\n${path}\n${canonicalBody}`).digest("hex");
       const stored = store.getIdempotency(actor.companyId, actor.id, key);
       if (stored) {
         if (stored.fingerprint !== fingerprint) throw new AppError(409, "IDEMPOTENCY_CONFLICT", "This key belongs to another request.");
@@ -156,6 +184,8 @@ export async function createApp(options: AppOptions) {
       pending.add(pendingKey); ownedPending = pendingKey;
       const ctx: Context = { store, actor, now, requestId };
       const prepared = route.operation === "generateReminder" ? await prepareReminder(ctx, id, body, provider) : undefined;
+      const preparedReply = route.operation === "createReply" ? await prepareReply(ctx, id, body, extractionProvider) : undefined;
+      const preparedReceipt = receiptUpload ? await prepareReceipt(ctx, id, receiptUpload, ocrProvider, extractionProvider) : undefined;
       const result = store.transaction(() => {
         // Another process may have committed while generation was awaiting I/O.
         const cached = store.getIdempotency(actor!.companyId, actor!.id, key);
@@ -165,6 +195,10 @@ export async function createApp(options: AppOptions) {
         }
         const data = route.operation === "importBankStatement" ? importBankStatement(ctx, upload!)
           : route.operation === "runMatch" ? runReceiptMatch(ctx, id, body)
+          : route.operation === "createReply" ? createReply(ctx, id, body, preparedReply!)
+          : route.operation === "correctReply" ? correctReply(ctx, id, body)
+          : route.operation === "uploadReceipt" ? saveReceipt(ctx, id, receiptUpload!, preparedReceipt!)
+          : route.operation === "correctReceipt" ? correctReceipt(ctx, id, body)
           : executeOperation(ctx, route.operation, id, body, prepared);
         store.saveIdempotency(actor!.companyId, actor!.id, key, fingerprint, endpoint.successStatus, data);
         return { status: endpoint.successStatus, data, replayed: false };

@@ -1,6 +1,6 @@
 # Backend foundation
 
-The backend implements nine contract endpoints: demo users, workspace, milestone completion, invoice drafting, invoice approval/rejection, reminder drafting, confirmed simulated sending, bank CSV import and matching proposals. It also exposes `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for the two STEP-4 operations. Frontend pages, receipt ingestion, payment approval and forecasts are later steps.
+The backend implements fourteen contract endpoints, including receipt uploads, authorized original images, reply extraction and manual corrections. It also exposes `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for STEP-4 and [EXTRACTION.md](EXTRACTION.md) for STEP-5. Frontend pages are developed separately; payment approval, promise confirmation and forecasts remain planned.
 
 ## Run locally
 
@@ -56,7 +56,7 @@ npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-The backend tests exercise actual local HTTP requests and SQLite files, including restart behavior. The separate contract command checks types and static data; it does not execute the future matcher or OCR workflow.
+The backend tests exercise actual local HTTP requests and SQLite files, including restart behavior. STEP-5 scenarios are separated under `tests/integration/`. The separate contract command checks types and static data; it does not execute the matcher or OCR workflow.
 
 Verified on 2026-10-23 with Node.js 25.8.1 and npm 11.11.0: strict type checking, all 8 grouped backend tests, and all 13 contract/data groups passed. The backend tests cover role/tenant rejection, strict requests, a connected invoice-to-reminder workflow, stale versions, duplicate/replayed writes, collection eligibility, fallback generation, restart persistence and transaction rollback. Injected provider responses test both success and fallback without calling a real model.
 
