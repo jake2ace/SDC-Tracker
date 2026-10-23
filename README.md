@@ -4,7 +4,7 @@
 
 > Help Malaysian service micro-businesses invoice completed work, follow up on overdue balances and check payment claims against bank records before recording payment.
 
-**Steps 1, 2, 4, 5 and 6 are implemented: all seventeen backend contract operations, including reviewed payment allocation, partial balances, payment promises and 30-day forecasts.** Frontend integration and deployment remain separate work. The old implementation is backed up locally; its test results do not validate this rebuild.
+**The frontend now connects all seventeen backend contract operations, including reviewed payment allocation, partial balances, payment promises and 30-day forecasts.** Local integration results are recorded in the [STEP-7 report](docs/evaluation/STEP7-INTEGRATION.md). Ten manual workflow timings and a team member's review remain pending; deployment and submission are separate tasks.
 
 This README follows the section order of the [SDC submission template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md). Template alignment does not mean submission requirements are complete.
 
@@ -26,6 +26,7 @@ This README follows the section order of the [SDC submission template](https://g
 | GitHub Repository | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
 | Shared Contract | [Contract guide](docs/CONTRACT.md) · [types, rules and fixtures](contracts/) |
 | Backend API | [Startup, configuration and implemented endpoints](docs/BACKEND.md) |
+| Local Integration | [Browser, API and model validation](docs/evaluation/STEP7-INTEGRATION.md) |
 | Synthetic Data | [Demo seed](data/seed/README.md) · [evaluation inputs and separate gold](data/eval/README.md) |
 | Replit Project | Pending |
 | Live Demo | Pending |
@@ -41,7 +42,7 @@ Small service businesses must track milestone invoices and overdue balances. A c
 
 ### Solution
 
-The planned flow is: **milestone completed → invoice draft → Owner approval → overdue reminder draft → Finance confirms simulated sending → customer reply or screenshot → OCR and field extraction → bank-record matching → Finance approves payment allocation → balance, reminders, 30-day forecast and audit log update.**
+The application flow is: **milestone completed → invoice draft → Owner approval → overdue reminder draft → Finance confirms simulated sending → customer reply or screenshot → OCR and field extraction → bank-record matching → Finance approves payment allocation → balance, reminders, 30-day forecast and audit log update.**
 
 The new focus is payment-proof checking: AI helps read the claim, rules explain the match, and a person approves the entry. Partial payments leave the remaining balance outstanding. The prototype uses team-created synthetic data and simulated sending and bank data, with no real payments or bank integration.
 
@@ -51,14 +52,14 @@ The new focus is payment-proof checking: AI helps read the claim, rules explain 
 - **Proof review:** extracted fields, bank-credit candidates, duplicates, mismatches and manual fallback.
 - **Payment tracking:** approved partial/full allocations, remaining balances and traceable cash forecasts.
 
-The API connects invoicing, collections, receipt extraction, bank matching, Finance-approved payment allocation, remaining balances and cash forecasts. Frontend development is separate.
+The browser UI connects invoicing, collections, receipt extraction, bank matching, Finance-approved payment allocation, remaining balances and cash forecasts through the shared API contract.
 
 ### Tech Stack
 
 | Layer | Technology / status |
 | --- | --- |
 | Frontend | React + TypeScript + Vite, in `web/` |
-| Backend | Node.js 22.13+; runnable HTTP API |
+| Backend | Node.js HTTP API; Node.js 24 LTS recommended |
 | Database | SQLite; persistent demo data and transactions |
 | AI / Compute | Bundled local Tesseract OCR; server-side DeepSeek extraction; explicit manual fallback without a key |
 | Hosting / Dev | Replit use and deployment to be verified |
@@ -72,8 +73,9 @@ Current implementation, data and documentation entry points:
 ├── README.md / README.zh-CN.md
 ├── CONTRIBUTING.md
 ├── src/                        # HTTP API, business operations and SQLite store
-├── scripts/                    # Database initialization and reset
-├── tests/                      # HTTP and persistence tests; STEP-5 in tests/integration/
+├── scripts/                    # Database tools and independent evaluators
+├── tests/integration/          # API, persistence and browser integration tests
+├── web/                        # React UI; separate frontend unit tests in web/tests/
 ├── contracts/                  # v1.0.0 types, rules, fixtures and checks
 ├── data/seed/                  # Synthetic demo state and bank CSVs
 ├── data/eval/                  # Evaluation inputs and separate gold labels
@@ -87,11 +89,11 @@ Current implementation, data and documentation entry points:
 └── LICENSE
 ```
 
-The API in `src/` runs locally; `web/` is the next development step. See the [submission document checklist](submission/README.md) for planned materials.
+The API in `src/` and UI in `web/` run locally. Test code stays outside production modules. See the [submission document checklist](submission/README.md) for planned materials.
 
 ### Architecture
 
-Planned: **browser UI → Node.js API → SQLite**. The server runs OCR, calls DeepSeek for allowed extraction tasks, and matches imported synthetic bank credits. Human approval gates ledger and forecast updates. See [the product specification](docs/PRODUCT_SPEC.md).
+**Browser UI → Node.js API → SQLite.** The server runs OCR, calls DeepSeek for allowed extraction tasks, and matches imported synthetic bank credits. Human approval gates ledger and forecast updates. See [the product specification](docs/PRODUCT_SPEC.md).
 
 ## How to Run
 
@@ -101,16 +103,22 @@ Not available yet. The Replit project, configuration and verified instructions w
 
 ### Option 2 — Run Locally
 
-With Node.js 22.13+ and npm, clone the repository:
+Use Node.js 24 LTS and npm. Clone the repository and start the API:
 
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
 npm ci
-cp .env.example .env
+npm ci --prefix web
+# Keep an existing .env and its server-side key.
+test -f .env || cp .env.example .env
 npm run db:init
 npm start
 ```
+
+In a second terminal, run `npm run dev:web` from the repository root and open `http://localhost:5173`. The demo sign-in screen opens the workspace; select a demo identity to work as PM, Owner or Finance. The UI defaults to the real local API. Add `?source=mock` and reload only when you want fixed fixture scenarios.
+
+Set `DEEPSEEK_API_KEY` in the root `.env` and keep `DEEPSEEK_MODEL=deepseek-flash`; the key stays server-side and must not be placed in `web/` or any `VITE_` variable. Without a usable model, reminders use an identified template and evidence can be reviewed manually.
 
 Check `http://localhost:3000/health`. The API provides seventeen operations; examples are in the [backend guide](docs/BACKEND.md), [bank matching guide](docs/BANK_MATCHING.md), [receipt/reply guide](docs/EXTRACTION.md) and [payment/forecast guide](docs/RECONCILIATION.md):
 
@@ -125,7 +133,7 @@ Check `http://localhost:3000/health`. The API provides seventeen operations; exa
 - `POST /api/matches/:id/approve-payment` and `POST /api/replies/:id/confirm-promise`
 - `GET /api/forecast?asOfDate=2026-10-23&delayDays=7`
 
-Sending and payment recording are simulated. All contract endpoints are implemented; frontend integration and deployment are not yet verified. Reminder templates and manual evidence review work without an API key.
+Sending and payment recording are simulated. The local integration report distinguishes browser checks, real model calls and injected failure tests. No deployed application is claimed. The demo clock is fixed at 23 October 2026; the UI reads it from the API rather than the computer's date.
 
 ### Run Tests
 
@@ -134,13 +142,16 @@ From the repository root:
 ```bash
 npm run check
 npm test
+npm run test:web
+npm run test:e2e
+npm run build
 npm run evaluate:matcher
 npm run evaluate:forecast
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-Backend and separate integration tests cover persistence, permissions, evidence uploads, extraction fallback and manual corrections. The 30 frozen matcher cases and contract checks remain separate. [Extraction evidence](docs/EXTRACTION.md) distinguishes local OCR, actual model responses and injected tests; synthetic accuracy does not establish production accuracy.
+The browser suite lives in `tests/integration/browser/`; frontend unit tests live in `web/tests/`. If Chromium is not installed for Playwright, run `npx playwright install chromium` once before `test:e2e`. Backend tests cover persistence, permissions, evidence uploads, extraction fallback and manual corrections. The 30 frozen matcher cases and contract checks remain separate. [Integration evidence](docs/evaluation/STEP7-INTEGRATION.md) and [extraction evidence](docs/EXTRACTION.md) distinguish local OCR, actual model responses and injected tests; synthetic accuracy does not establish production accuracy.
 
 ## How We Use Replit
 
@@ -152,7 +163,7 @@ RunPod has not been used for this rebuild; the planned MVP has no GPU workload. 
 
 ## Challenges & Learnings
 
-Planning findings: a receipt is a claim to verify, partial payments must preserve the remainder, and frontend/backend work needs a shared contract. Implementation challenges and measured results will be recorded when observed.
+A receipt is a claim to verify, partial payments must preserve the remainder, and an interrupted response does not prove a write failed. Integration work adds safe retries, explicit recovery after a failed workspace refresh, identity-scoped state and source-aware cash forecasts. Manual workflow timing and member review will be recorded only after they occur.
 
 ## Future Improvements
 
@@ -165,7 +176,7 @@ Planning findings: a receipt is a claim to verify, partial payments must preserv
 | --- | --- | --- |
 | Registered roster pending confirmation | Task ownership pending confirmation | Pending confirmation |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. The shared contract and backend foundation are ready: frontend development can connect all seventeen implemented operations and use fixtures for controlled UI scenarios.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. All seventeen operations are connected; the next shared work is independent review, manual workflow measurement, deployment and submission material.
 
 Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 
@@ -175,11 +186,11 @@ Members can claim synthetic cases, independent calculations, test reviews, docum
 | --- | --- | --- |
 | 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | Complete — scope, data, API contracts and fixtures |
 | 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | Complete — backend, invoicing, collections and permissions |
-| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Frontend design, development and API integration |
+| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Frontend implemented and connected to all seventeen operations |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | Complete — bank CSV and deterministic matching |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | Complete — OCR, AI extraction and manual fallback |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | Complete — payment approval, partial payments and forecast |
-| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Integration and measured evaluation |
+| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Local technical integration; ten manual timings and member review pending |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Deployment, presentation and submission checks |
 
 Details: [dependencies and acceptance plan](docs/ISSUE_PLAN.md) · [frontend handoff](docs/FRONTEND_HANDOFF.md) · [decisions](docs/decisions.md).

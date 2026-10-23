@@ -1,6 +1,6 @@
 # Backend foundation
 
-The backend implements all seventeen contract endpoints, plus `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for STEP-4, [EXTRACTION.md](EXTRACTION.md) for STEP-5 and [RECONCILIATION.md](RECONCILIATION.md) for STEP-6 payment approval, promises and forecasts. Frontend pages are developed separately; deployment and full product integration remain unverified.
+The backend implements all seventeen contract endpoints, plus `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for STEP-4, [EXTRACTION.md](EXTRACTION.md) for STEP-5 and [RECONCILIATION.md](RECONCILIATION.md) for STEP-6 payment approval, promises and forecasts. The frontend is integrated locally; [STEP-7 evidence](evaluation/STEP7-INTEGRATION.md) covers the browser workflow and failure recovery. Deployment, human timing comparisons and team signoff remain pending.
 
 ## Run locally
 

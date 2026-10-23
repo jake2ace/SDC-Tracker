@@ -1,14 +1,14 @@
 # 前端设计与开发：Milestone2Cash Proof-to-Cash
 
-状态：STEP-1、STEP-2、STEP-4、STEP-5、STEP-6 已实现；前端继续 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。全部十七个后端接口可用，付款审批、承诺确认和预测可以接本地 API。接口详情见[后端说明](BACKEND.md)、[第五步说明](EXTRACTION.md)与[第六步说明](RECONCILIATION.md)。
+状态：前端已接通全部十七个后端接口，包括付款审批、承诺确认、原图读取和预测。第七步本地验证记录见[联调报告](evaluation/STEP7-INTEGRATION.md)；十次人工流程计时与组员复核仍待完成。接口详情见[后端说明](BACKEND.md)、[第五步说明](EXTRACTION.md)与[第六步说明](RECONCILIATION.md)。部署独立推进。
 
 ## 开发任务
 
-本任务负责 **Milestone2Cash Proof-to-Cash 的前端设计与开发**。团队已决定本地备份旧实现后，从干净项目重建；前后端按共享接口分工，项目协调负责人组织范围确认和联调验收。
+本文说明 **Milestone2Cash Proof-to-Cash 的前端设计与维护要求**。前后端按共享接口分工，项目协调负责人组织范围确认和联调验收。
 
 先读 `docs/PRODUCT_SPEC.md`，以它描述的产品主线与安全边界为准：项目阶段完成 → 发票审批 → 催款草稿与人工确认 → 客户回复／付款截图 → 银行核对 → 财务确认入账 → 现金流与日志。
 
-**现在可以设计页面并开发前端：已实现操作接真实本地 API，其余流程使用 fixtures，明确显示 mock 状态。** 前端技术栈为 **React + TypeScript + Vite**，工具链要求 **Node.js 22.13+**；不要自行创造另一套 API、字段名、状态码或响应结构。
+**默认使用真实本地 API；fixtures 仅用于显式选择的 mock 模式。** 前端技术栈为 **React + TypeScript + Vite**，建议工具链使用 **Node.js 24 LTS**；不要自行创造另一套 API、字段名、状态码或响应结构。
 
 ## 所有权和协作边界
 
@@ -17,7 +17,7 @@
 - 不读取、改动或提交 `.env`、真实密钥、账号凭证；不在客户端打包 API key。需要的服务端配置交给后端负责人。
 - 不复制本地备份、旧数据库、旧上传文件或旧环境配置进入仓库。不要为了复用 UI 恢复未经当前计划确认的旧代码。
 - 不扩大范围到真实 WhatsApp、银行接口、支付或税务提交。
-- 产品界面用 **English**；团队讨论和交接文档可以用中文。
+- 产品界面默认 **English**，保留中文和马来文切换；团队讨论和交接文档可以用中文。
 - 遇到规格或契约缺口先记录阻塞点；可以继续独立设计，不以猜测填补接口。
 
 ## 契约先行与数据接入
@@ -28,10 +28,13 @@
 
 ```bash
 npm ci
-cp .env.example .env
+npm ci --prefix web
+test -f .env || cp .env.example .env
 npm run db:init
 npm start
 ```
+
+在第二个终端从仓库根目录运行 `npm run dev:web`，打开 `http://localhost:5173`。已有 `.env` 不要覆盖；`DEEPSEEK_API_KEY` 仅放在服务端，模型保持 `deepseek-flash`。不把密钥放入前端或 `VITE_` 变量。默认连接 API，只有添加 `?source=mock` 并重新加载才回放 fixtures。
 
 服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。另外已实现 `POST /api/bank-statements` 和 `POST /api/receipts/:id/match`，使用说明见 [BANK_MATCHING.md](BANK_MATCHING.md)。现已增加回复创建与修正、凭证上传与修正、原图读取五个端点。无密钥时回复／凭证转人工审核；付款审批、承诺确认和预测已实现且不调用模型。提取证据和调用例子见 [EXTRACTION.md](EXTRACTION.md)。
 
@@ -69,7 +72,8 @@ npm start
 - **部分付款只减少余额，不显示整张发票已结清，也不显示余款催收已停止。** 部分付款确认按钮应表达本次入账，而不是模糊的“Mark fully paid”。
 - 完全结清后才显示收款完成与催收停止；是否结清由后端返回。
 - 承诺日期先展示解释结果及参照时区，再由人工确认；不能直接把承诺变成实际收入。
-- 切换公司后清除上一公司的详情、上传、选中项和缓存状态；不能短暂显示另一家公司数据。
+- 切换身份后清除详情、上传、选中项和缓存状态；切换公司还应回到 Home。旧身份的异步响应不能覆盖新身份或弹出旧公司的成功提示。
+- 响应中断时将写入结果显示为未知，并用相同幂等 key 重试；写入已确认但刷新失败时，明确显示已保存、清除过期工作区并只重试加载，不能再次提交写入。
 - 低置信度、缺证据或歧义状态不得开放“确认付款”捷径；人工修正后必须重新经过后端规则。
 
 ## 主演示故事
@@ -85,7 +89,7 @@ npm start
 
 演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。当前 seed 没有收据；先上传 `data/eval/images/` 中的合成图片，或通过人工修正补全字段，再调用匹配 API。付款审批请求体只提交 `{ expectedVersion: match.version }`；先展示提议金额并由 Finance 明确批准。成功后重新获取 workspace 和 forecast；版本冲突时刷新证据并重新匹配，不能盲目重试批准。预测请求必须包含 asOfDate 和 delayDays；演示日期从响应 meta.asOf 按 MYT 得到，不能使用电脑当天日期。原图端点需要 `X-Demo-User`，请先带身份 fetch 后创建 Blob URL，并在切换公司时撤销 URL。上传或提取可能耗时，应保留进度和可重试状态；重复请求复用原幂等 key。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
 
-## 前端交付标准
+## 前端维护与验收标准
 
 - 开工前：提交页面结构和状态清单；列出缺少的契约，不写猜测性功能接口。
 - 契约冻结后：先使用批准 fixtures 完成 UI，再通过统一数据访问层接 API；mock 和 api 保持相同 DTO。
@@ -94,4 +98,4 @@ npm start
 - 与后端联调验证：权限拒绝、重复提交、Partial 余款、低置信度人工处理、AI 故障、两公司切换和主演示全链。
 - 只有 mock 验证时明确写“仅 mock 验证”；未完成真实 API 联调不能写“全流程已通过”。
 
-按统一数据访问层接入全部已实现 API；fixtures 保留用于可重复的界面状态测试。前端完成后再执行跨页面的完整产品联调，不能将后端测试等同于前端已通过。
+全部 API 已通过统一数据访问层接入；fixtures 保留用于可重复的界面状态测试。运行 `npm run test:web` 检查单元测试、`npm run test:e2e` 检查独立浏览器集成测试、`npm run build` 检查生产构建。测试放在 `web/tests/` 和 `tests/integration/browser/`，不混入界面业务代码。浏览器、模型调用和人工验证各自记录，不能将自动化检查当作组员人工复核或人工操作计时。
