@@ -1,0 +1,742 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "These are planned synthetic facts, not OCR outputs. Verify labels against the generated images before benchmarking. Score all 40 samples and report failures/abstentions; do not hide unreadable cases.",
+    "kind": "receipt_ground_truth_for_generation_and_scoring",
+    "evaluationOnly": true,
+    "doNotLoadIntoRuntime": true,
+    "targets": {
+      "amountExactAccuracy": 0.9,
+      "referenceExactAccuracy": 0.85,
+      "transferTimeExactAccuracy": 0.85
+    }
+  },
+  "labels": [
+    {
+      "id": "receipt_eval_001",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 900000,
+        "reference": "LMN-231026-001",
+        "transferredAt": "2026-10-23T02:30:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_002",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 1800000,
+        "reference": "EVAL-002-OCT26",
+        "transferredAt": "2026-10-22T03:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_003",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 125050,
+        "reference": "EVAL-003-OCT26",
+        "transferredAt": "2026-10-23T04:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_004",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 360000,
+        "reference": "EVAL-004-OCT26",
+        "transferredAt": "2026-10-20T05:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_005",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 75000,
+        "reference": "EVAL-005-OCT26",
+        "transferredAt": "2026-10-21T06:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_006",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 240000,
+        "reference": "EVAL-006-OCT26",
+        "transferredAt": "2026-10-22T07:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_007",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 59999,
+        "reference": "EVAL-007-OCT26",
+        "transferredAt": "2026-10-23T01:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_008",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 1200000,
+        "reference": "EVAL-008-OCT26",
+        "transferredAt": "2026-10-20T02:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_009",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 100000,
+        "reference": "EVAL-009-OCT26",
+        "transferredAt": "2026-10-21T03:15:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_010",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 450000,
+        "reference": "EVAL-010-OCT26",
+        "transferredAt": "2026-10-22T04:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_011",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 900000,
+        "reference": "EVAL-011-OCT26",
+        "transferredAt": "2026-10-23T05:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_012",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 1800000,
+        "reference": "EVAL-012-OCT26",
+        "transferredAt": "2026-10-20T06:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_013",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 125050,
+        "reference": "EVAL-013-OCT26",
+        "transferredAt": "2026-10-21T07:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_014",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 360000,
+        "reference": "EVAL-014-OCT26",
+        "transferredAt": "2026-10-22T01:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_015",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 75000,
+        "reference": "EVAL-015-OCT26",
+        "transferredAt": "2026-10-23T02:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_016",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 240000,
+        "reference": "EVAL-016-OCT26",
+        "transferredAt": "2026-10-20T03:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_017",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 59999,
+        "reference": "EVAL-017-OCT26",
+        "transferredAt": "2026-10-21T04:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_018",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 1200000,
+        "reference": "EVAL-018-OCT26",
+        "transferredAt": "2026-10-22T05:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_019",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 100000,
+        "reference": "EVAL-019-OCT26",
+        "transferredAt": "2026-10-23T06:15:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_020",
+      "evidence": {
+        "bank": "DEMO SENDER BANK B",
+        "amountSen": 450000,
+        "reference": "EVAL-020-OCT26",
+        "transferredAt": "2026-10-20T07:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_021",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 900000,
+        "reference": "EVAL-021-OCT26",
+        "transferredAt": "2026-10-21T01:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_022",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 1800000,
+        "reference": "EVAL-022-OCT26",
+        "transferredAt": "2026-10-22T02:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_023",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 125050,
+        "reference": "EVAL-023-OCT26",
+        "transferredAt": "2026-10-23T03:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_024",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 360000,
+        "reference": "EVAL-024-OCT26",
+        "transferredAt": "2026-10-20T04:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_025",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 75000,
+        "reference": "EVAL-025-OCT26",
+        "transferredAt": "2026-10-21T05:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_026",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 240000,
+        "reference": "EVAL-026-OCT26",
+        "transferredAt": "2026-10-22T06:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_027",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 59999,
+        "reference": "EVAL-027-OCT26",
+        "transferredAt": "2026-10-23T07:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_028",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 1200000,
+        "reference": "EVAL-028-OCT26",
+        "transferredAt": "2026-10-20T01:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_029",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 100000,
+        "reference": "EVAL-029-OCT26",
+        "transferredAt": "2026-10-21T02:15:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_030",
+      "evidence": {
+        "bank": "DEMO SENDER BANK C",
+        "amountSen": 450000,
+        "reference": "EVAL-030-OCT26",
+        "transferredAt": "2026-10-22T03:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_031",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 900000,
+        "reference": "EVAL-031-OCT26",
+        "transferredAt": "2026-10-23T04:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_032",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 1800000,
+        "reference": "EVAL-032-OCT26",
+        "transferredAt": "2026-10-20T05:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_033",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 125050,
+        "reference": "EVAL-033-OCT26",
+        "transferredAt": "2026-10-21T06:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_034",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 360000,
+        "reference": "EVAL-034-OCT26",
+        "transferredAt": "2026-10-22T07:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_035",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 75000,
+        "reference": "EVAL-035-OCT26",
+        "transferredAt": "2026-10-23T01:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_036",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 240000,
+        "reference": "EVAL-036-OCT26",
+        "transferredAt": "2026-10-20T02:45:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_037",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 59999,
+        "reference": "EVAL-037-OCT26",
+        "transferredAt": "2026-10-21T03:15:00Z",
+        "payer": "KOPI TIGA TEST"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_038",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 1200000,
+        "reference": "EVAL-038-OCT26",
+        "transferredAt": "2026-10-22T04:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_039",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 100000,
+        "reference": "EVAL-039-OCT26",
+        "transferredAt": "2026-10-23T05:15:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    },
+    {
+      "id": "receipt_eval_040",
+      "evidence": {
+        "bank": "DEMO SENDER BANK D",
+        "amountSen": 450000,
+        "reference": "EVAL-040-OCT26",
+        "transferredAt": "2026-10-20T06:45:00Z",
+        "payer": "SINAR DEMO ENTERPRISE"
+      },
+      "visibleFields": [
+        "bank",
+        "amountSen",
+        "reference",
+        "transferredAt",
+        "payer"
+      ],
+      "requiresFinanceApproval": true
+    }
+  ]
+}

@@ -1,0 +1,410 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "All names, bank rows, conversations and amounts are invented for the demo. No real banking connection, sending or payment has occurred.",
+    "kind": "matcher_ground_truth",
+    "evaluationOnly": true,
+    "doNotLoadIntoRuntime": true,
+    "targetVerdictAccuracy": 1,
+    "approvalPolicy": "confirmed and partial mean eligible to request Finance approval; neither is a payment or bank-confirmation claim.",
+    "comparison": "Compare verdict, eligible credit and proposed amounts; requiredReasons must be present. Test implementation has not run."
+  },
+  "labels": [
+    {
+      "id": "matcher_eval_001",
+      "scenario": "Full exact transfer",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_002",
+      "scenario": "Partial transfer",
+      "expectedVerdict": "partial",
+      "requiredReasons": [
+        "partial_amount"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 900000,
+      "proposedOutstandingAmountSen": 900000,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_003",
+      "scenario": "Bank amount RM10 higher",
+      "expectedVerdict": "amount_mismatch",
+      "requiredReasons": [
+        "amount_differs"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_004",
+      "scenario": "Bank posting date is later than the current MYT date",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "future_bank_posting"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_005",
+      "scenario": "No imported bank rows",
+      "expectedVerdict": "not_in_bank_yet",
+      "requiredReasons": [
+        "no_bank_reference"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_006",
+      "scenario": "Duplicate image on same invoice",
+      "expectedVerdict": "duplicate",
+      "requiredReasons": [
+        "duplicate_image"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_007",
+      "scenario": "Duplicate image on another invoice",
+      "expectedVerdict": "duplicate",
+      "requiredReasons": [
+        "duplicate_image"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_008",
+      "scenario": "Matching credit already allocated",
+      "expectedVerdict": "duplicate",
+      "requiredReasons": [
+        "credit_already_allocated"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_009",
+      "scenario": "Wrong bank payer",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "wrong_payer"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_010",
+      "scenario": "Two otherwise eligible credits",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "multiple_candidates"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_011",
+      "scenario": "Missing receipt reference",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "missing_field"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_012",
+      "scenario": "Missing receipt amount",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "missing_field"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_013",
+      "scenario": "Missing transfer time",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "missing_field"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_014",
+      "scenario": "Missing receipt payer",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "missing_field"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_015",
+      "scenario": "AI confidence below threshold",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "low_confidence"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_016",
+      "scenario": "AI confidence at threshold",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_017",
+      "scenario": "Reference NFKC and spacing normalization",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_018",
+      "scenario": "Bank date plus two days inclusive",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_019",
+      "scenario": "Bank date three days later",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "date_outside_window"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_020",
+      "scenario": "Bank date before transfer date",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "date_outside_window"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_021",
+      "scenario": "Transfer UTC date differs from MYT date",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_022",
+      "scenario": "Reviewed manual evidence without AI confidence",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_023",
+      "scenario": "Manual evidence without review stamp",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "manual_review_required"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_024",
+      "scenario": "Transfer exceeds outstanding amount",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "overpayment"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_025",
+      "scenario": "Invalid zero amount direct matcher guard",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "invalid_evidence"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_026",
+      "scenario": "Bank reference does not match",
+      "expectedVerdict": "not_in_bank_yet",
+      "requiredReasons": [
+        "no_bank_reference"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_027",
+      "scenario": "Alternate maintained payer alias",
+      "expectedVerdict": "confirmed",
+      "requiredReasons": [
+        "exact_match"
+      ],
+      "eligibleCreditId": "bank_lumen_001",
+      "proposedPaymentAmountSen": 1800000,
+      "proposedOutstandingAmountSen": 0,
+      "eligibleForFinanceApproval": true,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_028",
+      "scenario": "Allocated reference reused with a new image",
+      "expectedVerdict": "duplicate",
+      "requiredReasons": [
+        "reused_reference"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_029",
+      "scenario": "AI output has no confidence",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "low_confidence"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    },
+    {
+      "id": "matcher_eval_030",
+      "scenario": "Transfer time is later than asOf",
+      "expectedVerdict": "needs_review",
+      "requiredReasons": [
+        "future_transfer_time"
+      ],
+      "eligibleCreditId": null,
+      "proposedPaymentAmountSen": null,
+      "proposedOutstandingAmountSen": null,
+      "eligibleForFinanceApproval": false,
+      "mustPostPaymentWithoutApproval": false
+    }
+  ]
+}

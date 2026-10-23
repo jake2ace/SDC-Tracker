@@ -4,7 +4,7 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**规划基线已在 `main`；[#17](https://github.com/jake2ace/SDC-Tracker/issues/17) 刚开始，目前没有可运行的应用。** 旧实现已在本地备份并从 `main` 移除；旧版测试结果不能证明重建版可用。
+**契约 v1.0.0 已形成，等待团队在 [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) 复核；应用尚未实现，目前不可运行。** 旧实现已在本地备份并从 `main` 移除；旧版测试结果不能证明重建版可用。
 
 本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
 
@@ -24,6 +24,8 @@
 | 资源 | 链接／状态 |
 | --- | --- |
 | GitHub 仓库 | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
+| 共享契约 | [契约说明](docs/CONTRACT.md) · [类型、规则与样例](contracts/) |
+| 合成数据 | [演示 seed](data/seed/README.md) · [评测输入与独立 gold](data/eval/README.md) |
 | Replit 项目 | 待补充 |
 | 在线演示 | 待补充 |
 | RunPod 端点 | 重建版尚未使用 |
@@ -54,22 +56,26 @@
 
 | 层级 | 计划采用的技术 |
 | --- | --- |
-| 前端 | 框架待 #17 确认；实现在 `web/` 中 |
-| 后端 | Node.js 22+ |
+| 前端 | React + TypeScript + Vite；实现在 `web/` 中 |
+| 后端 | Node.js 22.13+ |
 | 数据库 | SQLite |
 | AI／计算 | 本地 OCR 与服务端 DeepSeek；具体版本和能力待验证 |
 | 托管／开发 | Replit 使用与部署待验证 |
 
 ## 项目结构
 
-现有文档入口：
+现有契约、数据和文档入口：
 
 ```text
 .
 ├── README.md / README.zh-CN.md
 ├── CONTRIBUTING.md
+├── contracts/                  # v1.0.0 类型、规则、样例与校验
+├── data/seed/                  # 合成演示状态与银行 CSV
+├── data/eval/                  # 评测输入及独立 gold 标签
 ├── docs/
 │   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
+│   ├── CONTRACT.md
 │   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # 八个实施任务
@@ -77,7 +83,7 @@
 └── LICENSE
 ```
 
-计划中的实现目录：`src/`、`web/`、`contracts/`、`data/`、`tests/`、`eval/` 和 `scripts/`。计划文件名见[提交材料清单](submission/README.md)；PDF 只会在完成并核查后加入。
+应用实现目录 `src/`、`web/` 及后续实现测试／评测工具目前尚不可运行。计划文件名见[提交材料清单](submission/README.md)；PDF 只会在完成并核查后加入。
 
 ### 架构
 
@@ -91,18 +97,25 @@
 
 ### 方式二 — 在本地运行
 
-现在可以克隆规划基线：
+准备 Node.js 22.13+ 和 npm 后克隆仓库：
 
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
 ```
 
-目前没有应用启动命令。安装和配置说明会随可运行的实现补充。
+目前没有应用启动命令。可以先阅读共享契约和合成数据，并执行下方校验；应用安装和配置说明会随可运行的实现补充。
 
 ### 运行测试
 
-重建版测试尚未实现。相关 Issue 完成时会记录测试命令和真实结果。
+在仓库根目录执行：
+
+```bash
+npm ci --prefix contracts
+npm --prefix contracts run check
+```
+
+该命令检查 TypeScript 契约，并执行 13 组结构／数据一致性校验。它**不是应用实现测试**，不会运行 OCR、DeepSeek，也不能证明 matcher 或现金流预测已实现、达到准确率目标。实现测试与量化评测将在对应 Issue 中补充。
 
 ## 我们如何使用 Replit
 
@@ -127,7 +140,7 @@ cd SDC-Tracker
 | --- | --- | --- |
 | 正式注册名单待确认 | 任务认领待确认 | 待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。实现前先约定共享接口；前端 mock／API 功能开发须等 #17 冻结共享契约，线框设计可以提前开始。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。先在 #17 复核 v1.0.0 契约与数据；团队确认共同基线后，前端 mock 与后端实现可以并行。线框设计和复核现在就可以开始。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 

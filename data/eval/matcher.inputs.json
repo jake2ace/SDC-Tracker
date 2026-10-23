@@ -1,0 +1,2735 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "All names, bank rows, conversations and amounts are invented for the demo. No real banking connection, sending or payment has occurred.",
+    "kind": "deterministic_matcher_inputs",
+    "sampleCount": 30,
+    "targetInterface": "MatcherInput",
+    "independence": "Each sample contains its complete isolated input. Do not share mutable state or feed gold labels to the matcher.",
+    "syntheticEvidence": "Receipt hashes, dimensions and source=ai/manual fields are invented routing fixtures, not uploaded files or real OCR/model results.",
+    "invalidGuard": "Case 025 directly tests the internal matcher fail-closed guard. An HTTP request carrying a zero amount must fail schema validation with 422 before the matcher.",
+    "normalization": "reference: Unicode NFKC, trim, uppercase, remove Unicode whitespace; retain punctuation. Payer uses independently maintained customer aliases.",
+    "dateWindow": "Receipt transfer MYT date through plus 2 calendar days inclusive. A known matching reference outside the window needs review; it is not proof of missing bank funds."
+  },
+  "samples": [
+    {
+      "id": "matcher_eval_001",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_1",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000001",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_002",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_002",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_2",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000002",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 900000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 900000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_003",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_003",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_3",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000003",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1801000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_004",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_004",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_4",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000004",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-23T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-24",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_005",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_005",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_5",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000005",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_006",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_006",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_6",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000006",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [
+          {
+            "id": "receipt_prior_same_invoice",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:35:00Z",
+            "updatedAt": "2026-10-23T02:35:00Z",
+            "invoiceId": "inv_lumen_001",
+            "replyId": null,
+            "imageId": "img_fixture_6",
+            "imageSha256": "0000000000000000000000000000000000000000000000000000000000000006",
+            "mimeType": "image/png",
+            "byteLength": 1000,
+            "width": 900,
+            "height": 1200,
+            "processingStatus": "ready",
+            "evidence": {
+              "bank": "DEMO SENDER BANK",
+              "amountSen": 1800000,
+              "reference": "LMN-231026-001",
+              "transferredAt": "2026-10-22T02:30:00Z",
+              "payer": "KOPI TIGA TEST",
+              "confidence": 0.95,
+              "source": "ai",
+              "reviewedBy": null,
+              "reviewedAt": null
+            }
+          }
+        ],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_007",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_007",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_7",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000007",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [
+          {
+            "id": "receipt_prior_other_invoice",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:35:00Z",
+            "updatedAt": "2026-10-23T02:35:00Z",
+            "invoiceId": "inv_lumen_prior",
+            "replyId": null,
+            "imageId": "img_fixture_7",
+            "imageSha256": "0000000000000000000000000000000000000000000000000000000000000007",
+            "mimeType": "image/png",
+            "byteLength": 1000,
+            "width": 900,
+            "height": 1200,
+            "processingStatus": "ready",
+            "evidence": {
+              "bank": "DEMO SENDER BANK",
+              "amountSen": 1800000,
+              "reference": "LMN-231026-001",
+              "transferredAt": "2026-10-22T02:30:00Z",
+              "payer": "KOPI TIGA TEST",
+              "confidence": 0.95,
+              "source": "ai",
+              "reviewedBy": null,
+              "reviewedAt": null
+            }
+          }
+        ],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_008",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_008",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_8",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000008",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-22T02:45:00Z",
+            "updatedAt": "2026-10-22T03:00:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": "payment_prior_001"
+          }
+        ],
+        "existingReceipts": [],
+        "payments": [
+          {
+            "id": "payment_prior_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-22T03:00:00Z",
+            "updatedAt": "2026-10-22T03:00:00Z",
+            "invoiceId": "inv_lumen_prior",
+            "bankCreditId": "bank_lumen_001",
+            "receiptId": "receipt_prior_001",
+            "matchResultId": "match_prior_001",
+            "amountSen": 1800000,
+            "effectiveDate": "2026-10-22",
+            "bankPostedDate": "2026-10-22",
+            "confirmedAt": "2026-10-22T03:00:00Z",
+            "confirmedBy": "u_lumen_finance"
+          }
+        ]
+      }
+    },
+    {
+      "id": "matcher_eval_009",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_009",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_9",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000009",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "UNRELATED DEMO CUSTOMER",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_010",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_010",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_10",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000000a",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          },
+          {
+            "id": "bank_lumen_002",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-002",
+            "postedDate": "2026-10-23",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_011",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_011",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_11",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000000b",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": null,
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_012",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_012",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_12",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000000c",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": null,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_013",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_013",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_13",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000000d",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": null,
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_014",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_014",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_14",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000000e",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": null,
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_015",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_015",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_15",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000000f",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.84,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_016",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_016",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_16",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000010",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.85,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_017",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_017",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_17",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000011",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "　ｌｍｎ－２３１０２６－００１　",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": " LMN - 231026 - 001 ",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_018",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_018",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_18",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000012",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-20T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_019",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_019",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_19",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000013",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-19T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_020",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_020",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_20",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000014",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-21",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_021",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_021",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_21",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000015",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T16:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-23",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_022",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_022",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_22",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000016",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": null,
+            "source": "manual",
+            "reviewedBy": "u_lumen_finance",
+            "reviewedAt": "2026-10-23T02:50:00Z"
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_023",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_023",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_23",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000017",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": null,
+            "source": "manual",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_024",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_024",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_24",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000018",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 2000000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 2000000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_025",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_025",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_25",
+          "imageSha256": "0000000000000000000000000000000000000000000000000000000000000019",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 0,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 0,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_026",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_026",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_26",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000001a",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "OTHER-DEMO-REF",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_027",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_027",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_27",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000001b",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA SDN BHD TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA SDN BHD TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_028",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_028",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_28",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000001c",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          },
+          {
+            "id": "bank_prior_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-22T02:45:00Z",
+            "updatedAt": "2026-10-22T03:00:00Z",
+            "externalId": "PRIOR-EXTERNAL-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": "payment_prior_001"
+          }
+        ],
+        "existingReceipts": [],
+        "payments": [
+          {
+            "id": "payment_prior_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-22T03:00:00Z",
+            "updatedAt": "2026-10-22T03:00:00Z",
+            "invoiceId": "inv_lumen_prior",
+            "bankCreditId": "bank_prior_001",
+            "receiptId": "receipt_prior_different_image",
+            "matchResultId": "match_prior_001",
+            "amountSen": 1800000,
+            "effectiveDate": "2026-10-22",
+            "bankPostedDate": "2026-10-22",
+            "confirmedAt": "2026-10-22T03:00:00Z",
+            "confirmedBy": "u_lumen_finance"
+          }
+        ]
+      }
+    },
+    {
+      "id": "matcher_eval_029",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_029",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_29",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000001d",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-22T02:30:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": null,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-22",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    },
+    {
+      "id": "matcher_eval_030",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "companyId": "co_lumen",
+        "bankLedgerVersion": 1,
+        "invoice": {
+          "id": "inv_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "customerId": "cust_lumen_001",
+          "projectId": "proj_lumen_001",
+          "milestoneId": "ms_lumen_001",
+          "number": "LUMEN-DEMO-001",
+          "currency": "MYR",
+          "totalAmountSen": 1800000,
+          "paidAmountSen": 0,
+          "outstandingAmountSen": 1800000,
+          "dueDate": "2026-10-16",
+          "status": "issued",
+          "collectionStatus": "active",
+          "issuedAt": "2026-10-03T02:00:00Z",
+          "approvedBy": "u_lumen_owner",
+          "confirmedPromiseId": null
+        },
+        "customer": {
+          "id": "cust_lumen_001",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-09-30T01:00:00Z",
+          "updatedAt": "2026-10-23T02:50:00Z",
+          "name": "Kopi Tiga Test",
+          "payerAliases": [
+            "KOPI TIGA TEST",
+            "KOPI TIGA SDN BHD TEST"
+          ],
+          "preferredLanguage": "en"
+        },
+        "receipt": {
+          "id": "receipt_match_030",
+          "companyId": "co_lumen",
+          "version": 1,
+          "createdAt": "2026-10-23T02:40:00Z",
+          "updatedAt": "2026-10-23T02:40:00Z",
+          "invoiceId": "inv_lumen_001",
+          "replyId": null,
+          "imageId": "img_fixture_30",
+          "imageSha256": "000000000000000000000000000000000000000000000000000000000000001e",
+          "mimeType": "image/png",
+          "byteLength": 1000,
+          "width": 900,
+          "height": 1200,
+          "processingStatus": "ready",
+          "evidence": {
+            "bank": "DEMO SENDER BANK",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "transferredAt": "2026-10-23T05:00:00Z",
+            "payer": "KOPI TIGA TEST",
+            "confidence": 0.95,
+            "source": "ai",
+            "reviewedBy": null,
+            "reviewedAt": null
+          }
+        },
+        "bankCredits": [
+          {
+            "id": "bank_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T02:45:00Z",
+            "updatedAt": "2026-10-23T02:45:00Z",
+            "externalId": "LUMEN-CREDIT-001",
+            "postedDate": "2026-10-23",
+            "amountSen": 1800000,
+            "reference": "LMN-231026-001",
+            "payer": "KOPI TIGA TEST",
+            "bank": "DEMO RECEIVING BANK",
+            "allocatedPaymentId": null
+          }
+        ],
+        "existingReceipts": [],
+        "payments": []
+      }
+    }
+  ]
+}
