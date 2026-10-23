@@ -1,10 +1,10 @@
 # Milestone2Cash Proof-to-Cash 开发计划
 
-依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1 进行中，其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
+依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1 的契约与数据已准备，等待团队复核；其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
 
 | 步骤 | 交付 | 职责 | 依赖 | 状态 |
 | --- | --- | --- | --- | --- |
-| STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | 项目协调与后端开发；团队确认业务 | 无 | IN PROGRESS |
+| STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | 项目协调与后端开发；团队确认业务 | 无 | IN REVIEW |
 | STEP-2 | [核心底座、开票、催收、权限与日志](issues/02-foundation.md) | 后端开发 | STEP-1 | TODO |
 | STEP-3 | [前端设计、开发与 API 对接](issues/03-frontend.md) | 前端开发；前后端共同联调验收 | STEP-1；联调依赖 STEP-2/4/5/6 | TODO |
 | STEP-4 | [银行 CSV 与确定性匹配](issues/04-matching.md) | 后端开发 | STEP-1、STEP-2 | TODO |
@@ -52,5 +52,6 @@
 | 日期 | 决定 | 状态与追踪 |
 | --- | --- | --- |
 | 2026-10-23 | 按团队定稿从头建立新基线；旧方案先本地备份，再清理活动工作区；保留仓库身份和 Git 历史 | 本计划全部 TODO；备份及清理结果由主协调记录 |
+| 2026-10-23 | 同一仓库更新双语 README 与常规开发分工；完成契约 v1.0.0、两公司 seed 与合成评测清单 | STEP-1 IN REVIEW；见[契约](CONTRACT.md)与[校验记录](CONTRACT_VALIDATION.md)，应用尚未实现 |
 
 后续范围、接口、指标或分工变化追加记录，并关联 Issue/PR；保留旧决定及取代原因，不覆盖历史。

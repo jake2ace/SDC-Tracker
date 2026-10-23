@@ -1,0 +1,454 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "All names, bank rows, conversations and amounts are invented for the demo. No real banking connection, sending or payment has occurred.",
+    "kind": "reply_ground_truth",
+    "evaluationOnly": true,
+    "doNotLoadIntoRuntime": true,
+    "targetIntentAccuracy": 0.85,
+    "minimumConfidence": 0.85,
+    "relativeDatePolicy": "Use each reply's MYT receivedAt date. Every relative or ambiguous date needs a person to confirm before applying a promise. All promises need Finance confirmation, even explicit dates.",
+    "amountPolicy": "Only label an explicitly claimed paid/promised amount; do not infer a numeric amount from 'half', 'full' or a dispute.",
+    "ambiguityPolicy": "Ambiguous fragments use other plus manual review. Keep confidence routing separate from measuring model intent accuracy."
+  },
+  "labels": [
+    {
+      "id": "reply_eval_001",
+      "expectedIntent": "paid",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Explicit full-payment claim; not bank proof."
+    },
+    {
+      "id": "reply_eval_002",
+      "expectedIntent": "paid",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Payment claim without an explicit amount."
+    },
+    {
+      "id": "reply_eval_003",
+      "expectedIntent": "paid",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Explicit payment claim and amount."
+    },
+    {
+      "id": "reply_eval_004",
+      "expectedIntent": "paid",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "明确声称已经付款，不代表已入账。"
+    },
+    {
+      "id": "reply_eval_005",
+      "expectedIntent": "paid",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "声称已付但没有金额。"
+    },
+    {
+      "id": "reply_eval_006",
+      "expectedIntent": "paid",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "明确已付款主张和金额。"
+    },
+    {
+      "id": "reply_eval_007",
+      "expectedIntent": "paid",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Explicit payment claim."
+    },
+    {
+      "id": "reply_eval_008",
+      "expectedIntent": "paid",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Paid claim, receipt not supplied."
+    },
+    {
+      "id": "reply_eval_009",
+      "expectedIntent": "promise",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": "2026-10-28",
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Explicit future date still needs Finance confirmation before application."
+    },
+    {
+      "id": "reply_eval_010",
+      "expectedIntent": "promise",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": "2026-10-24",
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Tomorrow uses receivedAt in MYT; human date confirmation required."
+    },
+    {
+      "id": "reply_eval_011",
+      "expectedIntent": "promise",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Friday is ambiguous when received on Friday; do not choose today or next week."
+    },
+    {
+      "id": "reply_eval_012",
+      "expectedIntent": "promise",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": "2026-10-28",
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "明确承诺日期，应用前仍需人工确认。"
+    },
+    {
+      "id": "reply_eval_013",
+      "expectedIntent": "promise",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": "2026-10-25",
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "接收时刻为UTC 10月23日16:30，即MYT 10月24日；明天为10月25日。"
+    },
+    {
+      "id": "reply_eval_014",
+      "expectedIntent": "promise",
+      "expectedAmountSen": 1800000,
+      "expectedPromisedDate": "2026-10-28",
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Explicit date."
+    },
+    {
+      "id": "reply_eval_015",
+      "expectedIntent": "promise",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": "2026-10-24",
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Relative tomorrow date; manual confirmation required."
+    },
+    {
+      "id": "reply_eval_016",
+      "expectedIntent": "promise",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Promise depends on an unknown event; no date may be invented."
+    },
+    {
+      "id": "reply_eval_017",
+      "expectedIntent": "partial",
+      "expectedAmountSen": 900000,
+      "expectedPromisedDate": "2026-10-28",
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Partial claim plus explicit promise for the remainder."
+    },
+    {
+      "id": "reply_eval_018",
+      "expectedIntent": "partial",
+      "expectedAmountSen": 600000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Partial claim; no promised date."
+    },
+    {
+      "id": "reply_eval_019",
+      "expectedIntent": "partial",
+      "expectedAmountSen": 900000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "明确部分付款。"
+    },
+    {
+      "id": "reply_eval_020",
+      "expectedIntent": "partial",
+      "expectedAmountSen": 300000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "明确部分付款，不能结清。"
+    },
+    {
+      "id": "reply_eval_021",
+      "expectedIntent": "partial",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": "2026-10-24",
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "部分付款金额缺失，明天须人工确认。"
+    },
+    {
+      "id": "reply_eval_022",
+      "expectedIntent": "partial",
+      "expectedAmountSen": 900000,
+      "expectedPromisedDate": "2026-10-28",
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": true,
+      "mustCreatePayment": false,
+      "reason": "Partial claim and explicit remaining-payment promise."
+    },
+    {
+      "id": "reply_eval_023",
+      "expectedIntent": "partial",
+      "expectedAmountSen": 400000,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Explicit partial payment."
+    },
+    {
+      "id": "reply_eval_024",
+      "expectedIntent": "partial",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Partial claim with no verified numeric amount; do not infer half of the invoice."
+    },
+    {
+      "id": "reply_eval_025",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Explicit work dispute."
+    },
+    {
+      "id": "reply_eval_026",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Duplicate-billing dispute."
+    },
+    {
+      "id": "reply_eval_027",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Conflicting billed/agreed amounts are not a claimed payment."
+    },
+    {
+      "id": "reply_eval_028",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "工作未完成争议。"
+    },
+    {
+      "id": "reply_eval_029",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "重复开票争议。"
+    },
+    {
+      "id": "reply_eval_030",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "金额争议，不是付款承诺日期。"
+    },
+    {
+      "id": "reply_eval_031",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Work dispute."
+    },
+    {
+      "id": "reply_eval_032",
+      "expectedIntent": "dispute",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Amount dispute."
+    },
+    {
+      "id": "reply_eval_033",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Request for a document, no payment claim."
+    },
+    {
+      "id": "reply_eval_034",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Ambiguous fragment; cannot determine amount, intent or date."
+    },
+    {
+      "id": "reply_eval_035",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Instruction inside customer data is not evidence of payment."
+    },
+    {
+      "id": "reply_eval_036",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "一般回复，无付款信息。"
+    },
+    {
+      "id": "reply_eval_037",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "含糊且可能误发，不能猜金额或日期。"
+    },
+    {
+      "id": "reply_eval_038",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Document request."
+    },
+    {
+      "id": "reply_eval_039",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": false,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Contact-routing request."
+    },
+    {
+      "id": "reply_eval_040",
+      "expectedIntent": "other",
+      "expectedAmountSen": null,
+      "expectedPromisedDate": null,
+      "requiresExtractionReview": true,
+      "requiresPromiseConfirmation": false,
+      "mustCreatePayment": false,
+      "reason": "Ambiguous text requiring manual handling."
+    }
+  ],
+  "confidenceGuardExpectations": [
+    {
+      "id": "confidence_guard_1",
+      "requiresExtractionReview": true,
+      "mustCreatePayment": false
+    },
+    {
+      "id": "confidence_guard_2",
+      "requiresExtractionReview": true,
+      "mustCreatePayment": false
+    },
+    {
+      "id": "confidence_guard_3",
+      "requiresExtractionReview": false,
+      "mustCreatePayment": false
+    },
+    {
+      "id": "confidence_guard_4",
+      "requiresExtractionReview": false,
+      "mustCreatePayment": false
+    },
+    {
+      "id": "confidence_guard_5",
+      "requiresExtractionReview": true,
+      "mustCreatePayment": false
+    },
+    {
+      "id": "confidence_guard_6",
+      "requiresExtractionReview": true,
+      "mustCreatePayment": false
+    }
+  ]
+}

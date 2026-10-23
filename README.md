@@ -4,7 +4,7 @@
 
 > Help Malaysian service micro-businesses invoice completed work, follow up on overdue balances and check payment claims against bank records before recording payment.
 
-**Planning baseline on `main`; [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) has just started. No runnable app yet.** The old implementation was backed up locally and removed from `main`; its test results do not validate this rebuild.
+**Contract v1.0.0 is prepared and awaiting team review in [#17](https://github.com/jake2ace/SDC-Tracker/issues/17). The application is not implemented or runnable yet.** The old implementation was backed up locally and removed from `main`; its test results do not validate this rebuild.
 
 This README follows the section order of the [SDC submission template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md). Template alignment does not mean submission requirements are complete.
 
@@ -24,6 +24,8 @@ This README follows the section order of the [SDC submission template](https://g
 | Resource | Link / status |
 | --- | --- |
 | GitHub Repository | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
+| Shared Contract | [Contract guide](docs/CONTRACT.md) · [types, rules and fixtures](contracts/) |
+| Synthetic Data | [Demo seed](data/seed/README.md) · [evaluation inputs and separate gold](data/eval/README.md) |
 | Replit Project | Pending |
 | Live Demo | Pending |
 | RunPod Endpoint | Not used for this rebuild |
@@ -54,22 +56,26 @@ All features above are planned, not verified implementations.
 
 | Layer | Planned technology |
 | --- | --- |
-| Frontend | Framework pending #17; implementation in `web/` |
-| Backend | Node.js 22+ |
+| Frontend | React + TypeScript + Vite, in `web/` |
+| Backend | Node.js 22.13+ |
 | Database | SQLite |
 | AI / Compute | Local OCR and server-side DeepSeek; versions and capability checks pending |
 | Hosting / Dev | Replit use and deployment to be verified |
 
 ## Project Structure
 
-Current documentation entry points:
+Current contract, data and documentation entry points:
 
 ```text
 .
 ├── README.md / README.zh-CN.md
 ├── CONTRIBUTING.md
+├── contracts/                  # v1.0.0 types, rules, fixtures and checks
+├── data/seed/                  # Synthetic demo state and bank CSVs
+├── data/eval/                  # Evaluation inputs and separate gold labels
 ├── docs/
 │   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
+│   ├── CONTRACT.md
 │   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # Eight implementation tasks
@@ -77,7 +83,7 @@ Current documentation entry points:
 └── LICENSE
 ```
 
-Planned implementation directories: `src/`, `web/`, `contracts/`, `data/`, `tests/`, `eval/` and `scripts/`. See the [submission document checklist](submission/README.md) for planned filenames; PDFs will be added only when prepared and checked.
+Application implementation directories `src/` and `web/`, and later implementation tests/evaluation tools, are not runnable yet. See the [submission document checklist](submission/README.md) for planned filenames; PDFs will be added only when prepared and checked.
 
 ### Architecture
 
@@ -91,18 +97,25 @@ Not available yet. The Replit project, configuration and verified instructions w
 
 ### Option 2 — Run Locally
 
-You can clone the planning baseline:
+With Node.js 22.13+ and npm, clone the repository:
 
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
 ```
 
-There is no app startup command yet. Installation and configuration instructions will be added with the working implementation.
+There is no app startup command yet. You can inspect the shared contract and synthetic data, then run the checks below. App installation and configuration instructions will be added with the working implementation.
 
 ### Run Tests
 
-Rebuild tests are not implemented yet. Commands and actual results will be documented as the relevant issues are completed.
+From the repository root:
+
+```bash
+npm ci --prefix contracts
+npm --prefix contracts run check
+```
+
+This checks TypeScript contracts and runs 13 groups of structural/data consistency checks. It does **not** test an implemented app, run OCR or DeepSeek, or demonstrate matcher/forecast accuracy. Implementation tests and measured evaluation will be added in the relevant issues.
 
 ## How We Use Replit
 
@@ -127,7 +140,7 @@ Planning findings: a receipt is a claim to verify, partial payments must preserv
 | --- | --- | --- |
 | Registered roster pending confirmation | Task ownership pending confirmation | Pending confirmation |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. Shared interfaces are agreed before implementation; functional mock/API frontend development waits for #17's contract freeze, while wireframes can start earlier.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. First review the v1.0.0 contract and data in #17. After team review confirms the shared baseline, frontend mock development and backend implementation can proceed in parallel; wireframes and review can start now.
 
 Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 

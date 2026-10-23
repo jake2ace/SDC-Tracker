@@ -1,0 +1,429 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "All names, bank rows, conversations and amounts are invented for the demo. No real banking connection, sending or payment has occurred.",
+    "kind": "forecast_inputs",
+    "targetInterface": "ForecastInput",
+    "validationWindowDays": 10,
+    "productWindowDays": 30,
+    "source": "Independent synthetic before/after scenarios. After scenarios are separate approved snapshots, not mutations already applied to data/seed/demo-state.json.",
+    "openingPolicy": "200000 sen is MYT day-opening before today's confirmed 900000 sen receipt. Earlier-day confirmed payments are already included in opening; today's confirmedAt<=asOf is added once as actual.",
+    "recognitionPolicy": "effectiveDate is the Finance confirmation's MYT date; bankPostedDate retains original evidence. Pending bank credits are excluded from actual receipts.",
+    "delayedPolicy": "Delay shifts expected receipts only. Overdue expected date is first clamped to asOfDate, then delayDays is added. Confirmed actuals and expenses do not shift.",
+    "activityNote": "scenarioActivity contains invented fixture events for time-order validation, not evidence of real people approving payments."
+  },
+  "samples": [
+    {
+      "id": "forecast_baseline_on_time",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "asOfDate": "2026-10-23",
+        "companyId": "co_lumen",
+        "openingBalanceSen": 200000,
+        "safetyThresholdSen": 500000,
+        "delayDays": 0,
+        "invoices": [
+          {
+            "id": "inv_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "customerId": "cust_lumen_001",
+            "projectId": "proj_lumen_001",
+            "milestoneId": "ms_lumen_001",
+            "number": "LUMEN-DEMO-001",
+            "currency": "MYR",
+            "totalAmountSen": 1800000,
+            "paidAmountSen": 0,
+            "outstandingAmountSen": 1800000,
+            "dueDate": "2026-10-16",
+            "status": "issued",
+            "collectionStatus": "active",
+            "issuedAt": "2026-10-03T02:00:00Z",
+            "approvedBy": "u_lumen_owner",
+            "confirmedPromiseId": null
+          }
+        ],
+        "promises": [],
+        "payments": [],
+        "expenses": [
+          {
+            "id": "exp_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic supplier payment",
+            "amountSen": 300000,
+            "dueDate": "2026-10-25"
+          },
+          {
+            "id": "exp_lumen_002",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic monthly rent",
+            "amountSen": 400000,
+            "dueDate": "2026-10-30"
+          }
+        ]
+      },
+      "scenarioActivity": []
+    },
+    {
+      "id": "forecast_after_on_time",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "asOfDate": "2026-10-23",
+        "companyId": "co_lumen",
+        "openingBalanceSen": 200000,
+        "safetyThresholdSen": 500000,
+        "delayDays": 0,
+        "invoices": [
+          {
+            "id": "inv_lumen_001",
+            "companyId": "co_lumen",
+            "version": 3,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T03:10:00Z",
+            "customerId": "cust_lumen_001",
+            "projectId": "proj_lumen_001",
+            "milestoneId": "ms_lumen_001",
+            "number": "LUMEN-DEMO-001",
+            "currency": "MYR",
+            "totalAmountSen": 1800000,
+            "paidAmountSen": 900000,
+            "outstandingAmountSen": 900000,
+            "dueDate": "2026-10-16",
+            "status": "partially_paid",
+            "collectionStatus": "active",
+            "issuedAt": "2026-10-03T02:00:00Z",
+            "approvedBy": "u_lumen_owner",
+            "confirmedPromiseId": "promise_lumen_001"
+          }
+        ],
+        "promises": [
+          {
+            "id": "promise_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T03:10:00Z",
+            "updatedAt": "2026-10-23T03:10:00Z",
+            "invoiceId": "inv_lumen_001",
+            "replyId": "reply_lumen_002",
+            "promisedDate": "2026-10-28",
+            "amountSen": 900000,
+            "status": "active",
+            "confirmedBy": "u_lumen_finance",
+            "confirmedAt": "2026-10-23T03:10:00Z"
+          }
+        ],
+        "payments": [
+          {
+            "id": "payment_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T03:00:00Z",
+            "updatedAt": "2026-10-23T03:00:00Z",
+            "invoiceId": "inv_lumen_001",
+            "bankCreditId": "bank_lumen_001",
+            "receiptId": "receipt_forecast_001",
+            "matchResultId": "match_forecast_001",
+            "amountSen": 900000,
+            "effectiveDate": "2026-10-23",
+            "bankPostedDate": "2026-10-23",
+            "confirmedAt": "2026-10-23T03:00:00Z",
+            "confirmedBy": "u_lumen_finance"
+          }
+        ],
+        "expenses": [
+          {
+            "id": "exp_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic supplier payment",
+            "amountSen": 300000,
+            "dueDate": "2026-10-25"
+          },
+          {
+            "id": "exp_lumen_002",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic monthly rent",
+            "amountSen": 400000,
+            "dueDate": "2026-10-30"
+          }
+        ]
+      },
+      "scenarioActivity": [
+        {
+          "id": "event_forecast_001",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "bank.csv_imported",
+          "entityType": "bank_credit",
+          "entityId": "bank_lumen_001",
+          "occurredAt": "2026-10-23T02:45:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_001",
+          "summary": "Synthetic bank evidence imported; no payment posted."
+        },
+        {
+          "id": "event_forecast_002",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "receipt.reviewed",
+          "entityType": "receipt",
+          "entityId": "receipt_forecast_001",
+          "occurredAt": "2026-10-23T02:55:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_002",
+          "summary": "Synthetic manual evidence reviewed; amount 900000 sen."
+        },
+        {
+          "id": "event_forecast_003",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "payment.confirmed",
+          "entityType": "payment",
+          "entityId": "payment_lumen_001",
+          "occurredAt": "2026-10-23T03:00:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_003",
+          "summary": "Synthetic Finance approval posts 900000 sen; invoice remainder 900000 sen and collection stays active."
+        },
+        {
+          "id": "event_forecast_004",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "promise.confirmed",
+          "entityType": "payment_promise",
+          "entityId": "promise_lumen_001",
+          "occurredAt": "2026-10-23T03:10:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_004",
+          "summary": "Synthetic Finance confirmation schedules remaining 900000 sen for 2026-10-28; no further actual receipt."
+        }
+      ]
+    },
+    {
+      "id": "forecast_baseline_delayed_7",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "asOfDate": "2026-10-23",
+        "companyId": "co_lumen",
+        "openingBalanceSen": 200000,
+        "safetyThresholdSen": 500000,
+        "delayDays": 7,
+        "invoices": [
+          {
+            "id": "inv_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "customerId": "cust_lumen_001",
+            "projectId": "proj_lumen_001",
+            "milestoneId": "ms_lumen_001",
+            "number": "LUMEN-DEMO-001",
+            "currency": "MYR",
+            "totalAmountSen": 1800000,
+            "paidAmountSen": 0,
+            "outstandingAmountSen": 1800000,
+            "dueDate": "2026-10-16",
+            "status": "issued",
+            "collectionStatus": "active",
+            "issuedAt": "2026-10-03T02:00:00Z",
+            "approvedBy": "u_lumen_owner",
+            "confirmedPromiseId": null
+          }
+        ],
+        "promises": [],
+        "payments": [],
+        "expenses": [
+          {
+            "id": "exp_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic supplier payment",
+            "amountSen": 300000,
+            "dueDate": "2026-10-25"
+          },
+          {
+            "id": "exp_lumen_002",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic monthly rent",
+            "amountSen": 400000,
+            "dueDate": "2026-10-30"
+          }
+        ]
+      },
+      "scenarioActivity": []
+    },
+    {
+      "id": "forecast_after_delayed_7",
+      "input": {
+        "asOf": "2026-10-23T04:00:00Z",
+        "asOfDate": "2026-10-23",
+        "companyId": "co_lumen",
+        "openingBalanceSen": 200000,
+        "safetyThresholdSen": 500000,
+        "delayDays": 7,
+        "invoices": [
+          {
+            "id": "inv_lumen_001",
+            "companyId": "co_lumen",
+            "version": 3,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T03:10:00Z",
+            "customerId": "cust_lumen_001",
+            "projectId": "proj_lumen_001",
+            "milestoneId": "ms_lumen_001",
+            "number": "LUMEN-DEMO-001",
+            "currency": "MYR",
+            "totalAmountSen": 1800000,
+            "paidAmountSen": 900000,
+            "outstandingAmountSen": 900000,
+            "dueDate": "2026-10-16",
+            "status": "partially_paid",
+            "collectionStatus": "active",
+            "issuedAt": "2026-10-03T02:00:00Z",
+            "approvedBy": "u_lumen_owner",
+            "confirmedPromiseId": "promise_lumen_001"
+          }
+        ],
+        "promises": [
+          {
+            "id": "promise_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T03:10:00Z",
+            "updatedAt": "2026-10-23T03:10:00Z",
+            "invoiceId": "inv_lumen_001",
+            "replyId": "reply_lumen_002",
+            "promisedDate": "2026-10-28",
+            "amountSen": 900000,
+            "status": "active",
+            "confirmedBy": "u_lumen_finance",
+            "confirmedAt": "2026-10-23T03:10:00Z"
+          }
+        ],
+        "payments": [
+          {
+            "id": "payment_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-10-23T03:00:00Z",
+            "updatedAt": "2026-10-23T03:00:00Z",
+            "invoiceId": "inv_lumen_001",
+            "bankCreditId": "bank_lumen_001",
+            "receiptId": "receipt_forecast_001",
+            "matchResultId": "match_forecast_001",
+            "amountSen": 900000,
+            "effectiveDate": "2026-10-23",
+            "bankPostedDate": "2026-10-23",
+            "confirmedAt": "2026-10-23T03:00:00Z",
+            "confirmedBy": "u_lumen_finance"
+          }
+        ],
+        "expenses": [
+          {
+            "id": "exp_lumen_001",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic supplier payment",
+            "amountSen": 300000,
+            "dueDate": "2026-10-25"
+          },
+          {
+            "id": "exp_lumen_002",
+            "companyId": "co_lumen",
+            "version": 1,
+            "createdAt": "2026-09-30T01:00:00Z",
+            "updatedAt": "2026-10-23T02:50:00Z",
+            "title": "Synthetic monthly rent",
+            "amountSen": 400000,
+            "dueDate": "2026-10-30"
+          }
+        ]
+      },
+      "scenarioActivity": [
+        {
+          "id": "event_forecast_001",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "bank.csv_imported",
+          "entityType": "bank_credit",
+          "entityId": "bank_lumen_001",
+          "occurredAt": "2026-10-23T02:45:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_001",
+          "summary": "Synthetic bank evidence imported; no payment posted."
+        },
+        {
+          "id": "event_forecast_002",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "receipt.reviewed",
+          "entityType": "receipt",
+          "entityId": "receipt_forecast_001",
+          "occurredAt": "2026-10-23T02:55:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_002",
+          "summary": "Synthetic manual evidence reviewed; amount 900000 sen."
+        },
+        {
+          "id": "event_forecast_003",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "payment.confirmed",
+          "entityType": "payment",
+          "entityId": "payment_lumen_001",
+          "occurredAt": "2026-10-23T03:00:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_003",
+          "summary": "Synthetic Finance approval posts 900000 sen; invoice remainder 900000 sen and collection stays active."
+        },
+        {
+          "id": "event_forecast_004",
+          "companyId": "co_lumen",
+          "actorId": "u_lumen_finance",
+          "action": "promise.confirmed",
+          "entityType": "payment_promise",
+          "entityId": "promise_lumen_001",
+          "occurredAt": "2026-10-23T03:10:00Z",
+          "outcome": "succeeded",
+          "reasonCode": null,
+          "requestId": "req_event_forecast_004",
+          "summary": "Synthetic Finance confirmation schedules remaining 900000 sen for 2026-10-28; no further actual receipt."
+        }
+      ]
+    }
+  ]
+}

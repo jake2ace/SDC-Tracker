@@ -1,0 +1,442 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "All names, bank rows, conversations and amounts are invented for the demo. No real banking connection, sending or payment has occurred.",
+    "kind": "hand_calculated_forecast_ground_truth",
+    "evaluationOnly": true,
+    "doNotLoadIntoRuntime": true,
+    "calculation": "closing = opening + actual confirmed receipts + expected outstanding receipts - expenses; next day's opening = prior closing. All values are integer sen.",
+    "comparisonFields": [
+      "date",
+      "openingBalanceSen",
+      "actualReceiptsSen",
+      "expectedReceiptsSen",
+      "expensesSen",
+      "closingBalanceSen",
+      "belowSafetyThreshold"
+    ],
+    "expectedResult": "Exact match on every field for each of the 10 days in all four scenarios.",
+    "labelProvenance": "Hand-derived table agreed for STEP-1; no production forecast code generated these balances. Runtime entry IDs are not graded here, but must trace the same source invoice, payment and expenses.",
+    "outsideWindowNote": "In forecast_after_delayed_7, 900000 sen expected on 2026-11-04 is outside these 10 validation days but inside the product's 30-day view; it must not be lost."
+  },
+  "labels": [
+    {
+      "id": "forecast_baseline_on_time",
+      "windowDays": 10,
+      "expectedReceiptSchedule": [
+        {
+          "invoiceId": "inv_lumen_001",
+          "date": "2026-10-23",
+          "amountSen": 1800000
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-23",
+          "openingBalanceSen": 200000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 1800000,
+          "expensesSen": 0,
+          "closingBalanceSen": 2000000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-24",
+          "openingBalanceSen": 2000000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 2000000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-25",
+          "openingBalanceSen": 2000000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 300000,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-26",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-27",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-28",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-29",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-30",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 400000,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-31",
+          "openingBalanceSen": 1300000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-11-01",
+          "openingBalanceSen": 1300000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        }
+      ]
+    },
+    {
+      "id": "forecast_after_on_time",
+      "windowDays": 10,
+      "expectedReceiptSchedule": [
+        {
+          "invoiceId": "inv_lumen_001",
+          "date": "2026-10-28",
+          "amountSen": 900000
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-23",
+          "openingBalanceSen": 200000,
+          "actualReceiptsSen": 900000,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1100000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-24",
+          "openingBalanceSen": 1100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1100000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-25",
+          "openingBalanceSen": 1100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 300000,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-26",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-27",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-28",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 900000,
+          "expensesSen": 0,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-29",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1700000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-30",
+          "openingBalanceSen": 1700000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 400000,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-31",
+          "openingBalanceSen": 1300000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-11-01",
+          "openingBalanceSen": 1300000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        }
+      ]
+    },
+    {
+      "id": "forecast_baseline_delayed_7",
+      "windowDays": 10,
+      "expectedReceiptSchedule": [
+        {
+          "invoiceId": "inv_lumen_001",
+          "date": "2026-10-30",
+          "amountSen": 1800000
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-23",
+          "openingBalanceSen": 200000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 200000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-24",
+          "openingBalanceSen": 200000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 200000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-25",
+          "openingBalanceSen": 200000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 300000,
+          "closingBalanceSen": -100000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-26",
+          "openingBalanceSen": -100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": -100000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-27",
+          "openingBalanceSen": -100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": -100000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-28",
+          "openingBalanceSen": -100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": -100000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-29",
+          "openingBalanceSen": -100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": -100000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-30",
+          "openingBalanceSen": -100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 1800000,
+          "expensesSen": 400000,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-31",
+          "openingBalanceSen": 1300000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-11-01",
+          "openingBalanceSen": 1300000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1300000,
+          "belowSafetyThreshold": false
+        }
+      ]
+    },
+    {
+      "id": "forecast_after_delayed_7",
+      "windowDays": 10,
+      "expectedReceiptSchedule": [
+        {
+          "invoiceId": "inv_lumen_001",
+          "date": "2026-11-04",
+          "amountSen": 900000
+        }
+      ],
+      "days": [
+        {
+          "date": "2026-10-23",
+          "openingBalanceSen": 200000,
+          "actualReceiptsSen": 900000,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1100000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-24",
+          "openingBalanceSen": 1100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 1100000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-25",
+          "openingBalanceSen": 1100000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 300000,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-26",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-27",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-28",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-29",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 800000,
+          "belowSafetyThreshold": false
+        },
+        {
+          "date": "2026-10-30",
+          "openingBalanceSen": 800000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 400000,
+          "closingBalanceSen": 400000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-10-31",
+          "openingBalanceSen": 400000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 400000,
+          "belowSafetyThreshold": true
+        },
+        {
+          "date": "2026-11-01",
+          "openingBalanceSen": 400000,
+          "actualReceiptsSen": 0,
+          "expectedReceiptsSen": 0,
+          "expensesSen": 0,
+          "closingBalanceSen": 400000,
+          "belowSafetyThreshold": true
+        }
+      ]
+    }
+  ]
+}

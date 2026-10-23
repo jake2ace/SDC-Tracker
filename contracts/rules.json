@@ -1,0 +1,185 @@
+{
+  "contractVersion": "1.0.0",
+  "status": "planned",
+  "demoClock": "2026-10-23T04:00:00Z",
+  "currency": "MYR",
+  "moneyUnit": "sen",
+  "timezone": "Asia/Kuala_Lumpur",
+  "companyIds": [
+    "co_lumen",
+    "co_rantau"
+  ],
+  "types": {
+    "amount": "safe integer; positive for credit/payment/expense/invoice, zero allowed for paid/outstanding; balances and signed cash deltas may be negative",
+    "timestamp": "valid UTC ISO 8601 ending Z",
+    "businessDate": "valid YYYY-MM-DD in Asia/Kuala_Lumpur",
+    "version": "positive integer"
+  },
+  "identity": {
+    "header": "X-Demo-User",
+    "productionAuthentication": false,
+    "tenantSource": "server-owned user record; no client company override",
+    "roleInheritance": false
+  },
+  "idempotency": {
+    "header": "Idempotency-Key",
+    "keyPattern": "^[A-Za-z0-9._:-]{8,128}$",
+    "scope": [
+      "companyId",
+      "actorId",
+      "key"
+    ],
+    "binding": [
+      "method",
+      "canonicalPath",
+      "bodySha256"
+    ],
+    "jsonCanonicalization": "RFC8785",
+    "multipartCanonicalization": "RFC8785 of text fields, file MIME and SHA-256 bytes; ignore boundary and filename",
+    "replayBeforeVersionCheck": true,
+    "persistAcrossRestart": true
+  },
+  "uploads": {
+    "receipt": {
+      "mimeTypes": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "maxBytes": 5242880,
+      "maxPixels": 20000000,
+      "animatedImages": false
+    },
+    "csv": {
+      "encoding": "UTF-8",
+      "optionalBom": true,
+      "maxBytes": 1048576,
+      "maxDataRows": 1000,
+      "header": [
+        "externalId",
+        "postedDate",
+        "amountSen",
+        "reference",
+        "payer",
+        "bank"
+      ],
+      "atomicImport": true
+    }
+  },
+  "csv": {
+    "externalIdMaxLength": 128,
+    "referenceMaxLength": 128,
+    "payerMaxLength": 200,
+    "bankMaxLength": 100,
+    "uniqueExternalIdScope": "company",
+    "fingerprintFields": [
+      "normalizedBank",
+      "postedDate",
+      "amountSen",
+      "normalizedReference",
+      "normalizedPayer"
+    ],
+    "sameExternalIdDifferentPayload": "reject_whole_import",
+    "sameFingerprintDifferentExternalId": "skip_existing",
+    "zeroOrNegativeCredit": "reject",
+    "futurePostedDate": "reject_whole_import_if_after_asOf_MYT_date"
+  },
+  "normalization": {
+    "reference": "Unicode NFKC, trim, uppercase, remove Unicode whitespace; retain punctuation",
+    "payer": "Unicode NFKC, trim, uppercase, collapse Unicode whitespace to one ASCII space; retain punctuation",
+    "bank": "same as payer",
+    "externalId": "trim only; case-sensitive"
+  },
+  "matcher": {
+    "confidenceThreshold": 0.85,
+    "confidenceMeaning": "routing signal, not calibrated probability",
+    "amountToleranceSen": 0,
+    "minimumPostedDateOffsetDays": 0,
+    "maximumPostedDateOffsetDays": 2,
+    "bankEqualityRequired": false,
+    "payerAliasSource": "independently maintained customer.payerAliases",
+    "allowedApprovalVerdicts": [
+      "confirmed",
+      "partial"
+    ],
+    "verdicts": [
+      "confirmed",
+      "partial",
+      "amount_mismatch",
+      "not_in_bank_yet",
+      "duplicate",
+      "needs_review"
+    ],
+    "multipleCandidates": "needs_review",
+    "dateOutsideWindow": "needs_review",
+    "missingReference": "needs_review",
+    "wrongPayer": "needs_review",
+    "creditGreaterThanOutstanding": "needs_review",
+    "manualEvidenceRequiresServerReviewStamp": true,
+    "futureBankPosting": "needs_review"
+  },
+  "allocation": {
+    "oneCreditOneInvoice": true,
+    "fullCreditAmountOnly": true,
+    "splitting": false,
+    "offsetting": false,
+    "editingApprovedPayments": false,
+    "duplicateCreditAllocation": false
+  },
+  "ai": {
+    "allowedInputFields": [
+      "task",
+      "redactedText",
+      "language",
+      "outstandingAmountSen",
+      "replyReceivedAt",
+      "referenceDate",
+      "timezone"
+    ],
+    "forbiddenInputContent": [
+      "raw_images",
+      "bank_statements",
+      "customer_records",
+      "account_numbers",
+      "phone_numbers",
+      "emails",
+      "addresses"
+    ],
+    "localTokens": [
+      "referenceToken",
+      "payerToken"
+    ],
+    "unknownToken": "manual_required",
+    "consequentialActionsAllowed": false
+  },
+  "forecast": {
+    "horizonDays": 30,
+    "delayDaysMin": 0,
+    "delayDaysMax": 30,
+    "asOfDateMustEqualMytDateOfAsOf": true,
+    "paymentEffectiveDate": "MYT date of Finance confirmation",
+    "openingBalance": "balance at start of asOfDate; includes payments confirmed on earlier dates",
+    "actualReceipts": "payments effective on asOfDate with confirmedAt <= asOf",
+    "expectedAmount": "current outstandingAmountSen of issued or partially_paid invoices only",
+    "expectedDate": "confirmed active promise date, otherwise dueDate; clamp overdue date to asOfDate before applying delayDays",
+    "delayAffects": [
+      "expected_receipts"
+    ],
+    "expenseDate": "dueDate unchanged by delay",
+    "promiseAmount": "whole current outstanding only",
+    "partialPaymentStopsCollections": false
+  },
+  "evaluationTargets": {
+    "receiptCases": 40,
+    "receiptLayouts": 4,
+    "amountExactAccuracy": 0.9,
+    "referenceAccuracy": 0.85,
+    "timeAccuracy": 0.85,
+    "replyCases": 40,
+    "replyIntentAccuracy": 0.85,
+    "lowConfidenceReviewRate": 1,
+    "matcherCases": 30,
+    "matcherCorrectRate": 1,
+    "forecastHandCalculatedDays": 10
+  }
+}

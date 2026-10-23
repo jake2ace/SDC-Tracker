@@ -1,0 +1,17 @@
+{
+  "name": "proof-to-cash-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared DTOs, fixtures and contract checks for Proof-to-Cash",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "check": "npm run check:types && npm run check:fixtures",
+    "check:types": "tsc --project tsconfig.json",
+    "check:fixtures": "node --experimental-strip-types verify.mjs"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "typescript": "5.9.3"
+  }
+}

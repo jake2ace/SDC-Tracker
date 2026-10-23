@@ -1,0 +1,466 @@
+{
+  "metadata": {
+    "datasetVersion": "step1-v1",
+    "synthetic": true,
+    "executionStatus": "fixtures_only_not_executed",
+    "asOf": "2026-10-23T04:00:00Z",
+    "timezone": "Asia/Kuala_Lumpur",
+    "currency": "MYR",
+    "amountUnit": "sen",
+    "note": "All names, bank rows, conversations and amounts are invented for the demo. No real banking connection, sending or payment has occurred.",
+    "scenario": "before_finance_confirmation",
+    "bankLedgerVersion": 1,
+    "assetStatus": "No receipt image bytes exist in STEP-1. Receipts and matches are intentionally empty until upload/manual entry in a later step.",
+    "pendingOutcome": "Approving the 900000 sen Lumen credit later would leave 900000 sen outstanding; it has not been approved in this seed.",
+    "runtimeCompanyVersionIsAuthoritative": true,
+    "initializationPolicy": "This seed already contains the two imported synthetic credits. Re-importing the provided CSVs must be idempotent. Metadata bankLedgerVersion is descriptive only; company.version is authoritative."
+  },
+  "companies": [
+    {
+      "id": "co_lumen",
+      "name": "Studio Lumen Demo",
+      "currency": "MYR",
+      "timezone": "Asia/Kuala_Lumpur",
+      "version": 1
+    },
+    {
+      "id": "co_rantau",
+      "name": "Rantau IT Demo",
+      "currency": "MYR",
+      "timezone": "Asia/Kuala_Lumpur",
+      "version": 1
+    }
+  ],
+  "users": [
+    {
+      "id": "u_lumen_owner",
+      "displayName": "Lumen owner (demo)",
+      "companyId": "co_lumen",
+      "role": "owner"
+    },
+    {
+      "id": "u_lumen_finance",
+      "displayName": "Lumen finance (demo)",
+      "companyId": "co_lumen",
+      "role": "finance"
+    },
+    {
+      "id": "u_lumen_pm",
+      "displayName": "Lumen pm (demo)",
+      "companyId": "co_lumen",
+      "role": "pm"
+    },
+    {
+      "id": "u_rantau_owner",
+      "displayName": "Rantau owner (demo)",
+      "companyId": "co_rantau",
+      "role": "owner"
+    },
+    {
+      "id": "u_rantau_finance",
+      "displayName": "Rantau finance (demo)",
+      "companyId": "co_rantau",
+      "role": "finance"
+    },
+    {
+      "id": "u_rantau_pm",
+      "displayName": "Rantau pm (demo)",
+      "companyId": "co_rantau",
+      "role": "pm"
+    }
+  ],
+  "customers": [
+    {
+      "id": "cust_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "name": "Kopi Tiga Test",
+      "payerAliases": [
+        "KOPI TIGA TEST",
+        "KOPI TIGA SDN BHD TEST"
+      ],
+      "preferredLanguage": "en"
+    },
+    {
+      "id": "cust_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "name": "Pasar Sinar Test",
+      "payerAliases": [
+        "PASAR SINAR TEST",
+        "SINAR DEMO ENTERPRISE"
+      ],
+      "preferredLanguage": "ms"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "customerId": "cust_lumen_001",
+      "name": "Kopi Tiga demo design project",
+      "milestoneIds": [
+        "ms_lumen_001",
+        "ms_lumen_002"
+      ]
+    },
+    {
+      "id": "proj_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "customerId": "cust_rantau_001",
+      "name": "Pasar Sinar demo website project",
+      "milestoneIds": [
+        "ms_rantau_001"
+      ]
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "projectId": "proj_lumen_001",
+      "customerId": "cust_lumen_001",
+      "title": "Design phase delivery",
+      "amountSen": 1800000,
+      "dueDate": "2026-10-16",
+      "status": "completed",
+      "completedAt": "2026-10-01T01:00:00Z",
+      "invoiceId": "inv_lumen_001"
+    },
+    {
+      "id": "ms_lumen_002",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "projectId": "proj_lumen_001",
+      "customerId": "cust_lumen_001",
+      "title": "Final handover",
+      "amountSen": 600000,
+      "dueDate": "2026-11-10",
+      "status": "planned",
+      "completedAt": null,
+      "invoiceId": null
+    },
+    {
+      "id": "ms_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "projectId": "proj_rantau_001",
+      "customerId": "cust_rantau_001",
+      "title": "Website delivery",
+      "amountSen": 1200000,
+      "dueDate": "2026-10-18",
+      "status": "completed",
+      "completedAt": "2026-10-03T01:00:00Z",
+      "invoiceId": "inv_rantau_001"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "inv_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "customerId": "cust_lumen_001",
+      "projectId": "proj_lumen_001",
+      "milestoneId": "ms_lumen_001",
+      "number": "LUMEN-DEMO-001",
+      "currency": "MYR",
+      "totalAmountSen": 1800000,
+      "paidAmountSen": 0,
+      "outstandingAmountSen": 1800000,
+      "dueDate": "2026-10-16",
+      "status": "issued",
+      "collectionStatus": "active",
+      "issuedAt": "2026-10-03T02:00:00Z",
+      "approvedBy": "u_lumen_owner",
+      "confirmedPromiseId": null
+    },
+    {
+      "id": "inv_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "customerId": "cust_rantau_001",
+      "projectId": "proj_rantau_001",
+      "milestoneId": "ms_rantau_001",
+      "number": "RANTAU-DEMO-001",
+      "currency": "MYR",
+      "totalAmountSen": 1200000,
+      "paidAmountSen": 0,
+      "outstandingAmountSen": 1200000,
+      "dueDate": "2026-10-18",
+      "status": "issued",
+      "collectionStatus": "active",
+      "issuedAt": "2026-10-03T02:00:00Z",
+      "approvedBy": "u_rantau_owner",
+      "confirmedPromiseId": null
+    }
+  ],
+  "bankCredits": [
+    {
+      "id": "bank_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-10-23T02:45:00Z",
+      "updatedAt": "2026-10-23T02:45:00Z",
+      "externalId": "LUMEN-CREDIT-001",
+      "postedDate": "2026-10-23",
+      "amountSen": 900000,
+      "reference": "LMN-231026-001",
+      "payer": "KOPI TIGA TEST",
+      "bank": "DEMO RECEIVING BANK",
+      "allocatedPaymentId": null
+    },
+    {
+      "id": "bank_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-10-23T02:45:00Z",
+      "updatedAt": "2026-10-23T02:45:00Z",
+      "externalId": "RANTAU-CREDIT-001",
+      "postedDate": "2026-10-23",
+      "amountSen": 1200000,
+      "reference": "RTU-231026-001",
+      "payer": "SINAR DEMO ENTERPRISE",
+      "bank": "DEMO RECEIVING BANK",
+      "allocatedPaymentId": null
+    }
+  ],
+  "replies": [
+    {
+      "id": "reply_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-10-23T02:40:00Z",
+      "updatedAt": "2026-10-23T02:40:00Z",
+      "invoiceId": "inv_lumen_001",
+      "text": "I transferred RM9,000 today for LUMEN-DEMO-001. I will send the receipt next.",
+      "receivedAt": "2026-10-23T02:40:00Z",
+      "language": "en",
+      "receiptId": null,
+      "processingStatus": "manual_required",
+      "extraction": null,
+      "confirmedPromiseId": null
+    },
+    {
+      "id": "reply_lumen_002",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-10-23T02:50:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "invoiceId": "inv_lumen_001",
+      "text": "After the RM9,000 transfer is checked, I will pay the remaining RM9,000 on 28 October 2026.",
+      "receivedAt": "2026-10-23T02:50:00Z",
+      "language": "en",
+      "receiptId": null,
+      "processingStatus": "manual_required",
+      "extraction": null,
+      "confirmedPromiseId": null
+    },
+    {
+      "id": "reply_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-10-23T02:40:00Z",
+      "updatedAt": "2026-10-23T02:40:00Z",
+      "invoiceId": "inv_rantau_001",
+      "text": "Saya sudah pindahkan RM12,000 untuk RANTAU-DEMO-001. Sila semak transaksi dahulu.",
+      "receivedAt": "2026-10-23T02:40:00Z",
+      "language": "ms",
+      "receiptId": null,
+      "processingStatus": "manual_required",
+      "extraction": null,
+      "confirmedPromiseId": null
+    }
+  ],
+  "receipts": [],
+  "matchResults": [],
+  "payments": [],
+  "promises": [],
+  "expenses": [
+    {
+      "id": "exp_lumen_001",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "title": "Synthetic supplier payment",
+      "amountSen": 300000,
+      "dueDate": "2026-10-25"
+    },
+    {
+      "id": "exp_lumen_002",
+      "companyId": "co_lumen",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "title": "Synthetic monthly rent",
+      "amountSen": 400000,
+      "dueDate": "2026-10-30"
+    },
+    {
+      "id": "exp_rantau_001",
+      "companyId": "co_rantau",
+      "version": 1,
+      "createdAt": "2026-09-30T01:00:00Z",
+      "updatedAt": "2026-10-23T02:50:00Z",
+      "title": "Synthetic hosting bill",
+      "amountSen": 200000,
+      "dueDate": "2026-10-27"
+    }
+  ],
+  "activityLogs": [
+    {
+      "id": "seed_event_001",
+      "companyId": "co_lumen",
+      "actorId": "u_lumen_pm",
+      "action": "milestone.completed",
+      "entityType": "milestone",
+      "entityId": "ms_lumen_001",
+      "occurredAt": "2026-10-01T01:00:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_001",
+      "summary": "Synthetic seed milestone completed."
+    },
+    {
+      "id": "seed_event_002",
+      "companyId": "co_rantau",
+      "actorId": "u_rantau_pm",
+      "action": "milestone.completed",
+      "entityType": "milestone",
+      "entityId": "ms_rantau_001",
+      "occurredAt": "2026-10-03T01:00:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_002",
+      "summary": "Synthetic seed milestone completed."
+    },
+    {
+      "id": "seed_event_003",
+      "companyId": "co_lumen",
+      "actorId": "u_lumen_owner",
+      "action": "invoice.approved_and_issued",
+      "entityType": "invoice",
+      "entityId": "inv_lumen_001",
+      "occurredAt": "2026-10-03T02:00:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_003",
+      "summary": "Synthetic seed Owner approval issues 1800000 sen invoice."
+    },
+    {
+      "id": "seed_event_004",
+      "companyId": "co_rantau",
+      "actorId": "u_rantau_owner",
+      "action": "invoice.approved_and_issued",
+      "entityType": "invoice",
+      "entityId": "inv_rantau_001",
+      "occurredAt": "2026-10-03T02:00:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_004",
+      "summary": "Synthetic seed Owner approval issues 1200000 sen invoice."
+    },
+    {
+      "id": "seed_event_005",
+      "companyId": "co_lumen",
+      "actorId": "u_lumen_finance",
+      "action": "reply.recorded",
+      "entityType": "reply",
+      "entityId": "reply_lumen_001",
+      "occurredAt": "2026-10-23T02:40:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_005",
+      "summary": "Synthetic partial-payment claim recorded without creating a payment."
+    },
+    {
+      "id": "seed_event_006",
+      "companyId": "co_rantau",
+      "actorId": "u_rantau_finance",
+      "action": "reply.recorded",
+      "entityType": "reply",
+      "entityId": "reply_rantau_001",
+      "occurredAt": "2026-10-23T02:40:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_006",
+      "summary": "Synthetic payment claim recorded without creating a payment."
+    },
+    {
+      "id": "seed_event_007",
+      "companyId": "co_lumen",
+      "actorId": "u_lumen_finance",
+      "action": "bank.csv_imported",
+      "entityType": "bank_credit",
+      "entityId": "bank_lumen_001",
+      "occurredAt": "2026-10-23T02:45:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_007",
+      "summary": "Synthetic 900000 sen bank evidence imported; allocation and payment remain pending."
+    },
+    {
+      "id": "seed_event_008",
+      "companyId": "co_rantau",
+      "actorId": "u_rantau_finance",
+      "action": "bank.csv_imported",
+      "entityType": "bank_credit",
+      "entityId": "bank_rantau_001",
+      "occurredAt": "2026-10-23T02:45:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_008",
+      "summary": "Synthetic 1200000 sen bank evidence imported; allocation and payment remain pending."
+    },
+    {
+      "id": "seed_event_009",
+      "companyId": "co_lumen",
+      "actorId": "u_lumen_finance",
+      "action": "reply.recorded",
+      "entityType": "reply",
+      "entityId": "reply_lumen_002",
+      "occurredAt": "2026-10-23T02:50:00Z",
+      "outcome": "succeeded",
+      "reasonCode": null,
+      "requestId": "req_seed_event_009",
+      "summary": "Synthetic remainder promise text recorded; no promise date is applied."
+    }
+  ],
+  "forecastSettings": [
+    {
+      "companyId": "co_lumen",
+      "openingBalanceSen": 200000,
+      "safetyThresholdSen": 500000,
+      "asOfDate": "2026-10-23",
+      "delayDays": 0
+    },
+    {
+      "companyId": "co_rantau",
+      "openingBalanceSen": 100000,
+      "safetyThresholdSen": 300000,
+      "asOfDate": "2026-10-23",
+      "delayDays": 0
+    }
+  ]
+}
