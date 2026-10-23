@@ -1,6 +1,6 @@
 # STEP-7 local integration
 
-The supplied React frontend is integrated with all 17 backend operations. Local technical checks pass. The ten-screenshot human timing comparison and independent team review remain pending, as confirmed by the project owner on 24 October 2026. Issue #23 therefore stays open; this report does not claim deployment, submission readiness or measured staff time savings.
+The supplied React frontend is integrated with all 17 backend operations. Local technical checks pass. The project owner subsequently requested skipping the ten-screenshot human timing comparison and independent team review on 24 October 2026. These checks were not performed; Issue #23 closes with this explicit scope change. This report does not claim deployment, submission readiness or measured staff time savings.
 
 ## What changed
 
@@ -60,7 +60,7 @@ An initial run with only the key and no model setting correctly used the labelle
 
 ![Live-provider promise reflected in the seven-day delayed forecast](images/step7-live-cash.png)
 
-## Remaining human evidence
+## Human evidence excluded by request
 
 - Use the same ten synthetic screenshots for the manual and tool workflow, with the same start/end points. Include review and correction time in both results and record actual elapsed times; model latency alone cannot establish a human speedup.
 - Another team member must follow the recorded workflow and provide their own conclusion. Automated test results are not a member's signoff.

@@ -15,6 +15,7 @@ import { createLocalOcrProvider, type OcrProvider } from "./receipt-image.ts";
 import { prepareReply, createReply, prepareReceipt, saveReceipt, correctReply, correctReceipt } from "./evidence-operations.ts";
 import { approvePayment, confirmPromise } from "./reconciliation.ts";
 import { getForecast } from "./forecast-query.ts";
+import { createFrontendHandler } from "./frontend.ts";
 
 interface AppOptions {
   dbPath: string;
@@ -23,6 +24,7 @@ interface AppOptions {
   frontendOrigin?: string;
   extractionProvider?: ExtractionProvider;
   ocrProvider?: OcrProvider;
+  frontendDirectory?: string;
 }
 
 type WriteOperation = Operation | "importBankStatement" | "runMatch" | "createReply" | "correctReply" | "uploadReceipt" | "correctReceipt" | "approvePayment" | "confirmPromise";
@@ -84,6 +86,7 @@ function bodyFrom(req: IncomingMessage): Promise<unknown> {
 }
 
 export async function createApp(options: AppOptions) {
+  const frontend = options.frontendDirectory ? createFrontendHandler(options.frontendDirectory) : undefined;
   const store = new Store(options.dbPath);
   const now = options.clock ?? DEMO_CLOCK;
   if (!Number.isFinite(Date.parse(now)) || !now.endsWith("Z")) {
@@ -131,6 +134,7 @@ export async function createApp(options: AppOptions) {
       }
       const url = new URL(req.url ?? "/", "http://localhost");
       const path = url.pathname;
+      if (frontend?.(req, res, path)) return;
       if (url.search && !(req.method === "GET" && path === ENDPOINTS.getForecast.path)) {
         throw new AppError(422, "VALIDATION_ERROR", "This endpoint accepts no query parameters.");
       }

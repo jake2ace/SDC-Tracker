@@ -4,7 +4,7 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**前端现已接通全部十七个后端契约接口，包含人工批准入账、部分收款、付款承诺及 30 天现金流预测。** 本地联调结果见[第七步报告](docs/evaluation/STEP7-INTEGRATION.md)。十次人工流程计时和组员复核仍待完成；部署与参赛提交独立推进。
+**前端现已接通全部十七个后端契约接口，包含人工批准入账、部分收款、付款承诺及 30 天现金流预测。** 本地联调结果见[第七步报告](docs/evaluation/STEP7-INTEGRATION.md)。按用户要求跳过人工耗时对比与组员复核，不宣称已完成这两项实验；现进入部署与提交准备。
 
 本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
 
@@ -15,9 +15,9 @@
 | 团队名称 | Lets go |
 | 参赛赛道 | Domain 2 — Orbyte Smart SME Challenge |
 | SDG 方向（1–17） | SDG 8 — 体面工作和经济增长；拟对应目标 8.2 / 8.3 |
-| 队长 | 待团队确认 |
-| 大学 | 待团队确认 |
-| 成员人数 | 计划 4 人；正式注册名单待确认 |
+| 队长 | Jiazhong Yang |
+| 大学 | Monash University Malaysia；Universiti Malaya |
+| 成员人数 | 4 人；正式注册名单已确认 |
 
 ## 链接
 
@@ -27,11 +27,13 @@
 | 共享契约 | [契约说明](docs/CONTRACT.md) · [类型、规则与样例](contracts/) |
 | 后端 API | [启动、配置与已实现接口](docs/BACKEND.md) |
 | 本地联调 | [浏览器、API 与模型验证](docs/evaluation/STEP7-INTEGRATION.md) |
+| 部署说明 | [单端口构建、托管与持久化](docs/DEPLOYMENT.md) |
+| 提交准备 | [材料与剩余要求](submission/README.md) |
 | 合成数据 | [演示 seed](data/seed/README.md) · [评测输入与独立 gold](data/eval/README.md) |
 | Replit 项目 | 待补充 |
 | 在线演示 | 待补充 |
 | RunPod 端点 | 重建版尚未使用 |
-| 演示幻灯片 | 待补充 |
+| 演示幻灯片 | 独立准备；[本地幻灯片需求](submission/SLIDE_REQUIREMENTS.md) |
 | 演示视频 | 待补充 |
 
 ## 项目概览
@@ -60,7 +62,7 @@
 | --- | --- |
 | 前端 | React + TypeScript + Vite；实现在 `web/` 中 |
 | 后端 | Node.js HTTP API；建议使用 Node.js 24 LTS |
-| 数据库 | SQLite；演示数据持久化与事务 |
+| 数据库 | SQLite；本地持久化和事务已验证，云端持久存储待确认 |
 | AI／计算 | 离线 Tesseract OCR；服务端 DeepSeek 结构化；无密钥时明确转人工处理 |
 | 托管／开发 | Replit 使用与部署待验证 |
 
@@ -99,7 +101,7 @@
 
 ### 方式一 — 在 Replit 运行
 
-目前不可运行。Replit 项目、配置和验证过的操作步骤会在实现及部署核查时补充。
+仓库已提供 `.replit` 构建和启动配置及[部署说明](docs/DEPLOYMENT.md)，实际团队项目和公开地址尚未验证。普通 Replit 发布环境的文件系统不能作为已验证的持久 SQLite 存储；云端持久化仍需合适的数据库或持久化主机。
 
 ### 方式二 — 在本地运行
 
@@ -117,6 +119,15 @@ npm start
 ```
 
 在第二个终端进入仓库根目录，运行 `npm run dev:web`，然后打开 `http://localhost:5173`。演示登录页进入工作区后，可切换 PM、Owner 或 Finance 身份。界面默认连接真实的本地 API；仅在需要固定样例时，添加 `?source=mock` 并重新加载。
+
+如需通过单一地址运行构建版本，先停止开发服务器，然后执行：
+
+```bash
+npm run build
+npm run start:production
+```
+
+访问 `http://localhost:3000`，前端与 API 共用此地址。[部署检查](docs/DEPLOYMENT.md)已验证本地进程重启和无密钥降级。演示身份切换不等于生产登录认证。
 
 在根目录 `.env` 中设置 `DEEPSEEK_API_KEY`，保留 `DEEPSEEK_MODEL=deepseek-flash`。密钥只能留在服务端，不放入 `web/` 或任何 `VITE_` 变量。模型不可用时，提醒明确使用模板，付款证据可转人工录入和审核。
 
@@ -145,6 +156,8 @@ npm test
 npm run test:web
 npm run test:e2e
 npm run build
+npm run test:deployment
+npm run test:deployment:smoke
 npm run evaluate:matcher
 npm run evaluate:forecast
 npm ci --prefix contracts
@@ -163,7 +176,7 @@ npm --prefix contracts run check
 
 ## 挑战与收获
 
-付款凭证只是待核对的声明，部分付款必须保留余款，响应中断也不代表写入失败。联调中完善了安全重试、刷新失败后的明确恢复、身份切换后的状态隔离，以及区分实际和预计收入的现金流。人工流程计时和组员复核只在真实完成后记录。
+付款凭证只是待核对的声明，部分付款必须保留余款，响应中断也不代表写入失败。联调中完善了安全重试、刷新失败后的明确恢复、身份切换后的状态隔离，以及区分实际和预计收入的现金流。人工流程计时和组员复核按用户要求跳过；尚未测量人工节省时间。
 
 ## 后续改进
 
@@ -172,11 +185,14 @@ npm --prefix contracts run check
 
 ## 团队分工
 
-| 姓名 | 职责 | GitHub |
+| 姓名 | 大学 | 职责 |
 | --- | --- | --- |
-| 正式注册名单待确认 | 任务认领待确认 | 待确认 |
+| Jiazhong Yang | Monash University Malaysia | 注册队长 |
+| LOW LI XIN | Universiti Malaya | 组员；具体贡献待确认 |
+| Jieheng Li | Monash University Malaysia | 组员；具体贡献待确认 |
+| Lingchen Wu | Monash University Malaysia | 组员；具体贡献待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。全部十七个操作现已接通，接下来共同完成独立复核、人工流程计时、部署和提交材料。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。全部十七个操作现已接通，接下来共同完成部署、演示录制和提交材料。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
@@ -190,14 +206,15 @@ npm --prefix contracts run check
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 已完成 — 银行 CSV 与确定性匹配 |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | 已完成 — OCR、AI 提取及人工降级 |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 已完成 — 付款审批、部分收款与预测 |
-| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 本地技术联调；十次人工计时和组员复核待完成 |
+| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 已完成 — 技术联调；人工计时和组员复核按要求跳过 |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | 部署、演示与提交核对 |
 
 详细资料：[依赖与验收计划](docs/ISSUE_PLAN.md) · [前端交接](docs/FRONTEND_HANDOFF.md) · [决策记录](docs/decisions.md)。
 
 ## 提交检查清单
 
-- [ ] 确认团队信息、正式注册名单和 SDG 目标。
+- [x] 确认正式注册队长、成员和大学。
+- [ ] 确认拟采用的 SDG 目标和实际分工。
 - [ ] 补充幻灯片和演示视频链接。
 - [ ] 记录 Replit 使用及使用证明。
 - [ ] 确认 RunPod 要求的适用性，提供所需的真实证据。

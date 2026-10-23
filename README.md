@@ -4,7 +4,7 @@
 
 > Help Malaysian service micro-businesses invoice completed work, follow up on overdue balances and check payment claims against bank records before recording payment.
 
-**The frontend now connects all seventeen backend contract operations, including reviewed payment allocation, partial balances, payment promises and 30-day forecasts.** Local integration results are recorded in the [STEP-7 report](docs/evaluation/STEP7-INTEGRATION.md). Ten manual workflow timings and a team member's review remain pending; deployment and submission are separate tasks.
+**The frontend now connects all seventeen backend contract operations, including reviewed payment allocation, partial balances, payment promises and 30-day forecasts.** Local integration results are recorded in the [STEP-7 report](docs/evaluation/STEP7-INTEGRATION.md). The manual timing comparison and independent member review were skipped at the project owner's request; no such results are claimed. Deployment and submission are the current step.
 
 This README follows the section order of the [SDC submission template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md). Template alignment does not mean submission requirements are complete.
 
@@ -15,9 +15,9 @@ This README follows the section order of the [SDC submission template](https://g
 | Team Name | Lets go |
 | Team Domain | Domain 2 — Orbyte Smart SME Challenge |
 | SDG Track (1–17) | SDG 8 — Decent Work and Economic Growth; targets 8.2 / 8.3 proposed |
-| Team Leader | Pending team confirmation |
-| University | Pending team confirmation |
-| Number of Members | 4 planned — confirm registered roster |
+| Team Leader | Jiazhong Yang |
+| Universities | Monash University Malaysia; Universiti Malaya |
+| Number of Members | 4 — registered roster confirmed |
 
 ## Links
 
@@ -27,11 +27,13 @@ This README follows the section order of the [SDC submission template](https://g
 | Shared Contract | [Contract guide](docs/CONTRACT.md) · [types, rules and fixtures](contracts/) |
 | Backend API | [Startup, configuration and implemented endpoints](docs/BACKEND.md) |
 | Local Integration | [Browser, API and model validation](docs/evaluation/STEP7-INTEGRATION.md) |
+| Deployment Guide | [Single-port build, hosting and persistence](docs/DEPLOYMENT.md) |
+| Submission Preparation | [Documents and remaining requirements](submission/README.md) |
 | Synthetic Data | [Demo seed](data/seed/README.md) · [evaluation inputs and separate gold](data/eval/README.md) |
 | Replit Project | Pending |
 | Live Demo | Pending |
 | RunPod Endpoint | Not used for this rebuild |
-| Slide Deck | Pending |
+| Slide Deck | Prepared separately; [local slide requirements](submission/SLIDE_REQUIREMENTS.md) |
 | Demo Video | Pending |
 
 ## Overview
@@ -60,7 +62,7 @@ The browser UI connects invoicing, collections, receipt extraction, bank matchin
 | --- | --- |
 | Frontend | React + TypeScript + Vite, in `web/` |
 | Backend | Node.js HTTP API; Node.js 24 LTS recommended |
-| Database | SQLite; persistent demo data and transactions |
+| Database | SQLite; local persistence and transactions verified; hosted durable storage pending |
 | AI / Compute | Bundled local Tesseract OCR; server-side DeepSeek extraction; explicit manual fallback without a key |
 | Hosting / Dev | Replit use and deployment to be verified |
 
@@ -99,7 +101,7 @@ The API in `src/` and UI in `web/` run locally. Test code stays outside producti
 
 ### Option 1 — Run on Replit
 
-Not available yet. The Replit project, configuration and verified instructions will be added during implementation and deployment checks.
+The repository includes a `.replit` build/start configuration and [deployment instructions](docs/DEPLOYMENT.md). The actual team project and public URL have not yet been verified. A normal Replit published filesystem is not verified durable SQLite storage; hosted persistence requires a suitable database or persistent host.
 
 ### Option 2 — Run Locally
 
@@ -117,6 +119,15 @@ npm start
 ```
 
 In a second terminal, run `npm run dev:web` from the repository root and open `http://localhost:5173`. The demo sign-in screen opens the workspace; select a demo identity to work as PM, Owner or Finance. The UI defaults to the real local API. Add `?source=mock` and reload only when you want fixed fixture scenarios.
+
+For a single-port build, stop the development servers and run:
+
+```bash
+npm run build
+npm run start:production
+```
+
+Open `http://localhost:3000`; the frontend and API share this address. [Deployment checks](docs/DEPLOYMENT.md) verified local process restart and missing-key recovery. The demo identity selector is not production authentication.
 
 Set `DEEPSEEK_API_KEY` in the root `.env` and keep `DEEPSEEK_MODEL=deepseek-flash`; the key stays server-side and must not be placed in `web/` or any `VITE_` variable. Without a usable model, reminders use an identified template and evidence can be reviewed manually.
 
@@ -145,6 +156,8 @@ npm test
 npm run test:web
 npm run test:e2e
 npm run build
+npm run test:deployment
+npm run test:deployment:smoke
 npm run evaluate:matcher
 npm run evaluate:forecast
 npm ci --prefix contracts
@@ -163,7 +176,7 @@ RunPod has not been used for this rebuild; the planned MVP has no GPU workload. 
 
 ## Challenges & Learnings
 
-A receipt is a claim to verify, partial payments must preserve the remainder, and an interrupted response does not prove a write failed. Integration work adds safe retries, explicit recovery after a failed workspace refresh, identity-scoped state and source-aware cash forecasts. Manual workflow timing and member review will be recorded only after they occur.
+A receipt is a claim to verify, partial payments must preserve the remainder, and an interrupted response does not prove a write failed. Integration work adds safe retries, explicit recovery after a failed workspace refresh, identity-scoped state and source-aware cash forecasts. Manual workflow timing and independent member review were skipped at the project owner's request; staff time savings have not been measured.
 
 ## Future Improvements
 
@@ -172,11 +185,14 @@ A receipt is a claim to verify, partial payments must preserve the remainder, an
 
 ## Team
 
-| Name | Role | GitHub |
+| Name | University | Role |
 | --- | --- | --- |
-| Registered roster pending confirmation | Task ownership pending confirmation | Pending confirmation |
+| Jiazhong Yang | Monash University Malaysia | Registered team leader |
+| LOW LI XIN | Universiti Malaya | Team member; task ownership to be confirmed |
+| Jieheng Li | Monash University Malaysia | Team member; task ownership to be confirmed |
+| Lingchen Wu | Monash University Malaysia | Team member; task ownership to be confirmed |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. All seventeen operations are connected; the next shared work is independent review, manual workflow measurement, deployment and submission material.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. All seventeen operations are connected; the next shared work is deployment, the demonstration recording and submission material.
 
 Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 
@@ -190,14 +206,15 @@ Members can claim synthetic cases, independent calculations, test reviews, docum
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | Complete — bank CSV and deterministic matching |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | Complete — OCR, AI extraction and manual fallback |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | Complete — payment approval, partial payments and forecast |
-| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Local technical integration; ten manual timings and member review pending |
+| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Complete — technical integration; manual timings and member review skipped by request |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Deployment, presentation and submission checks |
 
 Details: [dependencies and acceptance plan](docs/ISSUE_PLAN.md) · [frontend handoff](docs/FRONTEND_HANDOFF.md) · [decisions](docs/decisions.md).
 
 ## Submission Checklist
 
-- [ ] Confirm team details, registered roster and SDG targets.
+- [x] Confirm registered team leader, roster and universities.
+- [ ] Confirm proposed SDG targets and actual contributions.
 - [ ] Add the slide deck and demo video links.
 - [ ] Record Replit use and proof of use.
 - [ ] Resolve RunPod applicability and provide any required truthful evidence.
