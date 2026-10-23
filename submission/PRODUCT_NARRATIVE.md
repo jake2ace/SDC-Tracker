@@ -53,7 +53,7 @@ flowchart LR
 
 Amounts use integer MYR sen. Permissions and company boundaries are checked by the server. Approval rechecks the invoice, screenshot and bank-record versions; changed evidence requires a fresh match. Database transactions, idempotency keys and unique credit allocation protect retries and concurrent approvals. Manual correction and template reminders remain available when the model cannot be used. Demo identity switching is not production authentication.
 
-**Sponsor API and cloud status:** no live Orbyte integration and no RunPod use are claimed. Replit use and deployment must be recorded from actual platform evidence before completing the template's corresponding questions.
+**Sponsor API and cloud status:** no live Orbyte integration and no RunPod use are claimed. Actual Replit workspace and public-host results are recorded in [hosted verification](../docs/evaluation/HOSTED-VERIFICATION.md). The demonstration uses resettable SQLite storage; durable financial hosting is not claimed. The formal Replit proof-of-use PDF remains to be prepared.
 
 ## 3.2. Design approach and deployment
 

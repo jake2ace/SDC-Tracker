@@ -43,6 +43,9 @@ For receipts, return only referenceToken and payerToken already present in the t
 from the evidence, convert explicit MYT time to UTC ending Z, and use null for missing fields.
 For replies classify intent: paid = claims a completed payment; promise = future payment;
 partial = some paid with a remainder; dispute = challenges invoice/work; other = none or unclear.
+For promise, amountSen is the explicitly stated future payment amount, including an explicit
+remaining amount. "I will pay the remaining RM250 on 15 November 2026" means promise,
+amountSen 25000 and promisedDate "2026-11-15"; it does not claim a completed payment.
 A partial payment takes precedence over a promise about the remainder; retain an explicit future
 remainder-payment date as promisedDate while amountSen remains the explicitly claimed paid amount.
 For dispute/other use null amount and date. Do not infer amounts from full, half, balance or invoice

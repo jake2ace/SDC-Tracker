@@ -30,8 +30,8 @@ This README follows the section order of the [SDC submission template](https://g
 | Deployment Guide | [Single-port build, hosting and persistence](docs/DEPLOYMENT.md) |
 | Submission Preparation | [Documents and remaining requirements](submission/README.md) |
 | Synthetic Data | [Demo seed](data/seed/README.md) · [evaluation inputs and separate gold](data/eval/README.md) |
-| Replit Project | Pending |
-| Live Demo | Pending |
+| Replit Project | [Team workspace](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) |
+| Live Demo | [Open the shared demo](https://milestone-2-cash-proof-to-cash.replit.app/) · [Friend test guide](docs/FRIEND_TEST_GUIDE.zh-CN.md) |
 | RunPod Endpoint | Not used for this rebuild |
 | Slide Deck | Prepared separately; [local slide requirements](submission/SLIDE_REQUIREMENTS.md) |
 | Demo Video | Pending |
@@ -64,7 +64,7 @@ The browser UI connects invoicing, collections, receipt extraction, bank matchin
 | Backend | Node.js HTTP API; Node.js 24 LTS recommended |
 | Database | SQLite; local persistence and transactions verified; hosted durable storage pending |
 | AI / Compute | Bundled local Tesseract OCR; server-side DeepSeek extraction; explicit manual fallback without a key |
-| Hosting / Dev | Replit use and deployment to be verified |
+| Hosting / Dev | Replit Node.js 24; resettable SQLite demo, not durable financial storage |
 
 ## Project Structure
 
@@ -101,7 +101,7 @@ The API in `src/` and UI in `web/` run locally. Test code stays outside producti
 
 ### Option 1 — Run on Replit
 
-The repository includes a `.replit` build/start configuration and [deployment instructions](docs/DEPLOYMENT.md). The actual team project and public URL have not yet been verified. A normal Replit published filesystem is not verified durable SQLite storage; hosted persistence requires a suitable database or persistent host.
+Open the [published demo](https://milestone-2-cash-proof-to-cash.replit.app/) or use the [team project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) with the checked-in `.replit` configuration. The public core workflow has passed [hosted verification](docs/evaluation/HOSTED-VERIFICATION.md). This is a resettable shared demo: SQLite lives on the published filesystem, which is not durable financial storage. See [deployment instructions](docs/DEPLOYMENT.md) for setup and limits.
 
 ### Option 2 — Run Locally
 
@@ -144,7 +144,7 @@ Check `http://localhost:3000/health`. The API provides seventeen operations; exa
 - `POST /api/matches/:id/approve-payment` and `POST /api/replies/:id/confirm-promise`
 - `GET /api/forecast?asOfDate=2026-10-23&delayDays=7`
 
-Sending and payment recording are simulated. The local integration report distinguishes browser checks, real model calls and injected failure tests. No deployed application is claimed. The demo clock is fixed at 23 October 2026; the UI reads it from the API rather than the computer's date.
+Sending and payment recording are simulated. The [hosted verification record](docs/evaluation/HOSTED-VERIFICATION.md) distinguishes local, Replit workspace and public-host checks. The demo clock is fixed at 23 October 2026; the UI reads it from the API rather than the computer's date.
 
 ### Run Tests
 
@@ -168,7 +168,7 @@ The browser suite lives in `tests/integration/browser/`; frontend unit tests liv
 
 ## How We Use Replit
 
-Use for this rebuild is planned, not yet evidenced. Record the actual project, development/deployment use and proof-of-use document in #24; store credentials in platform secrets. No Replit use or deployment is claimed here.
+The existing repository was imported into the [team Replit project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash). The workspace runs Node.js 24.22.1, builds the frontend, and serves the frontend and API together. Hosted workspace checks covered real DeepSeek reminders, receipt extraction, bank matching, human-approved settlement and forecast updates. Credentials stay in platform secrets. See the [deployment record](docs/DEPLOYMENT.md) for the public release status and storage limits; the final proof-of-use PDF remains a submission task.
 
 ## How We Use RunPod
 
@@ -192,7 +192,7 @@ A receipt is a claim to verify, partial payments must preserve the remainder, an
 | Jieheng Li | Monash University Malaysia | Team member; task ownership to be confirmed |
 | Lingchen Wu | Monash University Malaysia | Team member; task ownership to be confirmed |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. All seventeen operations are connected; the next shared work is deployment, the demonstration recording and submission material.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. All seventeen operations are connected and the shared demo is published; the next team tasks are friend testing, the demonstration recording and submission material.
 
 Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 

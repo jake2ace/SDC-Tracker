@@ -30,8 +30,8 @@
 | 部署说明 | [单端口构建、托管与持久化](docs/DEPLOYMENT.md) |
 | 提交准备 | [材料与剩余要求](submission/README.md) |
 | 合成数据 | [演示 seed](data/seed/README.md) · [评测输入与独立 gold](data/eval/README.md) |
-| Replit 项目 | 待补充 |
-| 在线演示 | 待补充 |
+| Replit 项目 | [团队工作区](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) |
+| 在线演示 | [公开演示](https://milestone-2-cash-proof-to-cash.replit.app/) · [朋友测试指南](docs/FRIEND_TEST_GUIDE.zh-CN.md) |
 | RunPod 端点 | 重建版尚未使用 |
 | 演示幻灯片 | 独立准备；[本地幻灯片需求](submission/SLIDE_REQUIREMENTS.md) |
 | 演示视频 | 待补充 |
@@ -64,7 +64,7 @@
 | 后端 | Node.js HTTP API；建议使用 Node.js 24 LTS |
 | 数据库 | SQLite；本地持久化和事务已验证，云端持久存储待确认 |
 | AI／计算 | 离线 Tesseract OCR；服务端 DeepSeek 结构化；无密钥时明确转人工处理 |
-| 托管／开发 | Replit 使用与部署待验证 |
+| 托管／开发 | Replit Node.js 24；可重置的 SQLite 演示环境，不是持久财务存档 |
 
 ## 项目结构
 
@@ -101,7 +101,7 @@
 
 ### 方式一 — 在 Replit 运行
 
-仓库已提供 `.replit` 构建和启动配置及[部署说明](docs/DEPLOYMENT.md)，实际团队项目和公开地址尚未验证。普通 Replit 发布环境的文件系统不能作为已验证的持久 SQLite 存储；云端持久化仍需合适的数据库或持久化主机。
+可直接打开[公开演示](https://milestone-2-cash-proof-to-cash.replit.app/)，或在[团队项目](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)使用仓库内的 `.replit` 配置。公网核心流程已通过[托管验证](docs/evaluation/HOSTED-VERIFICATION.md)，朋友可按[测试指南](docs/FRIEND_TEST_GUIDE.zh-CN.md)操作。这是共用、可重置的演示账本：SQLite 保存在发布实例文件系统中，不是持久财务存档。配置和限制见[部署说明](docs/DEPLOYMENT.md)。
 
 ### 方式二 — 在本地运行
 
@@ -144,7 +144,7 @@ npm run start:production
 - `POST /api/matches/:id/approve-payment`、`POST /api/replies/:id/confirm-promise`
 - `GET /api/forecast?asOfDate=2026-10-23&delayDays=7`
 
-消息发送与记账均为演示模拟。本地联调报告区分浏览器验证、真实模型调用及注入的故障测试，不宣称已经部署上线。演示时钟固定为 2026 年 10 月 23 日，界面从 API 读取，而非使用电脑当天日期。
+消息发送与记账均为演示模拟。[托管验证记录](docs/evaluation/HOSTED-VERIFICATION.md)区分本地、Replit 工作区与公网测试。演示时钟固定为 2026 年 10 月 23 日，界面从 API 读取，而非使用电脑当天日期。
 
 ### 运行测试
 
@@ -168,7 +168,7 @@ npm --prefix contracts run check
 
 ## 我们如何使用 Replit
 
-重建版计划使用 Replit，但目前没有对应使用证据。在 #24 中记录实际项目、开发／部署用途和使用证明；凭据存放在平台的 secrets 中。此处不宣称已经使用 Replit 或完成部署。
+现有仓库已导入[团队 Replit 项目](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)。工作区使用 Node.js 24.22.1，构建前端并在同一地址运行前端和 API。工作区已验证真实 DeepSeek 提醒、截图提取、银行匹配、人工批准入账和预测更新，密钥保存在平台 secrets。公开发布状态及数据保存限制见[部署记录](docs/DEPLOYMENT.md)；正式使用证明 PDF 仍需纳入提交材料。
 
 ## 我们如何使用 RunPod
 
@@ -192,7 +192,7 @@ npm --prefix contracts run check
 | Jieheng Li | Monash University Malaysia | 组员；具体贡献待确认 |
 | Lingchen Wu | Monash University Malaysia | 组员；具体贡献待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。全部十七个操作现已接通，接下来共同完成部署、演示录制和提交材料。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。全部十七个操作现已接通，共享演示已发布；接下来完成朋友测试、演示录制和提交材料。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
