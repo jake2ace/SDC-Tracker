@@ -4,7 +4,7 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**第一、二、四、五步已实现：共享契约、开票／催收、银行 CSV 匹配、本地 OCR、结构化提取与人工修正。** 前端独立开发；付款审批与现金流仍待实施。旧实现已在本地备份；旧版测试结果不能证明重建版可用。
+**第一、二、四、五、六步已实现：全部十七个后端契约接口可用，包含人工批准入账、部分收款、付款承诺及 30 天现金流预测。** 前端联调与部署仍独立推进。旧实现已在本地备份；旧版测试结果不能证明重建版可用。
 
 本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
 
@@ -51,7 +51,7 @@
 - **凭证审核：** 展示提取字段、银行入账候选、重复与不一致情况，并提供人工降级入口。
 - **收款跟踪：** 经批准的部分／全额付款分配、剩余欠款及可追溯的现金流预测。
 
-开票、催收、CSV 导入、匹配建议、凭证上传与客户回复提取 API 已实现；付款分配与预测待完成，前端独立开发。
+API 已连接开票、催收、凭证提取、银行核对、财务批准入账、剩余应收与现金流预测；前端独立开发。
 
 ### 技术栈
 
@@ -112,7 +112,7 @@ npm run db:init
 npm start
 ```
 
-访问 `http://localhost:3000/health` 检查服务。以下十四个操作已实现；调用示例见[后端说明](docs/BACKEND.md)、[银行匹配说明](docs/BANK_MATCHING.md)和[凭证与回复说明](docs/EXTRACTION.md)：
+访问 `http://localhost:3000/health` 检查服务。以下十七个操作已实现；调用示例见[后端说明](docs/BACKEND.md)、[银行匹配说明](docs/BANK_MATCHING.md)、[凭证与回复说明](docs/EXTRACTION.md)和[付款与预测说明](docs/RECONCILIATION.md)：
 
 - `GET /api/demo-users`、`GET /api/workspace`
 - `POST /api/milestones/:id/complete`、`POST /api/milestones/:id/invoice-draft`
@@ -122,8 +122,10 @@ npm start
 - `POST /api/invoices/:id/replies`、`POST /api/invoices/:id/receipts`
 - `PATCH /api/replies/:id/extraction`、`PATCH /api/receipts/:id/evidence`
 - `GET /api/receipts/:id/image`
+- `POST /api/matches/:id/approve-payment`、`POST /api/replies/:id/confirm-promise`
+- `GET /api/forecast?asOfDate=2026-10-23&delayDays=7`
 
-消息发送为模拟。其余契约端点仍待实现，前端和部署尚未完成；没有 API 密钥也可使用催款模板。
+消息发送与记账均为演示模拟。全部契约接口已实现，前端联调与部署尚未验证；没有 API 密钥也可使用催款模板及人工证据审核。
 
 ### 运行测试
 
@@ -133,6 +135,7 @@ npm start
 npm run check
 npm test
 npm run evaluate:matcher
+npm run evaluate:forecast
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
@@ -162,7 +165,7 @@ npm --prefix contracts run check
 | --- | --- | --- |
 | 正式注册名单待确认 | 任务认领待确认 | 待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。共享契约与后端基础已就绪：前端可以对接十四个已实现操作，剩余流程使用同一契约的 fixtures。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。共享契约与后端基础已就绪：前端可以对接全部十七个操作，并用同一契约的 fixtures 验证界面状态。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
@@ -175,7 +178,7 @@ npm --prefix contracts run check
 | 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | 前端设计、开发与 API 对接 |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 已完成 — 银行 CSV 与确定性匹配 |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | 已完成 — OCR、AI 提取及人工降级 |
-| 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 付款审批、部分收款与预测 |
+| 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 已完成 — 付款审批、部分收款与预测 |
 | 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 联调与量化评测 |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | 部署、演示与提交核对 |
 

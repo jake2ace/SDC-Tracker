@@ -90,6 +90,15 @@ export class Store {
         );
         CREATE UNIQUE INDEX IF NOT EXISTS invoice_per_milestone
           ON entities(company_id, json_extract(body, '$.milestoneId')) WHERE kind = 'invoices';
+        CREATE UNIQUE INDEX IF NOT EXISTS payment_per_credit
+          ON entities(company_id, json_extract(body, '$.bankCreditId')) WHERE kind = 'payments';
+        CREATE UNIQUE INDEX IF NOT EXISTS payment_per_receipt
+          ON entities(company_id, json_extract(body, '$.receiptId')) WHERE kind = 'payments';
+        CREATE UNIQUE INDEX IF NOT EXISTS payment_per_match
+          ON entities(company_id, json_extract(body, '$.matchResultId')) WHERE kind = 'payments';
+        CREATE UNIQUE INDEX IF NOT EXISTS active_promise_per_invoice
+          ON entities(company_id, json_extract(body, '$.invoiceId'))
+          WHERE kind = 'promises' AND json_extract(body, '$.status') = 'active';
         CREATE UNIQUE INDEX IF NOT EXISTS bank_external_id
           ON entities(company_id, json_extract(body, '$.externalId')) WHERE kind = 'bankCredits';
         CREATE UNIQUE INDEX IF NOT EXISTS bank_fingerprint

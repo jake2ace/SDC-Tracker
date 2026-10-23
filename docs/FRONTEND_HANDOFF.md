@@ -1,6 +1,6 @@
 # 前端设计与开发：Milestone2Cash Proof-to-Cash
 
-状态：STEP-1、STEP-2、STEP-4、STEP-5 已实现；前端继续 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。十四个接口可用，现已支持客户回复、凭证上传、原图查看与人工修正。付款审批、承诺确认和预测继续使用契约 fixtures。接口详情见[后端说明](BACKEND.md)与[第五步说明](EXTRACTION.md)。
+状态：STEP-1、STEP-2、STEP-4、STEP-5、STEP-6 已实现；前端继续 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。全部十七个后端接口可用，付款审批、承诺确认和预测可以接本地 API。接口详情见[后端说明](BACKEND.md)、[第五步说明](EXTRACTION.md)与[第六步说明](RECONCILIATION.md)。
 
 ## 开发任务
 
@@ -33,7 +33,7 @@ npm run db:init
 npm start
 ```
 
-服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。另外已实现 `POST /api/bank-statements` 和 `POST /api/receipts/:id/match`，使用说明见 [BANK_MATCHING.md](BANK_MATCHING.md)。现已增加回复创建与修正、凭证上传与修正、原图读取五个端点。无密钥时回复／凭证转人工审核；付款审批、承诺确认和预测仍为 planned。提取证据和调用例子见 [EXTRACTION.md](EXTRACTION.md)。
+服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。另外已实现 `POST /api/bank-statements` 和 `POST /api/receipts/:id/match`，使用说明见 [BANK_MATCHING.md](BANK_MATCHING.md)。现已增加回复创建与修正、凭证上传与修正、原图读取五个端点。无密钥时回复／凭证转人工审核；付款审批、承诺确认和预测已实现且不调用模型。提取证据和调用例子见 [EXTRACTION.md](EXTRACTION.md)。
 
 - `mock` 与 `api` 使用同一套已冻结 DTO 和前端访问接口；替换数据来源不应改页面业务逻辑。
 - mock 数据必须来自团队批准的合成 fixtures，覆盖正常和异常情形；不要用另一套更“方便”的字段隐藏集成问题。
@@ -83,7 +83,7 @@ npm start
 5. 录入并确认余款付款承诺，查看现金流变化及活动日志。
 6. 切换第二家公司，证明同一套界面和逻辑可复用。
 
-演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。当前 seed 没有收据；先上传 `data/eval/images/` 中的合成图片，或通过人工修正补全字段，再调用匹配 API。付款审批、承诺确认和现金流继续使用 mock。原图端点需要 `X-Demo-User`，请先带身份 fetch 后创建 Blob URL，并在切换公司时撤销 URL。上传或提取可能耗时，应保留进度和可重试状态；重复请求复用原幂等 key。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
+演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。当前 seed 没有收据；先上传 `data/eval/images/` 中的合成图片，或通过人工修正补全字段，再调用匹配 API。付款审批请求体只提交 `{ expectedVersion: match.version }`；先展示提议金额并由 Finance 明确批准。成功后重新获取 workspace 和 forecast；版本冲突时刷新证据并重新匹配，不能盲目重试批准。预测请求必须包含 asOfDate 和 delayDays；演示日期从响应 meta.asOf 按 MYT 得到，不能使用电脑当天日期。原图端点需要 `X-Demo-User`，请先带身份 fetch 后创建 Blob URL，并在切换公司时撤销 URL。上传或提取可能耗时，应保留进度和可重试状态；重复请求复用原幂等 key。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
 
 ## 前端交付标准
 
@@ -94,4 +94,4 @@ npm start
 - 与后端联调验证：权限拒绝、重复提交、Partial 余款、低置信度人工处理、AI 故障、两公司切换和主演示全链。
 - 只有 mock 验证时明确写“仅 mock 验证”；未完成真实 API 联调不能写“全流程已通过”。
 
-先提交页面结构和状态清单，再按统一数据访问层接入已实现 API；其余流程使用 fixtures，并随后端功能完成逐步联调。
+按统一数据访问层接入全部已实现 API；fixtures 保留用于可重复的界面状态测试。前端完成后再执行跨页面的完整产品联调，不能将后端测试等同于前端已通过。
