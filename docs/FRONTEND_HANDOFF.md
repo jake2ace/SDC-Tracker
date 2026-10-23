@@ -1,6 +1,6 @@
 # 前端设计与开发：Milestone2Cash Proof-to-Cash
 
-状态：STEP-1 契约 v1.0.0 与 STEP-2 后端基础已完成；前端可开始 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。七个开票／催收及身份接口已可运行，其余业务流程使用契约 fixtures。接口详情见[后端说明](BACKEND.md)。
+状态：STEP-1、STEP-2、STEP-4 已完成；前端可开始 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)。九个身份、开票、催收、CSV 与匹配接口已实现；凭证录入等其余流程使用契约 fixtures。接口详情见[后端说明](BACKEND.md)。
 
 ## 开发任务
 
@@ -33,7 +33,7 @@ npm run db:init
 npm start
 ```
 
-服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。其他契约端点仍为 planned。无密钥可用模板 fallback，真实 DeepSeek 调用与部署尚未验证。
+服务检查：`http://localhost:3000/health`。已实现 `GET /api/demo-users`、`GET /api/workspace`，以及完成阶段、生成发票草稿、审批发票、生成催款草稿和确认模拟发送五个 POST 操作。另外已实现 `POST /api/bank-statements` 和 `POST /api/receipts/:id/match`，使用说明见 [BANK_MATCHING.md](BANK_MATCHING.md)。凭证上传、提取及付款审批等端点仍为 planned。无密钥可用模板 fallback，真实 DeepSeek 调用与部署尚未验证。
 
 - `mock` 与 `api` 使用同一套已冻结 DTO 和前端访问接口；替换数据来源不应改页面业务逻辑。
 - mock 数据必须来自团队批准的合成 fixtures，覆盖正常和异常情形；不要用另一套更“方便”的字段隐藏集成问题。
@@ -51,7 +51,7 @@ npm start
 | Invoices | 发票金额、已入账、剩余应收、到期日、状态；Owner 审批；可追溯明细。 |
 | Collections | 逾期与余款状态；催款草稿、语言、可编辑文本；Finance 明确确认后模拟发送。 |
 | Reply Inbox | 选择关联发票，粘贴回复或上传截图；原始内容与提取字段并列；识别／修正／重新核对。 |
-| Bank Import | 合成 CSV 导入、校验错误、重复记录提示及导入结果；先按 fixtures 设计。 |
+| Bank Import | 合成 CSV 导入、校验错误、重复记录提示及导入结果；可接真实本地 API。 |
 | Proof Review | 银行证据、提取金额、参考号、时间、付款人、匹配理由；Confirmed / Partial / Mismatch / Not in bank yet / Duplicate / Needs review。 |
 | Finance Confirmation | 显示本次入账金额和入账后的剩余金额；只在后端允许时确认；展示失败和幂等结果。 |
 | Cash View | 未来 30 天的按时／延迟场景、承诺日期影响、安全线及每笔来源；区分实际与预计。 |
@@ -83,7 +83,7 @@ npm start
 5. 录入并确认余款付款承诺，查看现金流变化及活动日志。
 6. 切换第二家公司，证明同一套界面和逻辑可复用。
 
-演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票与催款流程可接 API，付款核对和现金流仍用 mock。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
+演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。匹配 API 需要已存在的收据；收据上传尚未实现，当前 seed 没有收据，凭证录入、付款审批和现金流继续使用 mock。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
 
 ## 前端交付标准
 

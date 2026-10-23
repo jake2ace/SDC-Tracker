@@ -1,6 +1,6 @@
 # Proof-to-Cash contract v1.0.0
 
-对应 [STEP-1 / #17](https://github.com/jake2ace/SDC-Tracker/issues/17)。**STEP-2 已实现身份列表、工作区和五个开票／催收写接口；其余十个接口仍为 planned，前端尚未实现。** 按 `contracts/api.ts` 的逐端点 status 区分能力；后端运行方式见[运行说明](BACKEND.md)。本文中的阈值、接口和技术栈是工程约定，不是 PDF 原文规定。
+对应 [STEP-1 / #17](https://github.com/jake2ace/SDC-Tracker/issues/17)。**STEP-2 的七个接口与 STEP-4 的 CSV 导入、匹配接口已实现；其余八个接口仍为 planned。** 按 `contracts/api.ts` 的逐端点 status 区分能力；后端运行方式见[运行说明](BACKEND.md)，导入和匹配见[第四步说明](BANK_MATCHING.md)。本文中的阈值、接口和技术栈是工程约定，不是 PDF 原文规定。
 
 ## 文件与版本
 

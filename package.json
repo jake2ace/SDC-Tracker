@@ -10,7 +10,8 @@
     "db:init": "node --experimental-strip-types --env-file-if-exists=.env scripts/database.ts",
     "db:reset": "node --experimental-strip-types --env-file-if-exists=.env scripts/database.ts --reset",
     "check": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.ts"
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "evaluate:matcher": "node --experimental-strip-types scripts/evaluate-matcher.ts"
   },
   "devDependencies": {
     "@types/node": "22.20.5",

@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import type { Workspace } from "../contracts/api.ts";
 import type { Company, DemoUser, ForecastDefaults } from "../contracts/domain.ts";
 import { AppError } from "./errors.ts";
+import type { BankImportBatch } from "./bank-import.ts";
 
 const ENTITY_KINDS = [
   "customers", "projects", "milestones", "invoices", "reminders", "replies",
@@ -79,6 +80,19 @@ export class Store {
         );
         CREATE UNIQUE INDEX IF NOT EXISTS invoice_per_milestone
           ON entities(company_id, json_extract(body, '$.milestoneId')) WHERE kind = 'invoices';
+        CREATE UNIQUE INDEX IF NOT EXISTS bank_external_id
+          ON entities(company_id, json_extract(body, '$.externalId')) WHERE kind = 'bankCredits';
+        CREATE UNIQUE INDEX IF NOT EXISTS bank_fingerprint
+          ON entities(company_id, json_extract(body, '$.bank'), json_extract(body, '$.postedDate'),
+            json_extract(body, '$.amountSen'), json_extract(body, '$.reference'), json_extract(body, '$.payer'))
+          WHERE kind = 'bankCredits';
+        CREATE TABLE IF NOT EXISTS bank_imports (
+          id TEXT PRIMARY KEY,
+          company_id TEXT NOT NULL REFERENCES companies(id),
+          body TEXT NOT NULL CHECK (json_valid(body))
+            CHECK (json_extract(body, '$.id') IS id)
+            CHECK (json_extract(body, '$.companyId') IS company_id)
+        );
         CREATE TABLE IF NOT EXISTS idempotency (
           company_id TEXT NOT NULL REFERENCES companies(id),
           actor_id TEXT NOT NULL,
@@ -108,6 +122,7 @@ export class Store {
     this.transaction(() => {
       this.db.exec(`
         DELETE FROM idempotency;
+        DELETE FROM bank_imports;
         DELETE FROM entities;
         DELETE FROM forecast_defaults;
         DELETE FROM users;
@@ -140,6 +155,22 @@ export class Store {
 
   getCompany(id: string): Company | undefined {
     return this.parse<Company>(this.db.prepare("SELECT body FROM companies WHERE id = ?").get(id));
+  }
+
+  updateCompany(company: Company): void {
+    const result = this.db.prepare("UPDATE companies SET body = ? WHERE id = ?")
+      .run(JSON.stringify(company), company.id);
+    if (result.changes !== 1) throw new AppError(404, "NOT_FOUND", "Resource not found.");
+  }
+
+  recordBankImport(batch: BankImportBatch): void {
+    this.db.prepare("INSERT INTO bank_imports (id, company_id, body) VALUES (?, ?, ?)")
+      .run(batch.id, batch.companyId, JSON.stringify(batch));
+  }
+
+  getBankImports(companyId: string): BankImportBatch[] {
+    return this.db.prepare("SELECT body FROM bank_imports WHERE company_id = ? ORDER BY rowid")
+      .all(companyId).map((row) => this.parse<BankImportBatch>(row)!);
   }
 
   getForecastDefaults(companyId: string): ForecastDefaults {
