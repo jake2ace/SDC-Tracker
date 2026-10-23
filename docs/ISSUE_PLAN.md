@@ -1,10 +1,10 @@
 # Milestone2Cash Proof-to-Cash 开发计划
 
-依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**8 步全部 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
+依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1 进行中，其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
 
 | 步骤 | 交付 | Owner role | 依赖 | 状态 |
 | --- | --- | --- | --- | --- |
-| STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | Codex；用户团队确认业务 | 无 | TODO |
+| STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | Codex；用户团队确认业务 | 无 | IN PROGRESS |
 | STEP-2 | [核心底座、开票、催收、权限与日志](issues/02-foundation.md) | Codex | STEP-1 | TODO |
 | STEP-3 | [Claude 前端与 API 对接](issues/03-frontend.md) | Claude；Codex 联调验收 | STEP-1；联调依赖 STEP-2/4/5/6 | TODO |
 | STEP-4 | [银行 CSV 与确定性匹配](issues/04-matching.md) | Codex | STEP-1、STEP-2 | TODO |

@@ -2,7 +2,7 @@
 
 GitHub：[#17](https://github.com/jake2ace/SDC-Tracker/issues/17)
 
-**状态：TODO · Owner role：Codex；用户团队确认业务范围 · 依赖：无**
+**状态：IN PROGRESS · Owner role：Codex；用户团队确认业务范围 · 依赖：无**
 
 ## 目标
 
