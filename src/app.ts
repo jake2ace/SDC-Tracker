@@ -96,7 +96,7 @@ export async function createApp(options: AppOptions) {
   const provider = options.reminderProvider ?? createReminderProvider({
     apiKey: process.env.DEEPSEEK_API_KEY,
     baseUrl: process.env.DEEPSEEK_BASE_URL,
-    model: process.env.DEEPSEEK_MODEL,
+    model: process.env.DEEPSEEK_MODEL ?? "deepseek-flash",
     timeoutMs: Number(process.env.DEEPSEEK_TIMEOUT_MS ?? 10000),
   });
   const pending = new Set<string>();

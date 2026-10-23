@@ -28,7 +28,7 @@ Use the [official document templates](https://drive.google.com/drive/folders/1Kv
 
 ## Remaining sequence
 
-1. Import this existing repository into the team's Replit project. Record actual use and verify the working application link. Resolve durable storage before claiming hosted persistence; the current SQLite adapter needs a persistent filesystem and one app instance.
+1. Use the [published demo](https://milestone-2-cash-proof-to-cash.replit.app/) and [hosted verification record](../docs/evaluation/HOSTED-VERIFICATION.md) to prepare actual Replit proof of use. Describe this as a resettable shared SQLite demo. Durable storage remains required before claiming production persistence.
 2. Confirm the submission form's API Premium sponsor requirement and RunPod applicability against an organiser answer. The current application makes no live Orbyte integration claim.
 3. Confirm actual contributions, workshop completion, contact details, IP statements and signatures; transfer the prepared text into the official forms and inspect the exports.
 4. Rehearse with the synthetic demo assets, record the real 5–7 minute English pitch and publish the final YouTube video with the required visibility. Add verified links to both READMEs.

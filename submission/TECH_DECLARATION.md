@@ -68,7 +68,7 @@ The DeepSeek key remains server-side and is omitted from this document, browser 
 | --- | --- | --- |
 | GitHub | Source history, issues, pull requests and repository distribution | Existing repository; account plan and final public access require confirmation. |
 | DeepSeek hosted API | Application inference | Provider-managed service; account plan, processing location and retention terms require confirmation. |
-| Replit | Required sponsor platform; target project/runtime use and evidence | Account access exists, but actual project URL, deployment, plan/region and use proof remain pending. A local `.replit` file is not use evidence. |
+| Replit | Required sponsor platform; project workspace and shared demonstration hosting | [Project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) and [public demo](https://milestone-2-cash-proof-to-cash.replit.app/); Node.js 24, Reserved VM 0.5 vCPU / 2 GiB in Asia. Actual checks and storage limitations are recorded in [hosted verification](../docs/evaluation/HOSTED-VERIFICATION.md). Formal proof PDF remains pending. |
 | RunPod | No verified application workload or endpoint in the current code/evidence | No use claimed. Applicability of the GPU rule to hosted API inference still needs official clarification. |
 
 Local development and tests are verified separately from cloud deployment. Do not mark a cloud host as deployed until its real URL and execution/persistence checks are recorded.
@@ -118,13 +118,13 @@ The development workflow included type checks, separate backend and frontend tes
 
 | Sponsor | Resource | Actual use / outstanding evidence |
 | --- | --- | --- |
-| Replit | Replit Core resource offered through the event | Account redemption is reported in the portal for some members; actual app/project use, ownership and proof PDF remain to be recorded. Do not equate redemption with implementation. |
+| Replit | Replit Core resource offered through the event | The existing project was imported, built, tested and publicly hosted in the team account. Account redemption is reported in the portal for some members. Formal ownership details and proof-of-use PDF still require team review. |
 | RunPod | Event compute-credit resource | No verified project GPU workload or endpoint; do not claim usage. |
 | Alpha Red Solutions / Orbyte | Domain-2 challenge brief and platform approach | Used as the product-design context; no live Orbyte API, account integration, customer data or production access. |
 
 **Essential/replacement text (maximum 100 words):**
 
-The current application uses portable Node.js, SQLite and a React build. No verified sponsor-hosted runtime or GPU endpoint is yet required by its implementation. Replit project use and evidence still need to be recorded to satisfy the event's platform rule. Hosted extraction uses the team's existing DeepSeek account; deterministic matching, manual evidence review and forecasts do not depend on a sponsor model. Orbyte supplies the ecosystem design context, and the current interface assumptions are simulated. RunPod applicability and the submission form's API Premium sponsor statement must be resolved before declaring full compliance.
+The current application uses portable Node.js, SQLite and a React build, with actual Replit workspace and public-host tests recorded. The formal Replit proof-of-use PDF remains pending. No GPU endpoint is used. Hosted extraction uses the team's existing DeepSeek account; deterministic matching, manual evidence review and forecasts do not depend on a sponsor model. Orbyte supplies the ecosystem design context, and the current interface assumptions are simulated. RunPod applicability and the submission form's API Premium sponsor statement must be resolved before declaring full compliance.
 
 ## 6. Security, Privacy & Responsible Use
 

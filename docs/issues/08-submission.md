@@ -30,4 +30,5 @@ GitHub：[#24](https://github.com/jake2ace/SDC-Tracker/issues/24)
 - 已准备前后端同一地址运行、`.replit` 配置和[部署说明](../DEPLOYMENT.md)。50 项后端、16 项前端、3 条浏览器流程、13 组契约检查通过；另有独立生产进程浏览器检查，覆盖重启持久化和无 key 降级。
 - [英文方案](../../submission/PRODUCT_NARRATIVE.md)、[技术声明草稿](../../submission/TECH_DECLARATION.md)和[演示脚本](../../submission/PITCH_SCRIPT.md)已准备；四人注册名单已确认。最终官方 PDF、平台用证、签名与录制仍待完成。
 - 已复核[当前官方要求](../SUBMISSION_REQUIREMENTS.md)：截止为 2026-10-25 07:59:59 MYT，提交仓库需公开，Replit 需真实用证；RunPod 适用性与表单 API Premium sponsor 声明仍需确认。
-- 本地检查不代替线上验收。尚无已验证的 Replit 项目、云端持久化、正式视频或提交回执，本 Issue 保持 IN PROGRESS。
+- [Replit 项目](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)已发布到[公开演示](https://milestone-2-cash-proof-to-cash.replit.app/)，公网收款全流程及真实 AI 调用通过，详见[托管验证](../evaluation/HOSTED-VERIFICATION.md)。这是可重置的共享 SQLite 演示环境，不能宣称具备持久财务存储。
+- [朋友测试指南](../FRIEND_TEST_GUIDE.zh-CN.md)已准备。正式使用证明 PDF、视频、团队签署和提交回执仍未完成，本 Issue 保持 IN PROGRESS。

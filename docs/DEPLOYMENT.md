@@ -2,7 +2,7 @@
 
 The Node server can serve the production frontend and all 17 API routes on one port. This is a synthetic, shared demo with selectable roles, not an authenticated production finance service. The browser never receives the DeepSeek key.
 
-**Status on 24 October 2026:** the production build, local single-port process, missing-key fallback and restart persistence have been tested. No public deployment URL, Replit workspace proof or hosted persistence result has been verified. Local readiness is not evidence that the app is published.
+**Status on 24 October 2026:** the [Replit project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) is published at [the public demo URL](https://milestone-2-cash-proof-to-cash.replit.app/). The complete public API workflow passed with real DeepSeek calls. See [hosted verification](evaluation/HOSTED-VERIFICATION.md) for observed failures, retries and storage results. This is a resettable shared demo, not durable production financial storage.
 
 Final regression on Node.js 24.19.0 passed: 50 backend tests (including four deployment scenarios), 16 frontend tests, three browser journeys and 13 contract/data validation groups. The independent production-process browser smoke passed once. Build and TypeScript checks passed. These local checks do not establish hosted persistence or availability.
 
@@ -51,6 +51,8 @@ Set the existing DeepSeek key in the platform's secret configuration, then verif
 
 **SQLite hosting boundary:** the current adapter needs one running application instance and a persistent filesystem supporting SQLite locking. Replit's ordinary published filesystem is not a verified durable database location. No Replit-specific database adapter has been implemented. A Replit demo that uses ephemeral storage must be described as resettable; it does not satisfy hosted persistence acceptance. For durable hosting, mount storage and set `DB_PATH` to that mount, or implement and test a managed-database adapter before making a persistence claim.
 
+The actual hosted check confirmed that republishing reset the ledger and removed uploaded receipts. Pause/resume failed to initialize once, so restart persistence is unverified. Republishing the same tested version recovered the service, and a fresh incognito browser confirmed the unpaid seed. Preserve test feedback outside this app and avoid pausing or republishing during a friend's test session.
+
 ## Persistent host operation
 
 For a host with a durable directory owned by the application user, run:
@@ -75,4 +77,12 @@ npm run test:deployment:smoke
 
 The four deployment integration scenarios cover static/API responses, private-path and traversal rejection, manual recovery without a model key, persistent restart and missing-build rejection. The additional smoke scenario builds the actual frontend, launches `src/server.ts` as a fresh production process, opens Chromium, drafts a visible template reminder without a key, restarts the process and checks that the reminder remains. It also checks that frontend and API requests use one origin and that the page reports no uncaught JavaScript errors. Install the browser with `npx playwright install chromium` if a supported local Chrome is unavailable.
 
-Before marking deployment complete, record the real workspace URL, public URL, commit and host configuration; open the public URL in a fresh browser context; repeat the core payment flow and missing-key recovery there; restart the hosted instance and verify the same record IDs and receipt images; confirm durable storage and access permissions. Preserve the actual results in the submission record. These public-host checks remain pending until a real host is available.
+The public-host record covers health, built frontend assets, real AI reminders and extraction, partial/final settlement, forecast updates, CSV deduplication and company isolation. A model output rejected by validation returned the template fallback on the public host. Missing-key recovery was verified locally; it was not simulated by removing the live secret. Storage lifecycle checks and their limits are recorded in [hosted verification](evaluation/HOSTED-VERIFICATION.md).
+
+For a fresh synthetic ledger, the standalone public API check can be run explicitly from the repository root:
+
+```bash
+SMOKE_BASE_URL=https://milestone-2-cash-proof-to-cash.replit.app node tests/integration/hosted-smoke.mjs
+```
+
+This modifies the shared demo ledger. Coordinate with testers first; it is not a read-only health check. Give friends the [test guide](FRIEND_TEST_GUIDE.zh-CN.md), two synthetic receipt images and the final-credit CSV, and arrange one tester at a time.
