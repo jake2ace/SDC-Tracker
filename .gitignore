@@ -35,3 +35,4 @@ tmp/
 # Local agent metadata
 .codex/
 .agents/
+.multi-model-dev/
