@@ -2,7 +2,7 @@
 
 GitHub：[#23](https://github.com/jake2ace/SDC-Tracker/issues/23)
 
-**状态：TODO · Owner role：Codex；用户团队交叉复核 · 依赖：STEP-3 ([#19](https://github.com/jake2ace/SDC-Tracker/issues/19))、STEP-4 ([#20](https://github.com/jake2ace/SDC-Tracker/issues/20))、STEP-5 ([#21](https://github.com/jake2ace/SDC-Tracker/issues/21))、STEP-6 ([#22](https://github.com/jake2ace/SDC-Tracker/issues/22))**
+**状态：TODO · 职责：测试与评测；团队交叉复核 · 依赖：STEP-3 ([#19](https://github.com/jake2ace/SDC-Tracker/issues/19))、STEP-4 ([#20](https://github.com/jake2ace/SDC-Tracker/issues/20))、STEP-5 ([#21](https://github.com/jake2ace/SDC-Tracker/issues/21))、STEP-6 ([#22](https://github.com/jake2ace/SDC-Tracker/issues/22))**
 
 ## 目标
 
@@ -20,7 +20,7 @@ GitHub：[#23](https://github.com/jake2ace/SDC-Tracker/issues/23)
 - [ ] 在承诺日期变更和部分付款后，对 **10 天预测**逐项独立手算；结果必须完全一致（Exact match）。另验证全额结清及实际/预计去重；产品视图仍为未来 30 天。
 - [ ] 验证无权限、驳回、低置信度、接口失败、重复导入/批准、资料变化及重启持久化；未获批准不得入账，失败不得伪报成功。
 - [ ] 用 **10 张合成截图**对人工流程与工具流程按一致起止点计时，报告实测耗时；金额、状态和安全边界问题修复后才能进入最终演示。
-- [ ] 用户团队或另一位成员按记录复核并留下结论；未经复核不标 Done。
+- [ ] 团队或另一位成员按记录复核并留下结论；未经复核不标 Done。
 
 ## 证据
 

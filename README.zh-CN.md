@@ -54,7 +54,7 @@
 
 | 层级 | 计划采用的技术 |
 | --- | --- |
-| 前端 | 框架待 #17 确认；Claude 负责 `web/` |
+| 前端 | 框架待 #17 确认；实现在 `web/` 中 |
 | 后端 | Node.js 22+ |
 | 数据库 | SQLite |
 | AI／计算 | 本地 OCR 与服务端 DeepSeek；具体版本和能力待验证 |
@@ -67,10 +67,10 @@
 ```text
 .
 ├── README.md / README.zh-CN.md
-├── AGENTS.md / CLAUDE.md
+├── CONTRIBUTING.md
 ├── docs/
 │   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
-│   ├── CLAUDE_HANDOFF.md / TEAM_GUIDE.md
+│   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # 八个实施任务
 ├── submission/README.md        # 待准备材料与证据清单
@@ -125,11 +125,11 @@ cd SDC-Tracker
 
 | 姓名 | 职责 | GitHub |
 | --- | --- | --- |
-| 正式注册名单待确认 | 人类成员的任务认领待确认 | 待确认 |
+| 正式注册名单待确认 | 任务认领待确认 | 待确认 |
 
-Codex 和 Claude 是 AI 辅助工具，不是注册参赛队员。Codex 统筹计划、契约、后端及联调；Claude 负责前端。前端 mock／API 功能开发须等 #17 冻结共享契约，线框设计可以提前开始。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。实现前先约定共享接口；前端 mock／API 功能开发须等 #17 冻结共享契约，线框设计可以提前开始。
 
-人类组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
+组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
 ### 八步开发计划
 
@@ -137,14 +137,14 @@ Codex 和 Claude 是 AI 辅助工具，不是注册参赛队员。Codex 统筹�
 | --- | --- | --- |
 | 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | 范围、数据、API 契约与测试样例 |
 | 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | 后端、开票、催收与权限 |
-| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Claude 前端与 API 对接 |
+| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | 前端设计、开发与 API 对接 |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 银行 CSV 与确定性匹配 |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | OCR、AI 提取及人工降级 |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 付款审批、部分收款与预测 |
 | 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 联调与量化评测 |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | 部署、演示与提交核对 |
 
-详细资料：[依赖与验收计划](docs/ISSUE_PLAN.md) · [Claude 交接](docs/CLAUDE_HANDOFF.md) · [决策记录](docs/decisions.md)。
+详细资料：[依赖与验收计划](docs/ISSUE_PLAN.md) · [前端交接](docs/FRONTEND_HANDOFF.md) · [决策记录](docs/decisions.md)。
 
 ## 提交检查清单
 

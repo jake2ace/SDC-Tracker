@@ -1,10 +1,10 @@
-# Claude 前端交接：Milestone2Cash Proof-to-Cash
+# 前端设计与开发：Milestone2Cash Proof-to-Cash
 
-状态：前端规划交接，尚未开工。任务为 [#19：Claude 前端与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)，功能实现依赖 [#17：共享契约冻结](https://github.com/jake2ace/SDC-Tracker/issues/17)。下文“规划 Issue 1”均指 STEP-1 / #17。
+状态：前端规划交接，尚未开工。任务为 [#19：前端设计与 API 对接](https://github.com/jake2ace/SDC-Tracker/issues/19)，功能实现依赖 [#17：共享契约冻结](https://github.com/jake2ace/SDC-Tracker/issues/17)。下文“规划 Issue 1”均指 STEP-1 / #17。
 
-## 可直接交给 Claude 的任务
+## 开发任务
 
-你负责 **Milestone2Cash Proof-to-Cash 的前端**。团队已决定本地备份旧实现后，从干净项目重建；Codex 负责范围、接口协调和验收，后端由后端负责人实现。
+本任务负责 **Milestone2Cash Proof-to-Cash 的前端设计与开发**。团队已决定本地备份旧实现后，从干净项目重建；前后端按共享接口分工，项目协调负责人组织范围确认和联调验收。
 
 先读 `docs/PRODUCT_SPEC.md`，以它描述的产品主线与安全边界为准：项目阶段完成 → 发票审批 → 催款草稿与人工确认 → 客户回复／付款截图 → 银行核对 → 财务确认入账 → 现金流与日志。
 

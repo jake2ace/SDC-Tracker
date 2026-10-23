@@ -2,7 +2,7 @@
 
 GitHub：[#24](https://github.com/jake2ace/SDC-Tracker/issues/24)
 
-**状态：TODO · Owner role：Codex 负责部署/技术核对；用户团队负责演示、材料确认及实际提交 · 依赖：部署骨架 STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))；最终验收 STEP-7 ([#23](https://github.com/jake2ace/SDC-Tracker/issues/23))**
+**状态：TODO · 职责：后端开发负责部署与技术核对；文档和演示任务负责人准备材料，团队确认并完成实际提交 · 依赖：部署骨架 STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))；最终验收 STEP-7 ([#23](https://github.com/jake2ace/SDC-Tracker/issues/23))**
 
 ## 目标
 
@@ -18,7 +18,7 @@ GitHub：[#24](https://github.com/jake2ace/SDC-Tracker/issues/24)
 - [ ] **最终检查：** 在部署环境/无痕窗口走通 STEP-7 ([#23](https://github.com/jake2ace/SDC-Tracker/issues/23)) 核心流程、重启与失败场景；移除 AI key 后可见降级，人工录入和规则核对仍可工作。按 README 可在干净环境安装、配置、初始化和运行。
 - [ ] PRD、pitch deck、工具/模型/第三方声明、公开仓库与演示视频按当前官方清单核对；UI 和演示以英文表达，功能与数字有实测依据。
 - [ ] 清楚说明全部合成数据、模拟开票/发送/收款、CSV 导入和人工审批边界；不宣称 live Orbyte、银行实时接入或真实回款效果。
-- [ ] 用户团队确认讲解内容和实际分工；核对链接权限、视频可访问性、材料版本、截止日期及提交入口，确保评委可访问。
+- [ ] 团队确认讲解内容和实际分工；核对链接权限、视频可访问性、材料版本、截止日期及提交入口，确保评委可访问。
 - [ ] 实际提交后另存回执/状态证据；部署完成、材料完成和已提交分别记录，不能互相代替。
 
 ## 证据
