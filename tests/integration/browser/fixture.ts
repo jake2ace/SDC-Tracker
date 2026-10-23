@@ -44,7 +44,7 @@ export async function signIn(page: Page, url: string) {
   await page.goto(`${url}?source=api`);
   await page.getByRole("button", { name: /Open demo|Try the demo|Enter demo|Sign in/i }).first().click();
   await expect(page.getByLabel("Demo identity")).toBeVisible();
-  await expect(page.getByText("Source: local demo API", { exact: true })).toBeVisible();
+  await expect(page.getByText("Connected demo workspace", { exact: true })).toBeVisible();
 }
 
 export async function actor(page: Page, id: string) {

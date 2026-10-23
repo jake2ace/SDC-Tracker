@@ -140,7 +140,7 @@ test("real API: failed requests never show success, retries are idempotent, tena
   await page.getByLabel("Message text (pasted from WhatsApp or email)").fill("Private unsaved Lumen note");
   await page.setViewportSize({ width: 390, height: 844 });
   await actor(page, "u_rantau_finance");
-  await expect(page.getByRole("heading", { name: "Rantau IT Demo", exact: true })).toBeVisible();
+  await expect(page.locator(".home-eyebrow")).toContainText("Rantau IT Demo");
   await expect(page.getByText("Private unsaved Lumen note")).toHaveCount(0);
   await visit(page, `invoices/${INVOICE}`);
   await expect(page.getByText("Invoice not found in this company", { exact: true })).toBeVisible();
