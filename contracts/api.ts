@@ -6,7 +6,7 @@ import type {
 } from "./domain";
 
 export const CONTRACT_VERSION = "1.0.0" as const;
-export const SERVICE_STATUS = "planned" as const;
+export const SERVICE_STATUS = "partial" as const;
 export const DEMO_CLOCK = "2026-10-23T04:00:00Z" as const;
 
 export interface ApiMeta {
@@ -137,7 +137,7 @@ export interface PromiseConfirmedResult { promise: PaymentPromise; invoice: Invo
 export interface ForecastQuery { asOfDate: MytDate; delayDays: number; }
 export interface AuthorizedImage { contentType: Receipt["mimeType"]; body: Blob; }
 
-/** Types indexed by stable operationId. Every endpoint below is PLANNED. */
+/** Types indexed by stable operationId; per-endpoint status is listed below. */
 export interface ApiOperations {
   listDemoUsers: { request: undefined; response: ApiSuccess<{ users: DemoUser[] }> };
   getWorkspace: { request: undefined; response: ApiSuccess<Workspace> };
@@ -162,19 +162,19 @@ interface EndpointDefinition {
   method: "GET" | "POST" | "PATCH";
   path: string;
   roles: readonly Role[];
-  status: "planned";
+  status: "planned" | "implemented";
   successStatus: number;
   format: "json" | "multipart" | "image";
 }
 
 export const ENDPOINTS = {
-  listDemoUsers: { method: "GET", path: "/api/demo-users", roles: [], status: "planned", successStatus: 200, format: "json" },
-  getWorkspace: { method: "GET", path: "/api/workspace", roles: ["owner", "finance", "pm"], status: "planned", successStatus: 200, format: "json" },
-  completeMilestone: { method: "POST", path: "/api/milestones/:id/complete", roles: ["pm"], status: "planned", successStatus: 200, format: "json" },
-  createInvoiceDraft: { method: "POST", path: "/api/milestones/:id/invoice-draft", roles: ["pm"], status: "planned", successStatus: 200, format: "json" },
-  decideInvoice: { method: "POST", path: "/api/invoices/:id/decision", roles: ["owner"], status: "planned", successStatus: 200, format: "json" },
-  generateReminder: { method: "POST", path: "/api/invoices/:id/reminders", roles: ["finance"], status: "planned", successStatus: 201, format: "json" },
-  sendReminder: { method: "POST", path: "/api/reminders/:id/send", roles: ["finance"], status: "planned", successStatus: 200, format: "json" },
+  listDemoUsers: { method: "GET", path: "/api/demo-users", roles: [], status: "implemented", successStatus: 200, format: "json" },
+  getWorkspace: { method: "GET", path: "/api/workspace", roles: ["owner", "finance", "pm"], status: "implemented", successStatus: 200, format: "json" },
+  completeMilestone: { method: "POST", path: "/api/milestones/:id/complete", roles: ["pm"], status: "implemented", successStatus: 200, format: "json" },
+  createInvoiceDraft: { method: "POST", path: "/api/milestones/:id/invoice-draft", roles: ["pm"], status: "implemented", successStatus: 200, format: "json" },
+  decideInvoice: { method: "POST", path: "/api/invoices/:id/decision", roles: ["owner"], status: "implemented", successStatus: 200, format: "json" },
+  generateReminder: { method: "POST", path: "/api/invoices/:id/reminders", roles: ["finance"], status: "implemented", successStatus: 201, format: "json" },
+  sendReminder: { method: "POST", path: "/api/reminders/:id/send", roles: ["finance"], status: "implemented", successStatus: 200, format: "json" },
   createReply: { method: "POST", path: "/api/invoices/:id/replies", roles: ["finance"], status: "planned", successStatus: 201, format: "json" },
   correctReply: { method: "PATCH", path: "/api/replies/:id/extraction", roles: ["finance"], status: "planned", successStatus: 200, format: "json" },
   uploadReceipt: { method: "POST", path: "/api/invoices/:id/receipts", roles: ["finance"], status: "planned", successStatus: 200, format: "multipart" },

@@ -4,7 +4,7 @@
 
 > Help Malaysian service micro-businesses invoice completed work, follow up on overdue balances and check payment claims against bank records before recording payment.
 
-**Contract v1.0.0 is prepared and awaiting team review in [#17](https://github.com/jake2ace/SDC-Tracker/issues/17). The application is not implemented or runnable yet.** The old implementation was backed up locally and removed from `main`; its test results do not validate this rebuild.
+**Steps 1–2 are complete: contract v1.0.0 and a runnable invoicing/collections API with SQLite persistence.** Frontend, proof matching, extraction and cash-flow implementation remain planned. The old implementation is backed up locally; its test results do not validate this rebuild.
 
 This README follows the section order of the [SDC submission template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md). Template alignment does not mean submission requirements are complete.
 
@@ -25,6 +25,7 @@ This README follows the section order of the [SDC submission template](https://g
 | --- | --- |
 | GitHub Repository | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
 | Shared Contract | [Contract guide](docs/CONTRACT.md) · [types, rules and fixtures](contracts/) |
+| Backend API | [Startup, configuration and implemented endpoints](docs/BACKEND.md) |
 | Synthetic Data | [Demo seed](data/seed/README.md) · [evaluation inputs and separate gold](data/eval/README.md) |
 | Replit Project | Pending |
 | Live Demo | Pending |
@@ -50,32 +51,35 @@ The new focus is payment-proof checking: AI helps read the claim, rules explain 
 - **Proof review:** extracted fields, bank-credit candidates, duplicates, mismatches and manual fallback.
 - **Payment tracking:** approved partial/full allocations, remaining balances and traceable cash forecasts.
 
-All features above are planned, not verified implementations.
+Invoicing and collections are implemented through the API. Proof review, payment allocation, forecasts and the frontend remain planned.
 
 ### Tech Stack
 
-| Layer | Planned technology |
+| Layer | Technology / status |
 | --- | --- |
 | Frontend | React + TypeScript + Vite, in `web/` |
-| Backend | Node.js 22.13+ |
-| Database | SQLite |
-| AI / Compute | Local OCR and server-side DeepSeek; versions and capability checks pending |
+| Backend | Node.js 22.13+; runnable HTTP API |
+| Database | SQLite; persistent demo data and transactions |
+| AI / Compute | Reminder templates work without a key; optional server-side DeepSeek adapter, real calls unverified; OCR planned |
 | Hosting / Dev | Replit use and deployment to be verified |
 
 ## Project Structure
 
-Current contract, data and documentation entry points:
+Current implementation, data and documentation entry points:
 
 ```text
 .
 ├── README.md / README.zh-CN.md
 ├── CONTRIBUTING.md
+├── src/                        # HTTP API, business operations and SQLite store
+├── scripts/                    # Database initialization and reset
+├── tests/                      # HTTP and persistence tests
 ├── contracts/                  # v1.0.0 types, rules, fixtures and checks
 ├── data/seed/                  # Synthetic demo state and bank CSVs
 ├── data/eval/                  # Evaluation inputs and separate gold labels
 ├── docs/
 │   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
-│   ├── CONTRACT.md
+│   ├── CONTRACT.md / BACKEND.md
 │   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # Eight implementation tasks
@@ -83,7 +87,7 @@ Current contract, data and documentation entry points:
 └── LICENSE
 ```
 
-Application implementation directories `src/` and `web/`, and later implementation tests/evaluation tools, are not runnable yet. See the [submission document checklist](submission/README.md) for planned filenames; PDFs will be added only when prepared and checked.
+The API in `src/` runs locally; `web/` is the next development step. See the [submission document checklist](submission/README.md) for planned materials.
 
 ### Architecture
 
@@ -102,20 +106,33 @@ With Node.js 22.13+ and npm, clone the repository:
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
+npm ci
+cp .env.example .env
+npm run db:init
+npm start
 ```
 
-There is no app startup command yet. You can inspect the shared contract and synthetic data, then run the checks below. App installation and configuration instructions will be added with the working implementation.
+Check `http://localhost:3000/health`. The API provides these seven operations; request headers and examples are in the [backend guide](docs/BACKEND.md):
+
+- `GET /api/demo-users` and `GET /api/workspace`
+- `POST /api/milestones/:id/complete` and `POST /api/milestones/:id/invoice-draft`
+- `POST /api/invoices/:id/decision`
+- `POST /api/invoices/:id/reminders` and `POST /api/reminders/:id/send`
+
+Sending is simulated. Other contract endpoints remain planned; no frontend or deployment is available yet. Reminder templates work without an API key.
 
 ### Run Tests
 
 From the repository root:
 
 ```bash
+npm run check
+npm test
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-This checks TypeScript contracts and runs 13 groups of structural/data consistency checks. It does **not** test an implemented app, run OCR or DeepSeek, or demonstrate matcher/forecast accuracy. Implementation tests and measured evaluation will be added in the relevant issues.
+Type checking, 8 HTTP/SQLite tests and 13 contract/data validation groups passed. These checks do not establish real DeepSeek, OCR, matching, forecast, frontend or deployment readiness.
 
 ## How We Use Replit
 
@@ -140,7 +157,7 @@ Planning findings: a receipt is a claim to verify, partial payments must preserv
 | --- | --- | --- |
 | Registered roster pending confirmation | Task ownership pending confirmation | Pending confirmation |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. First review the v1.0.0 contract and data in #17. After team review confirms the shared baseline, frontend mock development and backend implementation can proceed in parallel; wireframes and review can start now.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. The shared contract and backend foundation are ready: frontend development can connect the seven implemented operations and use fixtures for the remaining planned flows.
 
 Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 
@@ -148,8 +165,8 @@ Members can claim synthetic cases, independent calculations, test reviews, docum
 
 | Step | Issue | Deliverable |
 | --- | --- | --- |
-| 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | Scope, data, API contracts and fixtures |
-| 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | Backend, invoicing, collections and permissions |
+| 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | Complete — scope, data, API contracts and fixtures |
+| 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | Complete — backend, invoicing, collections and permissions |
 | 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Frontend design, development and API integration |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | Bank CSV and deterministic matching |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | OCR, AI extraction and manual fallback |
