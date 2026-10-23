@@ -4,7 +4,7 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**第一、二步已完成：契约 v1.0.0，以及可运行的开票／催收 API 和 SQLite 持久化。** 前端、凭证匹配、提取和现金流实现仍待开发。旧实现已在本地备份；旧版测试结果不能证明重建版可用。
+**第一、二、四步已完成：共享契约、持久化开票／催收 API、银行 CSV 导入和确定性匹配。** 前端独立开发；凭证提取、付款审批与现金流仍待实施。旧实现已在本地备份；旧版测试结果不能证明重建版可用。
 
 本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
 
@@ -51,7 +51,7 @@
 - **凭证审核：** 展示提取字段、银行入账候选、重复与不一致情况，并提供人工降级入口。
 - **收款跟踪：** 经批准的部分／全额付款分配、剩余欠款及可追溯的现金流预测。
 
-开票与催收 API 已实现；凭证审核、付款分配、预测及前端仍待开发。
+开票、催收、CSV 导入与匹配建议 API 已实现；凭证录入、付款分配、预测及前端仍待完成。
 
 ### 技术栈
 
@@ -112,12 +112,13 @@ npm run db:init
 npm start
 ```
 
-访问 `http://localhost:3000/health` 检查服务。以下七个操作已实现；请求头和调用示例见[后端说明](docs/BACKEND.md)：
+访问 `http://localhost:3000/health` 检查服务。以下九个操作已实现；调用示例见[后端说明](docs/BACKEND.md)和[银行匹配说明](docs/BANK_MATCHING.md)：
 
 - `GET /api/demo-users`、`GET /api/workspace`
 - `POST /api/milestones/:id/complete`、`POST /api/milestones/:id/invoice-draft`
 - `POST /api/invoices/:id/decision`
 - `POST /api/invoices/:id/reminders`、`POST /api/reminders/:id/send`
+- `POST /api/bank-statements`、`POST /api/receipts/:id/match`
 
 消息发送为模拟。其余契约端点仍待实现，前端和部署尚未完成；没有 API 密钥也可使用催款模板。
 
@@ -128,11 +129,12 @@ npm start
 ```bash
 npm run check
 npm test
+npm run evaluate:matcher
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-类型检查、8 项 HTTP／SQLite 测试和 13 组契约／数据校验已通过。这些检查不代表真实 DeepSeek 调用、OCR、匹配、预测、前端或部署已经验证。
+类型检查、18 组后端测试、30 个冻结合成匹配案例和 13 组契约／数据校验已通过。这不代表真实 DeepSeek、OCR、生产准确率、付款审批、预测、前端或部署已经验证。
 
 ## 我们如何使用 Replit
 
@@ -157,7 +159,7 @@ npm --prefix contracts run check
 | --- | --- | --- |
 | 正式注册名单待确认 | 任务认领待确认 | 待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。共享契约与后端基础已就绪：前端可以对接七个已实现操作，剩余流程使用同一契约的 fixtures。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。共享契约与后端基础已就绪：前端可以对接九个已实现操作，剩余流程使用同一契约的 fixtures。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
@@ -168,7 +170,7 @@ npm --prefix contracts run check
 | 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | 已完成 — 范围、数据、API 契约与测试样例 |
 | 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | 已完成 — 后端、开票、催收与权限 |
 | 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | 前端设计、开发与 API 对接 |
-| 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 银行 CSV 与确定性匹配 |
+| 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 已完成 — 银行 CSV 与确定性匹配 |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | OCR、AI 提取及人工降级 |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 付款审批、部分收款与预测 |
 | 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 联调与量化评测 |

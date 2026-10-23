@@ -1,13 +1,13 @@
 # Milestone2Cash Proof-to-Cash 开发计划
 
-依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1、STEP-2 已完成；其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
+依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1、STEP-2、STEP-4 已完成；STEP-3 前端独立开发，其余步骤 TODO**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
 
 | 步骤 | 交付 | 职责 | 依赖 | 状态 |
 | --- | --- | --- | --- | --- |
 | STEP-1 | [范围、数据、API 与 fixtures 冻结](issues/01-contract.md) | 项目协调与后端开发；团队确认业务 | 无 | DONE |
 | STEP-2 | [核心底座、开票、催收、权限与日志](issues/02-foundation.md) | 后端开发 | STEP-1 | DONE |
 | STEP-3 | [前端设计、开发与 API 对接](issues/03-frontend.md) | 前端开发；前后端共同联调验收 | STEP-1；联调依赖 STEP-2/4/5/6 | TODO |
-| STEP-4 | [银行 CSV 与确定性匹配](issues/04-matching.md) | 后端开发 | STEP-1、STEP-2 | TODO |
+| STEP-4 | [银行 CSV 与确定性匹配](issues/04-matching.md) | 后端开发 | STEP-1、STEP-2 | DONE |
 | STEP-5 | [本地 OCR、DeepSeek 结构化与 fallback](issues/05-ai-extraction.md) | 后端开发与 AI 集成 | STEP-1、STEP-2 | TODO |
 | STEP-6 | [审批入账、部分付款与现金流联动](issues/06-reconciliation.md) | 后端开发 | STEP-2、STEP-4、STEP-5 | TODO |
 | STEP-7 | [端到端与量化评测](issues/07-evaluation.md) | 测试与评测；团队交叉复核 | STEP-3、STEP-4、STEP-5、STEP-6 | TODO |

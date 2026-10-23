@@ -6,6 +6,9 @@ import { Store, type EntityKind } from "./store.ts";
 import { AppError } from "./errors.ts";
 import { executeOperation, prepareReminder, type Context, type Operation } from "./operations.ts";
 import { createReminderProvider, type ReminderProvider } from "./reminder-provider.ts";
+import { readBankUpload, type BankUpload } from "./multipart.ts";
+import { importBankStatement } from "./bank-import.ts";
+import { runReceiptMatch } from "./reconciliation-match.ts";
 
 interface AppOptions {
   dbPath: string;
@@ -14,12 +17,15 @@ interface AppOptions {
   frontendOrigin?: string;
 }
 
-const writes: { operation: Operation; route: RegExp; kind: EntityKind }[] = [
+type WriteOperation = Operation | "importBankStatement" | "runMatch";
+const writes: { operation: WriteOperation; route: RegExp; kind: EntityKind | "company" }[] = [
   { operation: "completeMilestone", route: /^\/api\/milestones\/([^/]+)\/complete$/, kind: "milestones" },
   { operation: "createInvoiceDraft", route: /^\/api\/milestones\/([^/]+)\/invoice-draft$/, kind: "milestones" },
   { operation: "decideInvoice", route: /^\/api\/invoices\/([^/]+)\/decision$/, kind: "invoices" },
   { operation: "generateReminder", route: /^\/api\/invoices\/([^/]+)\/reminders$/, kind: "invoices" },
   { operation: "sendReminder", route: /^\/api\/reminders\/([^/]+)\/send$/, kind: "reminders" },
+  { operation: "importBankStatement", route: /^\/api\/bank-statements$/, kind: "company" },
+  { operation: "runMatch", route: /^\/api\/receipts\/([^/]+)\/match$/, kind: "receipts" },
 ];
 
 // JSON values parsed by this service use ECMAScript number/string serialization;
@@ -123,9 +129,9 @@ export async function createApp(options: AppOptions) {
       const route = req.method === "POST" ? writes.find((x) => x.route.test(path)) : undefined;
       if (!route) throw new AppError(404, "NOT_FOUND", "Endpoint not found.");
       operation = route.operation;
-      const id = route.route.exec(path)![1];
+      const id = route.kind === "company" ? actor.companyId : route.route.exec(path)![1];
       // Resolve within this company before permissions or idempotency replay.
-      if (!store.get(route.kind, id, actor.companyId)) throw new AppError(404, "NOT_FOUND", "Resource not found.");
+      if (!(route.kind === "company" ? store.getCompany(id) : store.get(route.kind, id, actor.companyId))) throw new AppError(404, "NOT_FOUND", "Resource not found.");
       ownEntityId = id;
       const endpoint = ENDPOINTS[route.operation];
       if (!(endpoint.roles as readonly string[]).includes(actor.role)) throw new AppError(403, "FORBIDDEN", "Your demo role cannot perform this action.");
@@ -133,8 +139,13 @@ export async function createApp(options: AppOptions) {
       if (typeof key !== "string" || !/^[A-Za-z0-9._:-]{8,128}$/.test(key)) {
         throw new AppError(422, "IDEMPOTENCY_KEY_REQUIRED", "Provide an Idempotency-Key of 8–128 allowed characters.");
       }
-      const body = await bodyFrom(req);
-      const fingerprint = createHash("sha256").update(`POST\n${path}\n${canonical(body)}`).digest("hex");
+      const body = route.operation === "importBankStatement" ? await readBankUpload(req) : await bodyFrom(req);
+      const upload = route.operation === "importBankStatement" ? body as BankUpload : undefined;
+      const canonicalBody = upload ? canonical({
+        expectedVersion: String(upload.expectedVersion), mimeType: upload.file.mimeType,
+        fileSha256: createHash("sha256").update(upload.file.bytes).digest("hex"),
+      }) : canonical(body);
+      const fingerprint = createHash("sha256").update(`POST\n${path}\n${canonicalBody}`).digest("hex");
       const stored = store.getIdempotency(actor.companyId, actor.id, key);
       if (stored) {
         if (stored.fingerprint !== fingerprint) throw new AppError(409, "IDEMPOTENCY_CONFLICT", "This key belongs to another request.");
@@ -152,7 +163,9 @@ export async function createApp(options: AppOptions) {
           if (cached.fingerprint !== fingerprint) throw new AppError(409, "IDEMPOTENCY_CONFLICT", "This key belongs to another request.");
           return { status: cached.status, data: cached.data, replayed: true };
         }
-        const data = executeOperation(ctx, route.operation, id, body, prepared);
+        const data = route.operation === "importBankStatement" ? importBankStatement(ctx, upload!)
+          : route.operation === "runMatch" ? runReceiptMatch(ctx, id, body)
+          : executeOperation(ctx, route.operation, id, body, prepared);
         store.saveIdempotency(actor!.companyId, actor!.id, key, fingerprint, endpoint.successStatus, data);
         return { status: endpoint.successStatus, data, replayed: false };
       });

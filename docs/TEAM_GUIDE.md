@@ -50,7 +50,7 @@ Use a focused PR with the relevant validation evidence. Keep incomplete work mar
 | Independent calculations | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17), [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Hand-calculated invoice balances and cash forecasts with clear assumptions |
 | Test preparation and review | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Test scenarios now; actual observations, timings, failures and evidence once the relevant feature runs |
 | Documentation and demo preparation | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Product explanation, submission checklist, slide outline or demo script that distinguishes planned and working features |
-| Frontend design | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Use the frozen shared contract, build UI states, and integrate the seven working backend endpoints; keep later endpoints explicitly mocked |
+| Frontend design | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Use the frozen shared contract, build UI states, and integrate the nine implemented backend endpoints; keep later endpoints explicitly mocked |
 
 You do not need to code to prepare cases, check calculations, review test evidence or help explain the product. Draft cases can begin now; machine-readable fixtures must follow the agreed contract. Record only work actually performed and results actually observed.
 

@@ -1,6 +1,6 @@
 # Backend foundation
 
-The STEP-2 backend implements seven contract endpoints: demo users, workspace, milestone completion, invoice drafting, invoice approval/rejection, reminder drafting and confirmed simulated sending. It also exposes `GET /health`. Frontend pages, reply extraction, receipts, bank import, reconciliation and forecast execution are later steps.
+The backend implements nine contract endpoints: demo users, workspace, milestone completion, invoice drafting, invoice approval/rejection, reminder drafting, confirmed simulated sending, bank CSV import and matching proposals. It also exposes `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for the two STEP-4 operations. Frontend pages, receipt ingestion, payment approval and forecasts are later steps.
 
 ## Run locally
 
