@@ -15,6 +15,7 @@
     "test": "node --experimental-strip-types --test tests/*.test.ts tests/integration/*.test.ts",
     "test:integration": "node --experimental-strip-types --test tests/integration/*.test.ts",
     "evaluate:matcher": "node --experimental-strip-types scripts/evaluate-matcher.ts",
+    "evaluate:forecast": "node --experimental-strip-types scripts/evaluate-forecast.ts",
     "generate:receipts": "node --experimental-strip-types scripts/generate-receipts.ts",
     "evaluate:extraction": "node --experimental-strip-types --env-file-if-exists=.env scripts/evaluate-extraction.ts"
   },

@@ -85,7 +85,7 @@ Confidence below `0.85` requires review. `fallbackReason` identifies the reason 
 
 Every write requires an `Idempotency-Key` and the current entity version. Replaying a successful request returns its prior result without repeating OCR/model calls; a reused key with a different request is rejected. Company isolation also applies to images and extraction records.
 
-Matching is available through STEP-4 after evidence is ready. Payment approval, promise confirmation and forecast calculation remain STEP-6 work; none of the five STEP-5 routes changes the outstanding invoice amount, records payment or confirms a promise.
+Matching is available through STEP-4 after evidence is ready. Payment approval, promise confirmation and forecast calculation are implemented separately in [STEP-6](RECONCILIATION.md); none of the five STEP-5 routes changes the outstanding invoice amount, records payment or confirms a promise.
 
 ## Verification
 

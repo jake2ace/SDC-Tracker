@@ -1,6 +1,6 @@
 # Backend foundation
 
-The backend implements fourteen contract endpoints, including receipt uploads, authorized original images, reply extraction and manual corrections. It also exposes `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for STEP-4 and [EXTRACTION.md](EXTRACTION.md) for STEP-5. Frontend pages are developed separately; payment approval, promise confirmation and forecasts remain planned.
+The backend implements all seventeen contract endpoints, plus `GET /health`. See [BANK_MATCHING.md](BANK_MATCHING.md) for STEP-4, [EXTRACTION.md](EXTRACTION.md) for STEP-5 and [RECONCILIATION.md](RECONCILIATION.md) for STEP-6 payment approval, promises and forecasts. Frontend pages are developed separately; deployment and full product integration remain unverified.
 
 ## Run locally
 

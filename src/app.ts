@@ -13,6 +13,8 @@ import { readReceiptUpload, type ReceiptUpload } from "./receipt-upload.ts";
 import { createExtractionProvider, type ExtractionProvider } from "./extraction-provider.ts";
 import { createLocalOcrProvider, type OcrProvider } from "./receipt-image.ts";
 import { prepareReply, createReply, prepareReceipt, saveReceipt, correctReply, correctReceipt } from "./evidence-operations.ts";
+import { approvePayment, confirmPromise } from "./reconciliation.ts";
+import { getForecast } from "./forecast-query.ts";
 
 interface AppOptions {
   dbPath: string;
@@ -23,7 +25,7 @@ interface AppOptions {
   ocrProvider?: OcrProvider;
 }
 
-type WriteOperation = Operation | "importBankStatement" | "runMatch" | "createReply" | "correctReply" | "uploadReceipt" | "correctReceipt";
+type WriteOperation = Operation | "importBankStatement" | "runMatch" | "createReply" | "correctReply" | "uploadReceipt" | "correctReceipt" | "approvePayment" | "confirmPromise";
 const writes: { operation: WriteOperation; route: RegExp; kind: EntityKind | "company" }[] = [
   { operation: "completeMilestone", route: /^\/api\/milestones\/([^/]+)\/complete$/, kind: "milestones" },
   { operation: "createInvoiceDraft", route: /^\/api\/milestones\/([^/]+)\/invoice-draft$/, kind: "milestones" },
@@ -36,6 +38,8 @@ const writes: { operation: WriteOperation; route: RegExp; kind: EntityKind | "co
   { operation: "correctReply", route: /^\/api\/replies\/([^/]+)\/extraction$/, kind: "replies" },
   { operation: "uploadReceipt", route: /^\/api\/invoices\/([^/]+)\/receipts$/, kind: "invoices" },
   { operation: "correctReceipt", route: /^\/api\/receipts\/([^/]+)\/evidence$/, kind: "receipts" },
+  { operation: "approvePayment", route: /^\/api\/matches\/([^/]+)\/approve-payment$/, kind: "matches" },
+  { operation: "confirmPromise", route: /^\/api\/replies\/([^/]+)\/confirm-promise$/, kind: "replies" },
 ];
 
 // JSON values parsed by this service use ECMAScript number/string serialization;
@@ -127,10 +131,12 @@ export async function createApp(options: AppOptions) {
       }
       const url = new URL(req.url ?? "/", "http://localhost");
       const path = url.pathname;
-      if (url.search) throw new AppError(422, "VALIDATION_ERROR", "This endpoint accepts no query parameters.");
+      if (url.search && !(req.method === "GET" && path === ENDPOINTS.getForecast.path)) {
+        throw new AppError(422, "VALIDATION_ERROR", "This endpoint accepts no query parameters.");
+      }
       if (req.method === "GET" && path === "/health") {
         store.listUsers();
-        success(200, { status: "ok", service: "proof-to-cash", stage: "foundation", database: "ready" }); return;
+        success(200, { status: "ok", service: "proof-to-cash", stage: "reconciliation", database: "ready" }); return;
       }
       if (req.method === "GET" && path === ENDPOINTS.listDemoUsers.path) {
         success(200, { users: store.listUsers() }); return;
@@ -139,7 +145,10 @@ export async function createApp(options: AppOptions) {
       actor = typeof actorId === "string" ? store.getUser(actorId) : undefined;
       if (!actor) throw new AppError(401, "UNAUTHENTICATED", "Select a valid demo user.");
       if (req.method === "GET" && path === ENDPOINTS.getWorkspace.path) {
-        success(200, store.getWorkspace(actor)); return;
+        success(200, store.transaction(() => store.getWorkspace(actor!))); return;
+      }
+      if (req.method === "GET" && path === ENDPOINTS.getForecast.path) {
+        success(200, getForecast({ store, actor, now, requestId }, url.searchParams)); return;
       }
       const imageRoute = /^\/api\/receipts\/([^/]+)\/image$/.exec(path);
       if (req.method === "GET" && imageRoute) {
@@ -199,6 +208,8 @@ export async function createApp(options: AppOptions) {
           : route.operation === "correctReply" ? correctReply(ctx, id, body)
           : route.operation === "uploadReceipt" ? saveReceipt(ctx, id, receiptUpload!, preparedReceipt!)
           : route.operation === "correctReceipt" ? correctReceipt(ctx, id, body)
+          : route.operation === "approvePayment" ? approvePayment(ctx, id, body)
+          : route.operation === "confirmPromise" ? confirmPromise(ctx, id, body)
           : executeOperation(ctx, route.operation, id, body, prepared);
         store.saveIdempotency(actor!.companyId, actor!.id, key, fingerprint, endpoint.successStatus, data);
         return { status: endpoint.successStatus, data, replayed: false };

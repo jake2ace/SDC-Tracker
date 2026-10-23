@@ -182,7 +182,7 @@ export const ENDPOINTS = {
   correctReceipt: { method: "PATCH", path: "/api/receipts/:id/evidence", roles: ["finance"], status: "implemented", successStatus: 200, format: "json" },
   importBankStatement: { method: "POST", path: "/api/bank-statements", roles: ["finance"], status: "implemented", successStatus: 200, format: "multipart" },
   runMatch: { method: "POST", path: "/api/receipts/:id/match", roles: ["finance"], status: "implemented", successStatus: 200, format: "json" },
-  approvePayment: { method: "POST", path: "/api/matches/:id/approve-payment", roles: ["finance"], status: "planned", successStatus: 200, format: "json" },
-  confirmPromise: { method: "POST", path: "/api/replies/:id/confirm-promise", roles: ["finance"], status: "planned", successStatus: 200, format: "json" },
-  getForecast: { method: "GET", path: "/api/forecast", roles: ["owner", "finance", "pm"], status: "planned", successStatus: 200, format: "json" },
+  approvePayment: { method: "POST", path: "/api/matches/:id/approve-payment", roles: ["finance"], status: "implemented", successStatus: 200, format: "json" },
+  confirmPromise: { method: "POST", path: "/api/replies/:id/confirm-promise", roles: ["finance"], status: "implemented", successStatus: 200, format: "json" },
+  getForecast: { method: "GET", path: "/api/forecast", roles: ["owner", "finance", "pm"], status: "implemented", successStatus: 200, format: "json" },
 } as const satisfies Record<keyof ApiOperations, EndpointDefinition>;

@@ -39,7 +39,7 @@ The server loads that company's receipt, invoice, customer aliases and bank reco
 
 The pure matcher uses exact normalized references and independently maintained payer aliases. It requires valid evidence, zero amount tolerance, an inclusive transfer-day to +2-day bank window, and no future transfer/posting date. Duplicate evidence, reused references, allocated credits and multiple candidates cannot be silently selected. Low-confidence or incomplete evidence remains reviewable. Only `confirmed` and `partial` can expose an eligible credit; that still is not approval or a claim of real bank receipt.
 
-Receipt upload/OCR and manual correction are now implemented in [STEP-5](EXTRACTION.md). The fresh seed contains no receipt records; upload a synthetic image from `data/eval/images/` first. The isolated matching tests also retain prepared receipt entities for deterministic rule checks. Payment approval remains planned and must still be explicitly mocked in the frontend.
+Receipt upload/OCR and manual correction are implemented in [STEP-5](EXTRACTION.md). The fresh seed contains no receipt records; upload a synthetic image from `data/eval/images/` first. The isolated matching tests also retain prepared receipt entities for deterministic rule checks. [STEP-6](RECONCILIATION.md) implements Finance approval of eligible matches and updates the ledger atomically.
 
 ## Verification
 

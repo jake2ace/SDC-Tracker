@@ -1,0 +1,61 @@
+{
+  "evaluation": "deterministic-forecast-frozen-synthetic-cases",
+  "evaluatedAt": "2026-10-23T16:02:11.104Z",
+  "runtime": "v25.8.1",
+  "inputSha256": "55923c9659128eda2bf41e5bae18ec8273650de83e0a4f7dede2c5415b2c259c",
+  "goldSha256": "54dd774f8c5f08f27bc476a768e7b8bcc999829168e7990841a37f245a6dbc18",
+  "sourceSha256": {
+    "forecast.ts": "3dee7a7bf82510d76b072677adb654e8e825e72e579a7436c172408451b7d3b5"
+  },
+  "sampleCount": 4,
+  "passed": 4,
+  "failed": 0,
+  "checkedGoldDays": 40,
+  "scope": "Four frozen synthetic cases, each compared exactly with ten independently hand-calculated days and the expected receipt schedule. All outputs cover 30 days; this is not a statistical forecast or a production banking validation.",
+  "results": [
+    {
+      "id": "forecast_baseline_on_time",
+      "checkedGoldDays": 10,
+      "daysCorrect": true,
+      "scheduleCorrect": true,
+      "deterministic": true,
+      "unchanged": true,
+      "horizonCorrect": true,
+      "traceable": true,
+      "passed": true
+    },
+    {
+      "id": "forecast_after_on_time",
+      "checkedGoldDays": 10,
+      "daysCorrect": true,
+      "scheduleCorrect": true,
+      "deterministic": true,
+      "unchanged": true,
+      "horizonCorrect": true,
+      "traceable": true,
+      "passed": true
+    },
+    {
+      "id": "forecast_baseline_delayed_7",
+      "checkedGoldDays": 10,
+      "daysCorrect": true,
+      "scheduleCorrect": true,
+      "deterministic": true,
+      "unchanged": true,
+      "horizonCorrect": true,
+      "traceable": true,
+      "passed": true
+    },
+    {
+      "id": "forecast_after_delayed_7",
+      "checkedGoldDays": 10,
+      "daysCorrect": true,
+      "scheduleCorrect": true,
+      "deterministic": true,
+      "unchanged": true,
+      "horizonCorrect": true,
+      "traceable": true,
+      "passed": true
+    }
+  ]
+}

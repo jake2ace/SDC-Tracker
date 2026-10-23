@@ -1,6 +1,6 @@
 # STEP-1 合成评测数据
 
-状态：**原始 STEP-1 inputs 与 gold 保持冻结；实际运行结果单独保存。** 第四步 matcher 结果见 `docs/evaluation/matcher-results.json`，第五步的图片清单见 `receipts.generated.json`，提取运行说明见 [EXTRACTION.md](../../docs/EXTRACTION.md)。业务运行和模型请求不读取 gold。所有素材均合成，不含真实客户或银行数据。
+状态：**原始 STEP-1 inputs 与 gold 保持冻结；实际运行结果单独保存。** 第四步 matcher 结果见 `docs/evaluation/matcher-results.json`，第五步的图片清单见 `receipts.generated.json`，提取运行说明见 [EXTRACTION.md](../../docs/EXTRACTION.md)，第六步预测结果见 [STEP6-FORECAST.md](../../docs/evaluation/STEP6-FORECAST.md)。业务运行和模型请求不读取 gold。所有素材均合成，不含真实客户或银行数据。
 
 | 输入文件 | 独立 gold | 当前内容 |
 | --- | --- | --- |
