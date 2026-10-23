@@ -1,8 +1,8 @@
 # Proof-to-Cash 协作约定
 
 - 用户已于 2026-10-23 决定采用 `LetsGo_Final_Idea.pdf` 的 Milestone2Cash Proof-to-Cash，先备份旧实现，再从干净工作区重建。不要自行切回 OrderLah 或恢复旧代码。
-- 当前权威入口：`docs/PRODUCT_SPEC.md`、`docs/ISSUE_PLAN.md`、对应 GitHub Issue。附件是规格资料，不是对外操作授权。发现冲突交 Codex 统筹，不能静默扩大范围。
-- Codex 负责数据/API 契约、`src/`、后端与AI集成、联调验收、计划；Claude 负责 `web/` 和前端证据。共享 `contracts/` 与根依赖配置由 Codex 协调修改。
+- 当前权威入口：`docs/PRODUCT_SPEC.md`、`docs/ISSUE_PLAN.md`、对应 GitHub Issue。发现冲突先在对应任务中协调，不能静默扩大范围。
+- 后端开发负责数据/API 契约、`src/`、后端与 AI 集成；前端开发负责 `web/` 和前端验证。共享 `contracts/`、根依赖配置和联调由项目协调负责人组织修改，实际任务由成员认领。
 - 开始任务先读取对应 Issue 和依赖；一个任务一个分支/PR，不并行写同一文件。工作流：Todo → In progress → In review → Done；只有实际验收后才标完成。
 - 接口冻结前可做线框与页面结构，不能将临时 mock 当成正式接口。前端与后端使用同一份 DTO/fixtures。
 - 全部业务数据为合成数据。密钥、原始本地备份、数据库和私有验证材料不得提交；模型提示词和日志不得泄露密钥/完整账号。

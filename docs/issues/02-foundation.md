@@ -2,7 +2,7 @@
 
 GitHub：[#18](https://github.com/jake2ace/SDC-Tracker/issues/18)
 
-**状态：TODO · Owner role：Codex · 依赖：STEP-1 ([#17](https://github.com/jake2ace/SDC-Tracker/issues/17))**
+**状态：TODO · 职责：后端开发 · 依赖：STEP-1 ([#17](https://github.com/jake2ace/SDC-Tracker/issues/17))**
 
 ## 目标
 
@@ -10,7 +10,7 @@ GitHub：[#18](https://github.com/jake2ace/SDC-Tracker/issues/18)
 
 ## 范围与允许目录
 
-`src/`、`data/seed/`、`tests/`、`scripts/`、`docs/` 及服务端工程配置；接口变更同步 `contracts/`。不修改 Claude 的 `web/` 页面。
+`src/`、`data/seed/`、`tests/`、`scripts/`、`docs/` 及服务端工程配置；接口变更同步 `contracts/`。涉及 `web/` 页面的改动交给前端任务负责人。
 
 ## 完成标准
 

@@ -54,7 +54,7 @@ All features above are planned, not verified implementations.
 
 | Layer | Planned technology |
 | --- | --- |
-| Frontend | Framework pending #17; Claude owns `web/` |
+| Frontend | Framework pending #17; implementation in `web/` |
 | Backend | Node.js 22+ |
 | Database | SQLite |
 | AI / Compute | Local OCR and server-side DeepSeek; versions and capability checks pending |
@@ -67,10 +67,10 @@ Current documentation entry points:
 ```text
 .
 ├── README.md / README.zh-CN.md
-├── AGENTS.md / CLAUDE.md
+├── CONTRIBUTING.md
 ├── docs/
 │   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
-│   ├── CLAUDE_HANDOFF.md / TEAM_GUIDE.md
+│   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # Eight implementation tasks
 ├── submission/README.md        # Planned documents and evidence checklist
@@ -125,11 +125,11 @@ Planning findings: a receipt is a claim to verify, partial payments must preserv
 
 | Name | Role | GitHub |
 | --- | --- | --- |
-| Registered roster pending confirmation | Human task claims pending confirmation | Pending confirmation |
+| Registered roster pending confirmation | Task ownership pending confirmation | Pending confirmation |
 
-Codex and Claude are AI assistance tools, not registered team members. Codex coordinates the plan, contracts, backend and integration; Claude handles the frontend. Functional mock/API frontend development waits for #17's contract freeze; wireframes can start earlier.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. Shared interfaces are agreed before implementation; functional mock/API frontend development waits for #17's contract freeze, while wireframes can start earlier.
 
-Human members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
+Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 
 ### Eight-step plan
 
@@ -137,14 +137,14 @@ Human members can claim synthetic cases, independent calculations, test reviews,
 | --- | --- | --- |
 | 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | Scope, data, API contracts and fixtures |
 | 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | Backend, invoicing, collections and permissions |
-| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Claude frontend and API integration |
+| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Frontend design, development and API integration |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | Bank CSV and deterministic matching |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | OCR, AI extraction and manual fallback |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | Payment approval, partial payments and forecast |
 | 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Integration and measured evaluation |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Deployment, presentation and submission checks |
 
-Details: [dependencies and acceptance plan](docs/ISSUE_PLAN.md) · [Claude handoff](docs/CLAUDE_HANDOFF.md) · [decisions](docs/decisions.md).
+Details: [dependencies and acceptance plan](docs/ISSUE_PLAN.md) · [frontend handoff](docs/FRONTEND_HANDOFF.md) · [decisions](docs/decisions.md).
 
 ## Submission Checklist
 

@@ -1,8 +1,8 @@
-# STEP-3：Claude 前端与 API 对接
+# STEP-3：前端设计、开发与 API 对接
 
 GitHub：[#19](https://github.com/jake2ace/SDC-Tracker/issues/19)
 
-**状态：TODO · Owner role：Claude；Codex 负责接口协调和联调验收 · 依赖：STEP-1 ([#17](https://github.com/jake2ace/SDC-Tracker/issues/17))；最终对接依赖 STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))、STEP-4 ([#20](https://github.com/jake2ace/SDC-Tracker/issues/20))、STEP-5 ([#21](https://github.com/jake2ace/SDC-Tracker/issues/21))、STEP-6 ([#22](https://github.com/jake2ace/SDC-Tracker/issues/22))**
+**状态：TODO · 职责：前端设计与开发；前后端共同协调接口和联调验收 · 依赖：STEP-1 ([#17](https://github.com/jake2ace/SDC-Tracker/issues/17))；最终对接依赖 STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))、STEP-4 ([#20](https://github.com/jake2ace/SDC-Tracker/issues/20))、STEP-5 ([#21](https://github.com/jake2ace/SDC-Tracker/issues/21))、STEP-6 ([#22](https://github.com/jake2ace/SDC-Tracker/issues/22))**
 
 ## 目标
 
@@ -10,7 +10,7 @@ GitHub：[#19](https://github.com/jake2ace/SDC-Tracker/issues/19)
 
 ## 范围与允许目录
 
-`web/`、`web/` 内前端测试及说明；共享依赖配置、`contracts/` 和后端变更由 Codex 协调。不得将密钥或核心财务判断放入前端。
+`web/`、`web/` 内前端测试及说明；共享依赖配置、`contracts/` 和后端变更由后端任务负责人及项目协调人员共同确认。不得将密钥或核心财务判断放入前端。
 
 ## 完成标准
 

@@ -2,7 +2,7 @@
 
 GitHub：[#22](https://github.com/jake2ace/SDC-Tracker/issues/22)
 
-**状态：TODO · Owner role：Codex · 依赖：STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))、STEP-4 ([#20](https://github.com/jake2ace/SDC-Tracker/issues/20))、STEP-5 ([#21](https://github.com/jake2ace/SDC-Tracker/issues/21))**
+**状态：TODO · 职责：后端开发 · 依赖：STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))、STEP-4 ([#20](https://github.com/jake2ace/SDC-Tracker/issues/20))、STEP-5 ([#21](https://github.com/jake2ace/SDC-Tracker/issues/21))**
 
 ## 目标
 

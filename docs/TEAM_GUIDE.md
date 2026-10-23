@@ -28,7 +28,7 @@ Comment on the relevant [GitHub issue](https://github.com/jake2ace/SDC-Tracker/i
 
 For example: “I would like to prepare five synthetic partial-payment cases for #17, including inputs and independently calculated expected balances. I will add a draft under `docs/` and confirm the final data format before creating fixtures.”
 
-An available task is not an assignment until someone actually claims it. Codex coordinates the plan, interfaces, backend and integration; Claude handles the frontend in `web/`. Changes to shared contracts or root dependencies must be coordinated with Codex.
+An available task is not an assignment until someone actually claims it. Work is divided into project coordination, frontend design and development, backend development, testing, and documentation. Frontend work belongs in `web/`; backend work belongs in `src/`. Coordinate shared contracts and root dependencies with the backend task owner and project coordinator before changing them.
 
 ## 3. Work on a separate branch and open a PR
 
@@ -50,8 +50,8 @@ Request review from the team before merging. Keep work marked as in progress unt
 | Independent calculations | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17), [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Hand-calculated invoice balances and cash forecasts with clear assumptions |
 | Test preparation and review | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Test scenarios now; actual observations, timings, failures and evidence once the relevant feature runs |
 | Documentation and demo preparation | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Product explanation, submission checklist, slide outline or demo script that distinguishes planned and working features |
-| Frontend design | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Coordinate wireframes and UI states with Claude; functional mock/API work waits for #17's shared contract to freeze |
+| Frontend design | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Agree wireframes and UI states with the frontend task owner; functional mock/API work waits for #17's shared contract to freeze |
 
 You do not need to code to prepare cases, check calculations, review test evidence or help explain the product. Draft cases can begin now; machine-readable fixtures must follow the agreed contract. Record only work actually performed and results actually observed.
 
-Use synthetic business data only. Keep credentials, local backups, databases and private evidence out of commits. Product UI and submission materials use English; team discussion can use Chinese. See [AGENTS.md](../AGENTS.md) for the shared working rules.
+Use synthetic business data only. Keep credentials, local backups, databases and private evidence out of commits. Product UI and submission materials use English; team discussion can use Chinese. Record actual tool and AI assistance truthfully. See [CONTRIBUTING.md](../CONTRIBUTING.md) for the shared working rules.
