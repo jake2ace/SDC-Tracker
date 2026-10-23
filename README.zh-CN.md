@@ -4,7 +4,7 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**第一、二、四、五、六步已实现：全部十七个后端契约接口可用，包含人工批准入账、部分收款、付款承诺及 30 天现金流预测。** 前端联调与部署仍独立推进。旧实现已在本地备份；旧版测试结果不能证明重建版可用。
+**前端现已接通全部十七个后端契约接口，包含人工批准入账、部分收款、付款承诺及 30 天现金流预测。** 本地联调结果见[第七步报告](docs/evaluation/STEP7-INTEGRATION.md)。十次人工流程计时和组员复核仍待完成；部署与参赛提交独立推进。
 
 本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
 
@@ -26,6 +26,7 @@
 | GitHub 仓库 | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
 | 共享契约 | [契约说明](docs/CONTRACT.md) · [类型、规则与样例](contracts/) |
 | 后端 API | [启动、配置与已实现接口](docs/BACKEND.md) |
+| 本地联调 | [浏览器、API 与模型验证](docs/evaluation/STEP7-INTEGRATION.md) |
 | 合成数据 | [演示 seed](data/seed/README.md) · [评测输入与独立 gold](data/eval/README.md) |
 | Replit 项目 | 待补充 |
 | 在线演示 | 待补充 |
@@ -41,7 +42,7 @@
 
 ### 解决方案
 
-计划中的流程：**项目阶段完成 → 发票草稿 → Owner 批准 → 逾期催款草稿 → Finance 确认模拟发送 → 客户回复或截图 → OCR 与字段提取 → 银行记录匹配 → Finance 批准付款分配 → 更新余额、催收、未来 30 天预测及活动日志。**
+应用流程：**项目阶段完成 → 发票草稿 → Owner 批准 → 逾期催款草稿 → Finance 确认模拟发送 → 客户回复或截图 → OCR 与字段提取 → 银行记录匹配 → Finance 批准付款分配 → 更新余额、催收、未来 30 天预测及活动日志。**
 
 新增重点是付款凭证核对：AI 辅助读取声明，规则解释匹配结果，人工批准入账。部分付款后，剩余金额仍然待收。原型使用团队自行创建的合成数据，发消息和银行数据均为模拟，不进行真实支付或银行接入。
 
@@ -51,14 +52,14 @@
 - **凭证审核：** 展示提取字段、银行入账候选、重复与不一致情况，并提供人工降级入口。
 - **收款跟踪：** 经批准的部分／全额付款分配、剩余欠款及可追溯的现金流预测。
 
-API 已连接开票、催收、凭证提取、银行核对、财务批准入账、剩余应收与现金流预测；前端独立开发。
+浏览器界面通过共享 API 契约连接开票、催收、凭证提取、银行核对、财务批准入账、剩余应收与现金流预测。
 
 ### 技术栈
 
 | 层级 | 技术／状态 |
 | --- | --- |
 | 前端 | React + TypeScript + Vite；实现在 `web/` 中 |
-| 后端 | Node.js 22.13+；HTTP API 可运行 |
+| 后端 | Node.js HTTP API；建议使用 Node.js 24 LTS |
 | 数据库 | SQLite；演示数据持久化与事务 |
 | AI／计算 | 离线 Tesseract OCR；服务端 DeepSeek 结构化；无密钥时明确转人工处理 |
 | 托管／开发 | Replit 使用与部署待验证 |
@@ -72,8 +73,9 @@ API 已连接开票、催收、凭证提取、银行核对、财务批准入账�
 ├── README.md / README.zh-CN.md
 ├── CONTRIBUTING.md
 ├── src/                        # HTTP API、业务操作与 SQLite 存储
-├── scripts/                    # 数据库初始化与重置
-├── tests/                      # HTTP 与持久化测试；第五步集中在 tests/integration/
+├── scripts/                    # 数据库工具与独立评测脚本
+├── tests/integration/          # API、持久化与浏览器集成测试
+├── web/                        # React 界面；单元测试独立放在 web/tests/
 ├── contracts/                  # v1.0.0 类型、规则、样例与校验
 ├── data/seed/                  # 合成演示状态与银行 CSV
 ├── data/eval/                  # 评测输入及独立 gold 标签
@@ -87,11 +89,11 @@ API 已连接开票、催收、凭证提取、银行核对、财务批准入账�
 └── LICENSE
 ```
 
-`src/` 中的 API 可在本地运行；`web/` 前端是下一步开发任务。计划提交文件见[提交材料清单](submission/README.md)。
+`src/` 中的 API 和 `web/` 中的界面均可在本地运行，测试代码与业务模块分开。计划提交文件见[提交材料清单](submission/README.md)。
 
 ### 架构
 
-计划架构：**浏览器界面 → Node.js API → SQLite**。服务端运行 OCR，调用 DeepSeek 执行允许的提取任务，并匹配导入的合成银行入账记录。账本和预测更新需要经过人工批准。详见[产品规格](docs/PRODUCT_SPEC.md)。
+**浏览器界面 → Node.js API → SQLite**。服务端运行 OCR，调用 DeepSeek 执行允许的提取任务，并匹配导入的合成银行入账记录。账本和预测更新需要经过人工批准。详见[产品规格](docs/PRODUCT_SPEC.md)。
 
 ## 如何运行
 
@@ -101,16 +103,22 @@ API 已连接开票、催收、凭证提取、银行核对、财务批准入账�
 
 ### 方式二 — 在本地运行
 
-准备 Node.js 22.13+ 和 npm 后克隆仓库：
+建议使用 Node.js 24 LTS 和 npm。克隆仓库并启动 API：
 
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
 npm ci
-cp .env.example .env
+npm ci --prefix web
+# 保留已有 .env 及其中的服务端密钥。
+test -f .env || cp .env.example .env
 npm run db:init
 npm start
 ```
+
+在第二个终端进入仓库根目录，运行 `npm run dev:web`，然后打开 `http://localhost:5173`。演示登录页进入工作区后，可切换 PM、Owner 或 Finance 身份。界面默认连接真实的本地 API；仅在需要固定样例时，添加 `?source=mock` 并重新加载。
+
+在根目录 `.env` 中设置 `DEEPSEEK_API_KEY`，保留 `DEEPSEEK_MODEL=deepseek-flash`。密钥只能留在服务端，不放入 `web/` 或任何 `VITE_` 变量。模型不可用时，提醒明确使用模板，付款证据可转人工录入和审核。
 
 访问 `http://localhost:3000/health` 检查服务。以下十七个操作已实现；调用示例见[后端说明](docs/BACKEND.md)、[银行匹配说明](docs/BANK_MATCHING.md)、[凭证与回复说明](docs/EXTRACTION.md)和[付款与预测说明](docs/RECONCILIATION.md)：
 
@@ -125,7 +133,7 @@ npm start
 - `POST /api/matches/:id/approve-payment`、`POST /api/replies/:id/confirm-promise`
 - `GET /api/forecast?asOfDate=2026-10-23&delayDays=7`
 
-消息发送与记账均为演示模拟。全部契约接口已实现，前端联调与部署尚未验证；没有 API 密钥也可使用催款模板及人工证据审核。
+消息发送与记账均为演示模拟。本地联调报告区分浏览器验证、真实模型调用及注入的故障测试，不宣称已经部署上线。演示时钟固定为 2026 年 10 月 23 日，界面从 API 读取，而非使用电脑当天日期。
 
 ### 运行测试
 
@@ -134,13 +142,16 @@ npm start
 ```bash
 npm run check
 npm test
+npm run test:web
+npm run test:e2e
+npm run build
 npm run evaluate:matcher
 npm run evaluate:forecast
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-后端及独立集成测试覆盖持久化、权限、凭证上传、提取降级和人工修正；30 个冻结匹配案例与契约检查独立执行。[提取验证说明](docs/EXTRACTION.md)区分本地 OCR、真实模型响应及注入测试，合成样本成绩不代表生产准确率。
+浏览器测试放在 `tests/integration/browser/`，前端单元测试放在 `web/tests/`。如尚未安装 Playwright 的 Chromium，先运行一次 `npx playwright install chromium`，再执行 `test:e2e`。后端测试覆盖持久化、权限、凭证上传、提取降级和人工修正；30 个冻结匹配案例与契约检查独立执行。[联调报告](docs/evaluation/STEP7-INTEGRATION.md)与[提取验证说明](docs/EXTRACTION.md)区分本地 OCR、真实模型响应及注入测试，合成样本成绩不代表生产准确率。
 
 ## 我们如何使用 Replit
 
@@ -152,7 +163,7 @@ npm --prefix contracts run check
 
 ## 挑战与收获
 
-当前规划结论：付款凭证只是待核对的声明，部分付款必须保留余款，前后端协作需要共享契约。实现中的困难和实测结果会在实际发生后记录。
+付款凭证只是待核对的声明，部分付款必须保留余款，响应中断也不代表写入失败。联调中完善了安全重试、刷新失败后的明确恢复、身份切换后的状态隔离，以及区分实际和预计收入的现金流。人工流程计时和组员复核只在真实完成后记录。
 
 ## 后续改进
 
@@ -165,7 +176,7 @@ npm --prefix contracts run check
 | --- | --- | --- |
 | 正式注册名单待确认 | 任务认领待确认 | 待确认 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。共享契约与后端基础已就绪：前端可以对接全部十七个操作，并用同一契约的 fixtures 验证界面状态。
+组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。全部十七个操作现已接通，接下来共同完成独立复核、人工流程计时、部署和提交材料。
 
 组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
 
@@ -175,11 +186,11 @@ npm --prefix contracts run check
 | --- | --- | --- |
 | 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | 已完成 — 范围、数据、API 契约与测试样例 |
 | 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | 已完成 — 后端、开票、催收与权限 |
-| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | 前端设计、开发与 API 对接 |
+| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | 前端已实现并接通全部十七个操作 |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | 已完成 — 银行 CSV 与确定性匹配 |
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | 已完成 — OCR、AI 提取及人工降级 |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 已完成 — 付款审批、部分收款与预测 |
-| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 联调与量化评测 |
+| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 本地技术联调；十次人工计时和组员复核待完成 |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | 部署、演示与提交核对 |
 
 详细资料：[依赖与验收计划](docs/ISSUE_PLAN.md) · [前端交接](docs/FRONTEND_HANDOFF.md) · [决策记录](docs/decisions.md)。

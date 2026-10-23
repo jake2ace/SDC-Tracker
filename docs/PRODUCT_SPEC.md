@@ -1,6 +1,6 @@
 # Milestone2Cash Proof-to-Cash 产品规格
 
-状态：STEP-1、STEP-2、STEP-4、STEP-5、STEP-6 已实现，十七个后端契约接口可在本地运行，包含批准入账、部分收款、承诺确认和现金流预测；前端联调、部署及最终验收仍待完成。实现规则见[契约说明](CONTRACT.md)，运行和已实现操作见[后端说明](BACKEND.md)。完整任务为 #17–#24，见[八步计划](ISSUE_PLAN.md)。
+状态：STEP-1 至 STEP-6 已实现，前端接入十七个后端契约接口，本地技术联调和量化准确率检查通过。STEP-7 的人工耗时对照、组员复核及 STEP-8 部署/最终提交仍待完成。实现规则见[契约说明](CONTRACT.md)，运行方式见[后端说明](BACKEND.md)，证据见[联调报告](evaluation/STEP7-INTEGRATION.md)。完整任务为 #17–#24，见[八步计划](ISSUE_PLAN.md)。
 
 ## 决策与来源
 
