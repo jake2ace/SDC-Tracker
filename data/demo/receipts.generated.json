@@ -1,0 +1,47 @@
+{
+  "synthetic": true,
+  "purpose": "Seed-aligned recording assets; not part of the frozen 40-image evaluation.",
+  "generator": "scripts/generate-demo-receipts.ts",
+  "generatorSha256": "0ec554fa403acf949dd31592df8138b8dabac0199b1c89cd5b7ae6d4ef5da7cf",
+  "sourceSeedSha256": "0dd892fe91121496ed59780fa28dec23a12a197266f88c2c7cdc770ae5bbe79e",
+  "renderer": "sharp 0.35.5; libvips 8.18.7",
+  "note": "Rendering is deterministic for the same seed, generator and renderer/font environment. Receipt sender bank and CSV receiving bank are different transfer sides. No OCR/model accuracy is asserted by generation.",
+  "samples": [
+    {
+      "id": "lumen-partial",
+      "imagePath": "receipts/lumen-partial.png",
+      "sha256": "98e0a0e218e4a8abcb99692342305abdf221c3ed12a1eb13224cc9b4b54142ef",
+      "byteLength": 81140,
+      "width": 900,
+      "height": 1180,
+      "companyId": "co_lumen",
+      "invoiceId": "inv_lumen_001",
+      "bankCreditExternalId": "LUMEN-CREDIT-001",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 900000,
+        "reference": "LMN-231026-001",
+        "payer": "KOPI TIGA TEST",
+        "transferredAt": "2026-10-23T02:30:00.000Z"
+      }
+    },
+    {
+      "id": "lumen-final",
+      "imagePath": "receipts/lumen-final.png",
+      "sha256": "65e7b1975c7ab94cf4a0520a5d03e0435ea82df06d5afba16de083454c4d5b90",
+      "byteLength": 80934,
+      "width": 900,
+      "height": 1180,
+      "companyId": "co_lumen",
+      "invoiceId": "inv_lumen_001",
+      "bankCreditExternalId": "LUMEN-DEMO-FINAL-002",
+      "evidence": {
+        "bank": "DEMO SENDER BANK A",
+        "amountSen": 900000,
+        "reference": "LMN-231026-002",
+        "payer": "KOPI TIGA TEST",
+        "transferredAt": "2026-10-23T03:00:00.000Z"
+      }
+    }
+  ]
+}

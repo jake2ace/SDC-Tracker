@@ -1,6 +1,6 @@
 # 前端设计与开发：Milestone2Cash Proof-to-Cash
 
-状态：前端已接通全部十七个后端接口，包括付款审批、承诺确认、原图读取和预测。第七步本地验证记录见[联调报告](evaluation/STEP7-INTEGRATION.md)；十次人工流程计时与组员复核仍待完成。接口详情见[后端说明](BACKEND.md)、[第五步说明](EXTRACTION.md)与[第六步说明](RECONCILIATION.md)。部署独立推进。
+状态：前端已接通全部十七个后端接口，包括付款审批、承诺确认、原图读取和预测。第七步本地验证记录见[联调报告](evaluation/STEP7-INTEGRATION.md)；人工耗时对比与组员复核按用户要求跳过，不宣称这两项已有结果。接口详情见[后端说明](BACKEND.md)、[第五步说明](EXTRACTION.md)与[第六步说明](RECONCILIATION.md)。部署独立推进。
 
 ## 开发任务
 
@@ -87,7 +87,7 @@ npm start
 5. 录入并确认余款付款承诺，查看现金流变化及活动日志。
 6. 切换第二家公司，证明同一套界面和逻辑可复用。
 
-演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。当前 seed 没有收据；先上传 `data/eval/images/` 中的合成图片，或通过人工修正补全字段，再调用匹配 API。付款审批请求体只提交 `{ expectedVersion: match.version }`；先展示提议金额并由 Finance 明确批准。成功后重新获取 workspace 和 forecast；版本冲突时刷新证据并重新匹配，不能盲目重试批准。预测请求必须包含 asOfDate 和 delayDays；演示日期从响应 meta.asOf 按 MYT 得到，不能使用电脑当天日期。原图端点需要 `X-Demo-User`，请先带身份 fetch 后创建 Blob URL，并在切换公司时撤销 URL。上传或提取可能耗时，应保留进度和可重试状态；重复请求复用原幂等 key。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
+演示时钟和 fixtures 已在契约 v1.0.0 中定义。seed 包含已签发发票、待审核银行记录及可完成的项目阶段；开票、催款与银行导入可接 API。当前 seed 没有收据；完整演示使用 [data/demo/](../data/demo/README.md) 中与种子银行记录对应的合成图片及尾款 CSV，再调用匹配 API。冻结的 `data/eval/images/` 用于量化评测，不与演示样本混算。付款审批请求体只提交 `{ expectedVersion: match.version }`；先展示提议金额并由 Finance 明确批准。成功后重新获取 workspace 和 forecast；版本冲突时刷新证据并重新匹配，不能盲目重试批准。预测请求必须包含 asOfDate 和 delayDays；演示日期从响应 meta.asOf 按 MYT 得到，不能使用电脑当天日期。原图端点需要 `X-Demo-User`，请先带身份 fetch 后创建 Blob URL，并在切换公司时撤销 URL。上传或提取可能耗时，应保留进度和可重试状态；重复请求复用原幂等 key。不要把待批准 credit 计为已收款，也不要写死依赖运行当天日期的成功路径。
 
 ## 前端维护与验收标准
 

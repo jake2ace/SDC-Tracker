@@ -2,7 +2,7 @@
 
 GitHub：[#24](https://github.com/jake2ace/SDC-Tracker/issues/24)
 
-**状态：TODO · 职责：后端开发负责部署与技术核对；文档和演示任务负责人准备材料，团队确认并完成实际提交 · 依赖：部署骨架 STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))；最终验收 STEP-7 ([#23](https://github.com/jake2ace/SDC-Tracker/issues/23))**
+**状态：IN PROGRESS · 职责：后端开发负责部署与技术核对；文档和演示任务负责人准备材料，团队确认并完成实际提交 · 依赖：部署骨架 STEP-2 ([#18](https://github.com/jake2ace/SDC-Tracker/issues/18))；技术验收 STEP-7 ([#23](https://github.com/jake2ace/SDC-Tracker/issues/23)，两项人工证据按用户要求跳过)**
 
 ## 目标
 
@@ -24,3 +24,10 @@ GitHub：[#24](https://github.com/jake2ace/SDC-Tracker/issues/24)
 ## 证据
 
 部署链接及验证记录、干净环境复现记录、官方要求来源和检查日期、最终材料清单/版本、工具声明、团队确认与提交回执。
+
+## 当前进度（2026-10-24）
+
+- 已准备前后端同一地址运行、`.replit` 配置和[部署说明](../DEPLOYMENT.md)。50 项后端、16 项前端、3 条浏览器流程、13 组契约检查通过；另有独立生产进程浏览器检查，覆盖重启持久化和无 key 降级。
+- [英文方案](../../submission/PRODUCT_NARRATIVE.md)、[技术声明草稿](../../submission/TECH_DECLARATION.md)和[演示脚本](../../submission/PITCH_SCRIPT.md)已准备；四人注册名单已确认。最终官方 PDF、平台用证、签名与录制仍待完成。
+- 已复核[当前官方要求](../SUBMISSION_REQUIREMENTS.md)：截止为 2026-10-25 07:59:59 MYT，提交仓库需公开，Replit 需真实用证；RunPod 适用性与表单 API Premium sponsor 声明仍需确认。
+- 本地检查不代替线上验收。尚无已验证的 Replit 项目、云端持久化、正式视频或提交回执，本 Issue 保持 IN PROGRESS。

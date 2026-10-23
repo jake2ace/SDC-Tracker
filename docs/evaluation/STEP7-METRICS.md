@@ -1,6 +1,6 @@
 # STEP-7 quantitative evaluation
 
-The technical accuracy targets passed on the frozen synthetic evaluation set. The paired human-versus-tool timing study and independent team review have **not** been performed; neither is claimed as complete. This report covers OCR, structured extraction, deterministic matching and forecast calculations. Browser workflow evidence is recorded separately.
+The technical accuracy targets passed on the frozen synthetic evaluation set. The paired human-versus-tool timing study and independent team review have **not** been performed and were subsequently skipped at the project owner's request on 24 October 2026; neither is claimed as complete. This report covers OCR, structured extraction, deterministic matching and forecast calculations. Browser workflow evidence is recorded separately.
 
 ## Recorded run
 
@@ -53,7 +53,7 @@ The receipt timer starts immediately before image validation, after bytes are lo
 
 These timings exclude browser upload, human review, matching, approval and correction. They are **not** a measurement of staff time or the required ten-screenshot manual-versus-tool comparison. No speedup, cost saving or billed API amount is claimed. The adapter does not expose provider billing information, so cost remains unreported.
 
-Outstanding evidence before closing the full STEP-7 acceptance checklist:
+The following evidence was excluded from the current STEP-7 scope at the project owner's request; it remains unmeasured and cannot support benefit claims:
 
 - Run the same ten selected synthetic screenshots through a human baseline and the tool workflow with identical start/end points, record corrections and elapsed time, and report both sets of results.
 - Have another team member independently follow the recorded workflow and leave their own review conclusion.

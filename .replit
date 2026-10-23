@@ -1,0 +1,10 @@
+entrypoint = "src/server.ts"
+run = "npm run build && HOST=0.0.0.0 PORT=3000 npm run start:production"
+
+[deployment]
+build = "npm ci --include=dev && npm --prefix web ci --include=dev && npm run build"
+run = "HOST=0.0.0.0 PORT=3000 npm run start:production"
+
+[[ports]]
+localPort = 3000
+externalPort = 80

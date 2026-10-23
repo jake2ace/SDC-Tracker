@@ -1,20 +1,37 @@
-# Submission documents
+# Submission preparation
 
-This is a preparation checklist, not evidence of a completed submission. The documents below do not exist yet. Use the [official submission templates](https://drive.google.com/drive/folders/1xw7c2aN8N-at8hPEULzkcU76e_FFb0Ef) and coordinate work in [#24](https://github.com/jake2ace/SDC-Tracker/issues/24).
+The local prototype and preparation sources are ready for team review. This folder is **not a completed or submitted competition package**. The current deadline is **25 October 2026, 07:59:59 MYT**; see the [official requirements and source versions](../docs/SUBMISSION_REQUIREMENTS.md) before finalising anything.
 
-The [SDC repository template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) lists these filenames. Replace `<TeamName>` with the confirmed team filename label before export.
+## Working materials
 
-| Planned filename | Content / status |
+| Material | Purpose / status |
 | --- | --- |
-| `SDC2026_<TeamName>_Preliminary.pdf` | Preliminary submission using the official template; pending |
-| `SDC2026_<TeamName>_TechDeclaration.pdf` | Actual tools, models, libraries, datasets and AI assistance; pending |
-| `SDC2026_<TeamName>_Replit_POU.pdf` | Evidence of actual Replit use; pending |
-| `SDC2026_<TeamName>_Runpod_POU.pdf` | RunPod applicability requires official confirmation; no use claimed |
+| [Product narrative](PRODUCT_NARRATIVE.md) | English proposal text mapped to the official preliminary sections; contact details, readiness declarations and signature still require actual team input. |
+| [Technology declaration](TECH_DECLARATION.md) | Actual stack, models, datasets, development assistance and limitations; final platform use, contributions and signatures still pending. |
+| [Pitch and demo script](PITCH_SCRIPT.md) | Proposed 6 minute 20 second English presentation; verify the final recording length after rehearsal. |
+| [Slide requirements](SLIDE_REQUIREMENTS.md) | Local presentation handoff with suggested structure, measured results and screenshot context. The deck is being prepared separately. |
+| [Synthetic demo assets](../data/demo/README.md) | Seed-aligned partial and final payment images and final bank CSV; separate from the frozen evaluation set. |
+| [Deployment runbook](../docs/DEPLOYMENT.md) | One-port frontend/API, environment variables, local verification and hosted persistence requirements. |
 
-- [ ] Confirm registered team details, current official requirements and file naming.
-- [ ] Prepare and review the required PDFs, with truthful evidence and declarations.
-- [ ] Add the real slide deck, demo video and deployed application links to both READMEs.
-- [ ] Verify the exact final files, link permissions and submission form entries.
-- [ ] Submit through the official channel and preserve the actual receipt/status evidence.
+The registered team is **Lets go**: Jiazhong Yang (leader), LOW LI XIN, Jieheng Li and Lingchen Wu. Universities are Monash University Malaysia and Universiti Malaya. Do not infer implementation contributions or workshop completion from this roster. Keep private contact details in the controlled submission copy only.
 
-Do not create blank PDFs to satisfy filenames. A completed local document or deployment is not a completed competition submission.
+## Final files
+
+Use the [official document templates](https://drive.google.com/drive/folders/1KvSNvXRXrnYpJ2rGterZx6Gfchi64Nkz) and the [repository template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template). Preserve their field order and word limits. These final PDFs have not been produced or signed yet:
+
+| Required filename | Remaining work |
+| --- | --- |
+| `SDC2026_Lets go_Preliminary.pdf` | Fill the official template, confirm readiness/IP fields and obtain the captain's signature. |
+| `SDC2026_Lets go_TechDeclaration.pdf` | Finalise actual tool/platform use and member review, then obtain the captain's signature. |
+| `SDC2026_Lets go_Replit_POU.pdf` | Include actual project/use evidence from the team's account. A local configuration file is insufficient. |
+| `SDC2026_Lets go_Runpod_POU.pdf` | Resolve applicability of the GPU rule; provide genuine evidence if used. Do not fabricate an endpoint or use screenshot. |
+
+## Remaining sequence
+
+1. Import this existing repository into the team's Replit project. Record actual use and verify the working application link. Resolve durable storage before claiming hosted persistence; the current SQLite adapter needs a persistent filesystem and one app instance.
+2. Confirm the submission form's API Premium sponsor requirement and RunPod applicability against an organiser answer. The current application makes no live Orbyte integration claim.
+3. Confirm actual contributions, workshop completion, contact details, IP statements and signatures; transfer the prepared text into the official forms and inspect the exports.
+4. Rehearse with the synthetic demo assets, record the real 5–7 minute English pitch and publish the final YouTube video with the required visibility. Add verified links to both READMEs.
+5. Prepare public repository access, check the final package and URLs as a judge, submit through [the official form](https://sdchack.my/submit), and preserve the real receipt/status.
+
+STEP-7 manual timing and independent member review were explicitly skipped. No time-saving percentage or member sign-off is claimed. A finished local build, prepared document or merged PR must not be described as a cloud deployment or completed competition submission.
