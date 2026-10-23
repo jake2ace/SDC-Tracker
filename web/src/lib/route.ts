@@ -5,23 +5,28 @@ export type Page = "home" | "invoices" | "bank" | "cash" | "activity";
 export type InvoiceTab = "details" | "messages" | "payment";
 
 export const PAGES: { id: Page; label: string }[] = [
-  { id: "home", label: msg("Home") },
+  { id: "home", label: msg("Overview") },
   { id: "invoices", label: msg("Invoices") },
   { id: "bank", label: msg("Bank") },
   { id: "cash", label: msg("Cash") },
   { id: "activity", label: msg("Activity") },
 ];
 
-export interface Route { page: Page; id: string | null; tab: InvoiceTab }
+export interface Route { surface: "website" | "workspace"; page: Page; id: string | null; tab: InvoiceTab }
 
 const TABS: InvoiceTab[] = ["details", "messages", "payment"];
 
-function parse(): Route {
-  const [, page, id, tab] = window.location.hash.replace(/^#/, "").split("/");
+export function parseRoute(hash: string): Route {
+  const [, page, id, tab] = hash.replace(/^#/, "").split("/");
   const known = PAGES.some((p) => p.id === page);
+  let decodedId: string | null = null;
+  if (known && id) {
+    try { decodedId = decodeURIComponent(id); } catch { /* Ignore malformed links. */ }
+  }
   return {
+    surface: known ? "workspace" : "website",
     page: known ? (page as Page) : "home",
-    id: known && id ? decodeURIComponent(id) : null,
+    id: decodedId,
     tab: TABS.includes(tab as InvoiceTab) ? (tab as InvoiceTab) : "details",
   };
 }
@@ -35,9 +40,9 @@ export function navigate(page: Page, id?: string | null, tab?: InvoiceTab) {
 }
 
 export function useRoute(): Route {
-  const [route, setRoute] = useState(parse);
+  const [route, setRoute] = useState(() => parseRoute(window.location.hash));
   useEffect(() => {
-    const on = () => setRoute(parse());
+    const on = () => setRoute(parseRoute(window.location.hash));
     window.addEventListener("hashchange", on);
     return () => window.removeEventListener("hashchange", on);
   }, []);

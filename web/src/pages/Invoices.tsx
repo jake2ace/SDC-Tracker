@@ -4,33 +4,86 @@ import { useAction, useSession } from "../lib/session";
 import { href, type InvoiceTab } from "../lib/route";
 import { formatMytDate, formatSen, formatUtcAsMyt } from "../lib/format";
 import { byId, customerName, daysPastDue, isOpen, userName } from "../lib/selectors";
-import type { Invoice, Workspace } from "../lib/contract";
+import type { Invoice, InvoiceStatus, Workspace } from "../lib/contract";
 import { ActionHint, Badge, Empty, ErrorNote, Field, InvoiceStatusBadge, KeyValue, Money, Panel } from "../components/ui";
 import { MessagesTab } from "./invoice/Messages";
 import { PaymentTab } from "./invoice/PaymentCheck";
 import { useT } from "../i18n";
+import "./Invoices.css";
+
+type InvoiceFilters = {
+  companyId: string;
+  query: string;
+  status: "all" | InvoiceStatus;
+  overdueOnly: boolean;
+};
 
 export function InvoicesPage({ selectedId, tab }: { selectedId: string | null; tab: InvoiceTab }) {
   const t = useT();
   const { workspace: ws } = useSession();
+  const [savedFilters, setSavedFilters] = useState<InvoiceFilters>({ companyId: "", query: "", status: "all", overdueOnly: false });
   if (!ws) return null;
   const selected = byId(ws.invoices, selectedId);
   const asOf = ws.forecastDefaults.asOfDate;
+  // Filters belong to this company and only affect the list. In particular,
+  // they never select another invoice or unmount a selected invoice's forms.
+  const emptyFilters: InvoiceFilters = { companyId: ws.company.id, query: "", status: "all", overdueOnly: false };
+  const filters = savedFilters.companyId === ws.company.id ? savedFilters : emptyFilters;
+  const setFilters = (patch: Partial<InvoiceFilters>) => setSavedFilters({ ...filters, ...patch });
+  const searchTerms = filters.query.normalize("NFKC").trim().toLowerCase().split(/\s+/).filter(Boolean);
+  const hasFilters = filters.query.length > 0 || filters.status !== "all" || filters.overdueOnly;
+  const filteredInvoices = ws.invoices.filter((inv) => {
+    const searchText = [inv.number, customerName(ws, inv.customerId), byId(ws.projects, inv.projectId)?.name ?? ""].join(" ").normalize("NFKC").toLowerCase();
+    return searchTerms.every((term) => searchText.includes(term))
+      && (filters.status === "all" || inv.status === filters.status)
+      && (!filters.overdueOnly || (isOpen(inv) && daysPastDue(inv, asOf) > 0));
+  });
+  const selectedIsFilteredOut = selected && !filteredInvoices.some((inv) => inv.id === selected.id);
 
   return (
-    <div className={`master-detail${selectedId ? " has-detail" : ""}`}>
+    <div className={`master-detail invoice-workspace${selectedId ? " has-detail" : ""}`}>
       <section className="master" aria-label={t("Invoices")}>
         <h1>{t("Invoices")}</h1>
-        {ws.invoices.length === 0 ? <Empty title={t("No invoices yet")}>{t("Complete a milestone on Home to create one.")}</Empty> : (
+        {ws.invoices.length > 0 && <div className="invoice-filters">
+          <label className="invoice-search">
+            <span className="sr-only">{t("Search invoices")}</span>
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.5 12.5 4 4" /></svg>
+            <input id="invoice-search" type="search" value={filters.query} placeholder={t("Invoice number, customer or project")} onChange={(e) => setFilters({ query: e.target.value })} />
+          </label>
+          <div className="invoice-filter-controls">
+            <label className="invoice-status-filter">
+              <span className="sr-only">{t("Invoice status")}</span>
+              <select value={filters.status} onChange={(e) => setFilters({ status: e.target.value as InvoiceFilters["status"] })}>
+                <option value="all">{t("All statuses")}</option>
+                <option value="draft">{t("Drafts")}</option>
+                <option value="issued">{t("Unpaid")}</option>
+                <option value="partially_paid">{t("Partially paid")}</option>
+                <option value="paid">{t("Paid in full")}</option>
+                <option value="rejected">{t("Rejected")}</option>
+              </select>
+            </label>
+            <label className="invoice-overdue-filter"><input type="checkbox" checked={filters.overdueOnly} onChange={(e) => setFilters({ overdueOnly: e.target.checked })} /><span>{t("Overdue only")}</span></label>
+          </div>
+          <div className="invoice-filter-summary">
+            <span className="muted small" role="status" aria-live="polite">{t("{shown} of {total} invoices", { shown: filteredInvoices.length, total: ws.invoices.length })}</span>
+            {hasFilters && <button className="invoice-clear-filters" type="button" onClick={() => setSavedFilters(emptyFilters)}>{t("Clear filters")}</button>}
+          </div>
+          {selectedIsFilteredOut && <p className="invoice-filter-note small">{t("The selected invoice is outside these filters. Its details remain open.")}</p>}
+        </div>}
+        {ws.invoices.length === 0 ? <Empty title={t("No invoices yet")}>{t("Complete a milestone on Overview to create one.")}</Empty> : (
+          filteredInvoices.length === 0 ? <Empty title={t("No invoices match your filters")}><span>{t("Try another search or clear the filters.")}</span></Empty> :
           <ul className="inv-list">
-            {ws.invoices.map((inv) => {
+            {filteredInvoices.map((inv) => {
               const late = isOpen(inv) ? daysPastDue(inv, asOf) : 0;
+              const project = byId(ws.projects, inv.projectId);
               return (
                 <li key={inv.id}>
                   <a href={href("invoices", inv.id)} aria-current={inv.id === selectedId ? "true" : undefined}>
                     <span className="inv-top"><b>{inv.number}</b><Money sen={inv.outstandingAmountSen} strong /></span>
                     <span className="inv-sub muted small">{customerName(ws, inv.customerId)}</span>
+                    {project && <span className="inv-project small">{project.name}</span>}
                     <span className="inv-sub"><InvoiceStatusBadge status={inv.status} />{late > 0 && <span className="late small">{t("{n} days late", { n: late })}</span>}</span>
+                    <span className="inv-due small">{t("Due {date}", { date: formatMytDate(inv.dueDate) })}</span>
                   </a>
                 </li>
               );
