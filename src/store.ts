@@ -17,6 +17,16 @@ type StoredKind = EntityKind | "reminderSnapshots";
 type Entity = { id: string; companyId: string; version?: number };
 type StoredRow = { body: string };
 type IdempotencyRecord = { fingerprint: string; status: number; data: unknown };
+export interface ReceiptArtifact {
+  imageId: string; receiptId: string; companyId: string; bytes: Uint8Array;
+  mimeType: string; ocrText: string; ocrEngine: string | null;
+  ocrVersion: string | null; ocrError: string | null;
+}
+export interface ExtractionRun {
+  id: string; companyId: string; entityType: "reply" | "receipt"; entityId: string;
+  occurredAt: string; actorId: string; source: "ai" | "manual" | "unavailable";
+  fallbackReason: string | null; details: unknown;
+}
 type Seed = {
   companies: Company[];
   users: DemoUser[];
@@ -103,6 +113,16 @@ export class Store {
           PRIMARY KEY (company_id, actor_id, request_key),
           FOREIGN KEY (actor_id, company_id) REFERENCES users(id, company_id)
         );
+        CREATE TABLE IF NOT EXISTS receipt_artifacts (
+          company_id TEXT NOT NULL REFERENCES companies(id),
+          receipt_id TEXT NOT NULL, image_id TEXT NOT NULL,
+          bytes BLOB NOT NULL, body TEXT NOT NULL CHECK (json_valid(body)),
+          PRIMARY KEY (company_id, receipt_id), UNIQUE (company_id, image_id)
+        );
+        CREATE TABLE IF NOT EXISTS extraction_runs (
+          id TEXT PRIMARY KEY, company_id TEXT NOT NULL REFERENCES companies(id),
+          entity_id TEXT NOT NULL, body TEXT NOT NULL CHECK (json_valid(body))
+        );
       `);
       const count = this.db.prepare("SELECT count(*) AS count FROM companies").get() as { count: number };
       if (count.count === 0) this.reset();
@@ -122,6 +142,8 @@ export class Store {
     this.transaction(() => {
       this.db.exec(`
         DELETE FROM idempotency;
+        DELETE FROM extraction_runs;
+        DELETE FROM receipt_artifacts;
         DELETE FROM bank_imports;
         DELETE FROM entities;
         DELETE FROM forecast_defaults;
@@ -171,6 +193,28 @@ export class Store {
   getBankImports(companyId: string): BankImportBatch[] {
     return this.db.prepare("SELECT body FROM bank_imports WHERE company_id = ? ORDER BY rowid")
       .all(companyId).map((row) => this.parse<BankImportBatch>(row)!);
+  }
+
+  insertReceiptArtifact(artifact: ReceiptArtifact): void {
+    const { bytes, ...metadata } = artifact;
+    this.db.prepare("INSERT INTO receipt_artifacts (company_id, receipt_id, image_id, bytes, body) VALUES (?, ?, ?, ?, ?)")
+      .run(artifact.companyId, artifact.receiptId, artifact.imageId, bytes, JSON.stringify(metadata));
+  }
+
+  getReceiptArtifact(receiptId: string, companyId: string): ReceiptArtifact | undefined {
+    const row = this.db.prepare("SELECT bytes, body FROM receipt_artifacts WHERE company_id = ? AND receipt_id = ?")
+      .get(companyId, receiptId) as { bytes: Uint8Array; body: string } | undefined;
+    return row ? { ...JSON.parse(row.body), bytes: row.bytes } as ReceiptArtifact : undefined;
+  }
+
+  recordExtraction(run: ExtractionRun): void {
+    this.db.prepare("INSERT INTO extraction_runs (id, company_id, entity_id, body) VALUES (?, ?, ?, ?)")
+      .run(run.id, run.companyId, run.entityId, JSON.stringify(run));
+  }
+
+  getExtractionRuns(entityId: string, companyId: string): ExtractionRun[] {
+    return this.db.prepare("SELECT body FROM extraction_runs WHERE company_id = ? AND entity_id = ? ORDER BY rowid")
+      .all(companyId, entityId).map(row => this.parse<ExtractionRun>(row)!);
   }
 
   getForecastDefaults(companyId: string): ForecastDefaults {

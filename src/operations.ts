@@ -11,13 +11,13 @@ export type PreparedReminder = { draftText: string; generationMode: "ai" | "fall
 type Command = Record<string, unknown>;
 interface ReminderSnapshot extends TenantEntity { invoiceVersion: number; outstandingAmountSen: number }
 
-function invalid(field: string, message: string): never {
+export function invalid(field: string, message: string): never {
   throw new AppError(422, "VALIDATION_ERROR", message, {
     fieldErrors: [{ field, code: "invalid", message }],
   });
 }
 
-function command(value: unknown, fields: readonly string[]): Command {
+export function command(value: unknown, fields: readonly string[]): Command {
   if (!value || typeof value !== "object" || Array.isArray(value)) invalid("body", "Expected a JSON object.");
   const data = value as Command;
   for (const key of Object.keys(data)) {
@@ -30,13 +30,13 @@ function command(value: unknown, fields: readonly string[]): Command {
   return data;
 }
 
-function versionNumber(value: unknown, field: string): asserts value is number {
+export function versionNumber(value: unknown, field: string): asserts value is number {
   if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 1) {
     invalid(field, "Version must be a positive safe integer.");
   }
 }
 
-function expectVersion(entity: TenantEntity, value: unknown, entityType: string): void {
+export function expectVersion(entity: TenantEntity, value: unknown, entityType: string): void {
   if (entity.version !== value) {
     throw new AppError(409, "VERSION_CONFLICT", "The record changed. Refresh before continuing.", {
       currentVersion: entity.version, entityType, entityId: entity.id,
@@ -44,7 +44,7 @@ function expectVersion(entity: TenantEntity, value: unknown, entityType: string)
   }
 }
 
-function assertDate(date: string, field: string): void {
+export function assertDate(date: string, field: string): void {
   if (!/^\d{4}-\d{2}-\d{2}$/u.test(date)) invalid(field, "Expected a real YYYY-MM-DD date.");
   const parsed = new Date(`${date}T00:00:00Z`);
   if (!Number.isFinite(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== date) {
@@ -52,13 +52,13 @@ function assertDate(date: string, field: string): void {
   }
 }
 
-function today(ctx: Context): string {
+export function today(ctx: Context): string {
   const parsed = new Date(ctx.now);
   if (!Number.isFinite(parsed.getTime())) throw new AppError(500, "INTERNAL_ERROR", "Invalid server clock.");
   return new Date(parsed.getTime() + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
 }
 
-function money(value: number, positive: boolean, field: string): void {
+export function money(value: number, positive: boolean, field: string): void {
   if (!Number.isSafeInteger(value) || value < (positive ? 1 : 0)) invalid(field, "Invalid money amount in sen.");
 }
 
@@ -81,21 +81,21 @@ function collectible(ctx: Context, invoice: Invoice): void {
   }
 }
 
-function requireEntity<T>(entity: T | undefined | null): T {
+export function requireEntity<T>(entity: T | undefined | null): T {
   if (!entity) throw new AppError(404, "NOT_FOUND", "Record not found.");
   return entity;
 }
 
-function changed<T extends TenantEntity>(ctx: Context, entity: T, updates: Partial<T>): T {
+export function changed<T extends TenantEntity>(ctx: Context, entity: T, updates: Partial<T>): T {
   if (!Number.isSafeInteger(entity.version + 1)) throw new AppError(409, "INVALID_STATE", "Record version limit reached.");
   return { ...entity, ...updates, version: entity.version + 1, updatedAt: ctx.now };
 }
 
-function stamp(ctx: Context, prefix: string): TenantEntity {
+export function stamp(ctx: Context, prefix: string): TenantEntity {
   return { id: `${prefix}_${randomUUID()}`, companyId: ctx.actor.companyId, version: 1, createdAt: ctx.now, updatedAt: ctx.now };
 }
 
-function audit(ctx: Context, action: string, entityType: string, entityId: string, summary: string, reasonCode: string | null = null): void {
+export function audit(ctx: Context, action: string, entityType: string, entityId: string, summary: string, reasonCode: string | null = null): void {
   const event: ActivityEvent = {
     id: `evt_${randomUUID()}`, companyId: ctx.actor.companyId, actorId: ctx.actor.id,
     action, entityType, entityId, occurredAt: ctx.now, outcome: "succeeded", reasonCode,
@@ -104,7 +104,7 @@ function audit(ctx: Context, action: string, entityType: string, entityId: strin
   ctx.store.insert("activityLog", event);
 }
 
-function text(value: unknown, field: string, max: number): string {
+export function text(value: unknown, field: string, max: number): string {
   if (typeof value !== "string" || !value.trim() || value.length > max ||
       /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/u.test(value)) {
     invalid(field, `Expected non-empty text of at most ${max} characters.`);

@@ -4,7 +4,7 @@
 
 > Help Malaysian service micro-businesses invoice completed work, follow up on overdue balances and check payment claims against bank records before recording payment.
 
-**Steps 1, 2 and 4 are complete: shared contracts, a persistent invoicing/collections API, bank CSV import and deterministic matching.** Frontend, receipt extraction, payment approval and forecasts remain in development or planned. The old implementation is backed up locally; its test results do not validate this rebuild.
+**Steps 1, 2, 4 and 5 are implemented: contracts, invoicing/collections, bank CSV matching, local receipt OCR and structured extraction with manual review.** Frontend is developed separately; payment approval and forecasts remain planned. The old implementation is backed up locally; its test results do not validate this rebuild.
 
 This README follows the section order of the [SDC submission template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md). Template alignment does not mean submission requirements are complete.
 
@@ -51,7 +51,7 @@ The new focus is payment-proof checking: AI helps read the claim, rules explain 
 - **Proof review:** extracted fields, bank-credit candidates, duplicates, mismatches and manual fallback.
 - **Payment tracking:** approved partial/full allocations, remaining balances and traceable cash forecasts.
 
-Invoicing, collections, CSV import and matching proposals are implemented through the API. Receipt ingestion, payment allocation, forecasts and the frontend remain planned or in separate development.
+Invoicing, collections, CSV import, matching proposals, receipt ingestion and reply extraction are implemented through the API. Payment allocation and forecasts remain planned; frontend development is separate.
 
 ### Tech Stack
 
@@ -60,7 +60,7 @@ Invoicing, collections, CSV import and matching proposals are implemented throug
 | Frontend | React + TypeScript + Vite, in `web/` |
 | Backend | Node.js 22.13+; runnable HTTP API |
 | Database | SQLite; persistent demo data and transactions |
-| AI / Compute | Reminder templates work without a key; optional server-side DeepSeek adapter, real calls unverified; OCR planned |
+| AI / Compute | Bundled local Tesseract OCR; server-side DeepSeek extraction; explicit manual fallback without a key |
 | Hosting / Dev | Replit use and deployment to be verified |
 
 ## Project Structure
@@ -73,7 +73,7 @@ Current implementation, data and documentation entry points:
 ├── CONTRIBUTING.md
 ├── src/                        # HTTP API, business operations and SQLite store
 ├── scripts/                    # Database initialization and reset
-├── tests/                      # HTTP and persistence tests
+├── tests/                      # HTTP and persistence tests; STEP-5 in tests/integration/
 ├── contracts/                  # v1.0.0 types, rules, fixtures and checks
 ├── data/seed/                  # Synthetic demo state and bank CSVs
 ├── data/eval/                  # Evaluation inputs and separate gold labels
@@ -112,13 +112,16 @@ npm run db:init
 npm start
 ```
 
-Check `http://localhost:3000/health`. The API provides these nine operations; examples are in the [backend guide](docs/BACKEND.md) and [bank matching guide](docs/BANK_MATCHING.md):
+Check `http://localhost:3000/health`. The API provides fourteen operations; examples are in the [backend guide](docs/BACKEND.md), [bank matching guide](docs/BANK_MATCHING.md) and [receipt/reply guide](docs/EXTRACTION.md):
 
 - `GET /api/demo-users` and `GET /api/workspace`
 - `POST /api/milestones/:id/complete` and `POST /api/milestones/:id/invoice-draft`
 - `POST /api/invoices/:id/decision`
 - `POST /api/invoices/:id/reminders` and `POST /api/reminders/:id/send`
 - `POST /api/bank-statements` and `POST /api/receipts/:id/match`
+- `POST /api/invoices/:id/replies` and `POST /api/invoices/:id/receipts`
+- `PATCH /api/replies/:id/extraction` and `PATCH /api/receipts/:id/evidence`
+- `GET /api/receipts/:id/image`
 
 Sending is simulated. Other contract endpoints remain planned; no frontend or deployment is available yet. Reminder templates work without an API key.
 
@@ -134,7 +137,7 @@ npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-Type checking, 18 backend test groups, all 30 frozen synthetic matcher cases and 13 contract/data groups passed. These do not establish real DeepSeek, OCR, production accuracy, payment approval, forecasts, frontend or deployment readiness.
+Backend and separate integration tests cover persistence, permissions, evidence uploads, extraction fallback and manual corrections. The 30 frozen matcher cases and contract checks remain separate. [Extraction evidence](docs/EXTRACTION.md) distinguishes local OCR, actual model responses and injected tests; synthetic accuracy does not establish production accuracy.
 
 ## How We Use Replit
 
@@ -159,7 +162,7 @@ Planning findings: a receipt is a claim to verify, partial payments must preserv
 | --- | --- | --- |
 | Registered roster pending confirmation | Task ownership pending confirmation | Pending confirmation |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. The shared contract and backend foundation are ready: frontend development can connect the nine implemented operations and use fixtures for the remaining planned flows.
+Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. The shared contract and backend foundation are ready: frontend development can connect the fourteen implemented operations and use fixtures for the remaining planned flows.
 
 Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
 
@@ -171,7 +174,7 @@ Members can claim synthetic cases, independent calculations, test reviews, docum
 | 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | Complete — backend, invoicing, collections and permissions |
 | 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Frontend design, development and API integration |
 | 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | Complete — bank CSV and deterministic matching |
-| 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | OCR, AI extraction and manual fallback |
+| 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | Complete — OCR, AI extraction and manual fallback |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | Payment approval, partial payments and forecast |
 | 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Integration and measured evaluation |
 | 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Deployment, presentation and submission checks |

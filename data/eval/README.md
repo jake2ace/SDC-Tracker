@@ -1,17 +1,17 @@
 # STEP-1 合成评测数据
 
-状态：**仅 fixtures，未运行 OCR、模型、matcher 或 forecast 实现，没有准确率成绩**。inputs 与 gold 独立保存；业务运行和模型请求只读 inputs，gold 仅用于评测比对。所有素材均合成，不含真实客户或银行数据。
+状态：**原始 STEP-1 inputs 与 gold 保持冻结；实际运行结果单独保存。** 第四步 matcher 结果见 `docs/evaluation/matcher-results.json`，第五步的图片清单见 `receipts.generated.json`，提取运行说明见 [EXTRACTION.md](../../docs/EXTRACTION.md)。业务运行和模型请求不读取 gold。所有素材均合成，不含真实客户或银行数据。
 
 | 输入文件 | 独立 gold | 当前内容 |
 | --- | --- | --- |
-| `receipts.manifest.json` | `receipts.gold.json` | 40 个图片计划，4 种布局各 10；**实际图片 0 张** |
+| `receipts.manifest.json` | `receipts.gold.json` | 原始 40 个图片计划保持冻结；4 种布局各 10，实际 40 张图片及 hash 另存 `receipts.generated.json` |
 | `replies.inputs.json` | `replies.gold.json` | 40 条实际合成文本：英文 14、中文 13、马来语 13；5 类意图各 8 |
 | `matcher.inputs.json` | `matcher.gold.json` | 30 个互不依赖的完整 `MatcherInput` |
 | `forecast.inputs.json` | `forecast.gold.json` | 审批前/后 × 按时/延迟 7 天，4 个完整 `ForecastInput`；各核对 10 天 |
 
 ## 素材与标签边界
 
-- 收据仅有生成计划和待绘制事实。正常、裁剪、噪声、暗色共 4 种变体；STEP-5 生成图片后须检查金额、参考号、时间仍可见，记录实际路径/hash，再执行 OCR。不得把清单写成“已测 40 张图片”。
+- 收据正常、裁剪、噪声、暗色共 4 种变体，实际图片由离线生成器绘制并检查必需字段可见。图片生成和识别评测是两个独立步骤；图片存在不代表 OCR 或模型成功，逐项运行结果必须另行记录。
 - 收据 gold 用于离线生成和评分，不得供识别服务读取答案。样本不可因 OCR 失败被移出分母；报告失败和人工转交。
 - 回复标签中的 `requiresExtractionReview` 处理含糊内容/相对日期；`requiresPromiseConfirmation` 表示承诺必须人工确认后才能应用。即使回复判成 `paid`，也不得直接生成付款。
 - 回复另有 6 个置信度 guard probe，注入人为指定的输出，仅测试路由规则；它们不是模型结果，也不计入 40 条意图准确率的分母。置信度 `<0.85`、缺失或非法时人工处理，`0.85` 为可继续验证的边界。
