@@ -96,14 +96,12 @@ The authenticated [team portal](https://sdchack.my/portal) and the user's regist
 
 Development/presentation roles are not inferred from these registration fields.
 
-## Inputs still needed before final submission
+## Final submission status — 25 October 2026
 
-- Add the required leader contact details only in the controlled final submission copy; confirm actual development/presentation roles without inferring them from registration.
-- Obtain actual leader approval/signatures and truthful answers for workshops, prior-owned work and employment/IP conflicts. Do not fill these from assumptions.
-- Provide final tested prototype/build access, actual Replit use evidence and the RunPod applicability/use answer.
-- Export the completed official PDFs and PPTX; record/upload the real 5–7 minute demo; verify all final URLs with the intended judge access.
-- Resolve the current authenticated form's mandatory statement that the project integrates the API Premium sponsor's technology, with disqualification stated for submissions without it. The statement was directly observed on 24 October, but neither it nor the inspected official documents identify how it applies to Domain-2 simulated Orbyte integration. Do not attest without a supported answer.
-- Submit the final repository URL only when the concrete package is ready, then preserve the actual submission receipt/status. None of the checks in this file constitute that action.
+- Leader contact details and actual member contributions were supplied directly by the team. Mandatory workshops, prior-work and employment/IP answers were confirmed; both official forms contain the leader-authorised typed signature and date 25 October 2026.
+- The final official PDFs, pitch deck, Replit evidence and truthful RunPod non-use statement are available through the [submission index](../submission/README.md). The public prototype and 6:19 YouTube video were checked; final artifact hashes are recorded in the [manifest](../submission/manifest.json).
+- The portal already stores the repository URL and displays “API integration confirmed”. The refreshed [saved-state evidence](../submission/SUBMISSION_STATUS.md) records that existing status without inferring the original save time or reaccepting the statement. The stored checkbox is not independent sponsor-policy verification; no organiser clarification or exemption is claimed.
+- The team leader explicitly chose to use the existing tested demonstration for this competition and improve data persistence later. STEP-8 is complete within that accepted scope; hosted redeployment durability remains a [follow-up engineering item](https://github.com/jake2ace/SDC-Tracker/issues/40), not a passed test.
 
 ## Sources inspected
 
@@ -115,8 +113,8 @@ Development/presentation roles are not inferred from these registration fields.
 | Official preliminary DOCX, linked above | Drive modified 22 October 2026, 11:41:08 UTC; complete extracted text/fields read. |
 | Official technical declaration DOCX, linked above | Drive modified 22 October 2026, 08:15:44 UTC; complete extracted text/fields read. |
 | [Repository template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template) | Current README inspected 24 October; filename/layout guidance. |
-| [Homepage](https://sdchack.my/) and [FAQ](https://sdchack.my/faq) | Current public content inspected 24 October; now both state 25 October, 7:59 AM MYT. |
-| [Submission form](https://sdchack.my/submit) and [team portal](https://sdchack.my/portal) | Authenticated read-only browser inspection on 24 October; public URL, sponsor checkbox, current cutoff, registered team/domain/member details. No mutation or submission. |
+| [Homepage](https://sdchack.my/) and [FAQ](https://sdchack.my/faq) | Rechecked 25 October; both state 25 October, 7:59 AM MYT. |
+| [Submission form](https://sdchack.my/submit) and [team portal](https://sdchack.my/portal) | Registration fields inspected 24 October; submission page refreshed 25 October and saved repository URL/status captured. The check did not change or reaccept the stored declaration. |
 | Local 19 October orientation evidence | `比赛资料/会议截图_2026-10-19/10-preliminary-submission-six-items.png`, `11-tools-and-github-rules.png`, `13-presentation-format.png` visually inspected; meeting notes provide the Public-video/preliminary-PPTX verbal clarification. Older evidence, not a new audio verification. |
 
 The official Terms take precedence for policy; the Participant Handbook supplies operational detail. If a current organiser announcement changes these instructions, preserve and follow that specific announcement rather than silently editing the evidence.

@@ -22,6 +22,6 @@ GitHub：[#19](https://github.com/jake2ace/SDC-Tracker/issues/19)
 
 ## 证据
 
-运行与 API/mock 切换方式见 [web/README.md](../../web/README.md)。全部 17 个接口已对接；16 项前端测试、3 个浏览器集成场景和前端构建通过，关键截图与操作过程见[第七步联调报告](../evaluation/STEP7-INTEGRATION.md)。完整演示视频属于 STEP-8 提交材料，尚未录制。
+运行与 API/mock 切换方式见 [web/README.md](../../web/README.md)。全部 17 个接口已对接；历史联调记录中的 16 项前端测试、3 个浏览器集成场景和前端构建通过，关键截图与操作过程见[第七步联调报告](../evaluation/STEP7-INTEGRATION.md)。2026-10-25 最终材料已提供 [6:19 演示视频](https://www.youtube.com/watch?v=pholjV_8vBM)；后续 23 项前端测试与六项线上流程的范围见[STEP-8 记录](../evaluation/STEP8-FINAL-CHECK.md)，本次未重跑上述旧的 3 条自动化浏览器场景。
 
-前端和技术联调完成不等于人工效率实验或团队验收完成；STEP-7 的两项人工证据仍待补。
+前端和技术联调完成不等于人工效率实验或独立组员验收完成；STEP-7 的两项人工证据已按用户于 2026-10-24 的决定跳过，不宣称完成了这些实验。

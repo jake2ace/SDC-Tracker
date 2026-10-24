@@ -241,6 +241,8 @@ The deck and recorded video retain the earlier 69-check baseline (50 API, 16 UI 
 
 The competition portal already stores the repository URL. The [saved-state evidence](submission/SUBMISSION_STATUS.md) records the status visible on 25 October 2026; the portal does not display the original submission timestamp. Keep the public app and all submission links available during judging. The shared hosted demo should be inspected in its retained settled state; the clean local setup is the reproducible route for replaying the opening balance.
 
+On 25 October the team leader confirmed using the existing tested demonstration for this competition. STEP-8 is complete within that accepted scope. Cloud data persistence across redeployment is a [follow-up improvement](https://github.com/jake2ace/SDC-Tracker/issues/40); it is not presented as a verified capability of this demonstration.
+
 ## License
 
 Project source is licensed under [Apache License 2.0](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/LICENSE). Third-party packages and models retain their own licences and terms, as disclosed in the Technical & Tools Declaration.

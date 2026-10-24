@@ -31,6 +31,10 @@ The deck and recorded pitch retain the historical 69-check baseline: 50 API, 16 
 
 Historical 40-receipt / 40-reply evaluation results predate the reply-semantic guard changes. Final workflow checks do not rerun that benchmark. No current-model benchmark or real-business return on investment is implied.
 
-## Remaining release decision
+## Accepted demonstration scope and completion
 
-The material-upload pull request can be reviewed with the complete final artifact set and current evidence. Issue 24's hosted restart/persistence acceptance remains open because Replit redeployment durability is not established. Closing that acceptance item requires either a verified hosting/storage correction or an explicit team decision to accept the documented synthetic-demo storage limitation. The portal's stored API integration checkbox is recorded as a website state, not as independent sponsor-policy verification.
+The final materials were merged into `main` in [PR 39](https://github.com/jake2ace/SDC-Tracker/pull/39), merge commit `ab43055bf8d909c7295d4fecd9a31cbfbcc3cd55`. Files read back from `main` matched the reviewed PDF, deck, notes and manifest Git blobs.
+
+On 25 October 2026 the team leader explicitly selected: “这次先用现有演示，后续再完善数据保存” — use the existing tested demonstration for this competition and improve data persistence later. STEP-8 is completed against this confirmed demonstration scope. The current hosted app and settled synthetic ledger are retained; this completion does not claim that hosted restart or redeployment durability passed. That engineering work is tracked separately in [follow-up issue 40](https://github.com/jake2ace/SDC-Tracker/issues/40).
+
+The portal's stored API integration checkbox remains recorded as a website state, not as independent sponsor-policy verification. The current hosting belongs to the teammate's Replit account; no deployment on the leader's own computer is required.
