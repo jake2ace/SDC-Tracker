@@ -1,0 +1,105 @@
+{
+  "test_run": "2026-10-25 01:30 MYT",
+  "completed_at": "2026-10-25 01:50:59 MYT",
+  "environment": "https://milestone-2-cash-proof-to-cash.replit.app/",
+  "method": "Actual browser UI actions using the supplied friend-test ZIP",
+  "initial_state": {
+    "invoice": "LUMEN-DEMO-001",
+    "total_rm": 18000,
+    "received_rm": 0,
+    "outstanding_rm": 18000,
+    "final_handover": "Planned, RM6000; Finance Mark complete disabled",
+    "bank": "Only first RM9000 credit LMN-231026-001 present"
+  },
+  "cases": {
+    "F01": {
+      "status": "passed",
+      "finance_mark_complete": "disabled",
+      "pm_mark_complete": "enabled and succeeded",
+      "created_invoice": "DEMO-4CDD753C-C8FF-44AE-8E2A-98CB0AA91B96",
+      "created_invoice_id": "inv_6d8862b2-65f2-4cbf-aec2-08c7780aa65c",
+      "created_invoice_rm": 6000,
+      "pm_approve_and_issue": "disabled",
+      "owner_approve_and_issue": "enabled and succeeded",
+      "post_state": "Issued unpaid; Home milestone shows one invoice link and no second creation action"
+    },
+    "F02": {
+      "status": "passed",
+      "draft_source": "AI draft, English",
+      "auto_send": false,
+      "editing": "Changed reminder text before simulated sending",
+      "send_result": "Sent (simulated); No message left this app",
+      "received_rm_after": 0
+    },
+    "F03": {
+      "status": "passed",
+      "first_image": "lumen-partial.png",
+      "first_read": {"amount_rm":9000,"reference":"LMN-231026-001","payer":"KOPI TIGA TEST","transferred_myt":"2026-10-23 10:30","sending_bank":"DEMO SENDER BANK A","ai_confidence_percent":95,"manual_correction":false},
+      "bank_check": "Partial bank record found",
+      "received_before_approval_rm": 0,
+      "record_button_before_review": "disabled",
+      "human_confirmation": "Checked bank credit, screenshot and amounts, then recorded partial payment",
+      "received_after_approval_rm": 9000,
+      "outstanding_after_approval_rm": 9000,
+      "duplicate_image": "Re-upload returned the previously recorded receipt; no second bank-check or record-payment action was available; received and outstanding remained RM9000 each"
+    },
+    "F04": {
+      "status":"passed",
+      "input":"I will pay the remaining RM9,000 on 28 October 2026.",
+      "extraction":{"intent":"Promises a date","amount_rm":9000,"date":"2026-10-28","ai_confidence_percent":95,"manual_correction":false},
+      "human_confirmation":"Confirmed the reviewed RM9000 promise",
+      "original_due_date":"2026-10-16, unchanged",
+      "received_rm":9000,
+      "outstanding_rm":9000,
+      "on_time_expected_date":"2026-10-28",
+      "seven_days_late_expected_date":"2026-11-04",
+      "actual_first_receipt_date":"2026-10-23, unchanged in both scenarios"
+    },
+    "F05": {
+      "status":"passed",
+      "first_csv_import":"1 new, 0 already imported. No payment was recorded.",
+      "after_csv_import_received_rm":9000,
+      "after_csv_import_outstanding_rm":9000,
+      "second_image":"lumen-final.png",
+      "second_read":{"amount_rm":9000,"reference":"LMN-231026-002","payer":"KOPI TIGA TEST","transferred_myt":"2026-10-23 11:00","sending_bank":"DEMO SENDER BANK A","ai_confidence_percent":95,"manual_correction":false},
+      "bank_check":"Confirmed by bank record; full outstanding amount covered",
+      "record_button_before_review":"disabled",
+      "human_confirmation":"Checked bank credit, screenshot and amounts, then recorded RM9000",
+      "final_status":"Paid in full / Fully paid",
+      "final_received_rm":18000,
+      "final_outstanding_rm":0,
+      "new_reminder_button_count":0,
+      "cash_entries_for_main_invoice":"Two actual RM9000 receipts, zero expected receipts",
+      "page_refresh":"Preserved the two actual receipts and settled invoice",
+      "duplicate_csv_import":"0 new, 1 already imported. No payment was recorded."
+    },
+    "F06": {
+      "status":"passed",
+      "rantau_invoice_list":"Only RANTAU-DEMO-001, RM12000; no Lumen invoice",
+      "rantau_cash":"Rantau expected RM12000 and its own expense; no LUMEN-DEMO-001",
+      "cross_company_url":"Invoice not found in this company",
+      "return_to_lumen":"RM18000 received, RM0 due; two RM9000 payments remain",
+      "mobile_viewport":"390 x 844 CSS pixels; document width 390, no page horizontal overflow",
+      "mobile_actions":"Invoice details, horizontal navigation to Cash and Day by day button usable",
+      "languages":"English, Chinese and Malay displayed correctly in inspected views",
+      "themes":"Light and dark inspected; final theme restored to light and language to English",
+      "viewport_restored":true,
+      "device_limit":"Narrow browser viewport, not a physical-phone hardware test"
+    }
+  },
+  "final_shared_state": {
+    "main_invoice":"LUMEN-DEMO-001 fully paid: RM18000 received, RM0 outstanding",
+    "payment_count_for_main_invoice":2,
+    "additional_test_invoice":"RM6000 Final handover invoice issued, still unpaid",
+    "reminder":"One AI-labelled reminder edited and marked sent in the simulator",
+    "promise":"RM9000 on 2026-10-28 confirmed and subsequently fulfilled",
+    "bank_credit_count_for_lumen":2,
+    "reset_performed":false
+  },
+  "tooling_notes": [
+    "Chrome extension fileChooser.setFiles initially failed because Allow access to file URLs is disabled. No permission setting was changed.",
+    "First image was successfully selected through the native file picker and uploaded through the app.",
+    "User explicitly approved switching to the Codex in-app browser. Remaining uploads and tests completed there against the same shared online ledger.",
+    "Guide uses old Sign in and Home labels; actual labels are Open demo workspace and Overview."
+  ]
+}

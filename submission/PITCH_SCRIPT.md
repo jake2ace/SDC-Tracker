@@ -1,24 +1,26 @@
-# Milestone2Cash Proof-to-Cash — pitch and demo script
+# Milestone2Cash Proof-to-Cash — historical rehearsal script
 
-Draft recording target: **6 minutes 20 seconds**, including live actions and transitions, within the handbook's 5–7 minute video requirement. The final video must include a product demonstration and use the required YouTube submission format. This is a proposed script, not evidence that a presentation, recording or independent review has happened.
+**Final recorded pitch and demo:** [YouTube video, 6 minutes 19 seconds](https://www.youtube.com/watch?v=pholjV_8vBM), verified playing without a signed-in account on 25 October 2026. [Pitch deck](Milestone2Cash.pptx) · [signed proposal](SDC2026_Lets%20go_Preliminary.pdf) · [signed technical declaration](SDC2026_Lets%20go_TechDeclaration.pdf) · [live prototype](https://milestone-2-cash-proof-to-cash.replit.app/).
 
-Use the English interface. Replace presenter placeholders with the confirmed team roster and rehearse against the actual deployment. The names below are presentation roles, not claims about each member's development contribution.
+This is the early rehearsal draft with a planned duration of **6 minutes 20 seconds**. It is retained as preparation history and is not a transcript of the published cut. Its speaker cues and older regression counts describe that rehearsal version; the final video and signed documents are the judging materials. The recorded duration is within the handbook's 5–7 minute requirement.
 
-## Before recording
+Team-confirmed roles: Jiazhong Yang and Jieheng Li handled code implementation; Lingchen Wu handled UI design and user experience; LOW LI XIN handled proposal concept, core features, product positioning, PPT and video production. Presenter 1/2/3 below are retained rehearsal cues rather than final speaker credits.
+
+## Original rehearsal setup
 
 - Use a dedicated demo database and verify the seeded Lumen invoice shows RM18,000 outstanding. The fixed demo clock is 23 October 2026, 12:00 MYT; make this visible.
 - Use `data/demo/receipts/lumen-partial.png`: a visibly synthetic RM9,000 receipt with fields that match `LMN-231026-001` and the seeded bank credit. Inspect the actual image and extracted fields. Do not use an unrelated evaluation image and present manual replacement of its fields as correct OCR.
 - For full settlement, use `data/demo/receipts/lumen-final.png` and import its matching `data/demo/bank-lumen-final.csv` credit. Otherwise use the existing recorded integration evidence and label that segment clearly. Instructions and generation provenance are in [data/demo/README.md](../data/demo/README.md).
 - Verify the API data source is selected. Leave the synthetic-data and simulated-send labels visible. Keep credentials, environment files and private account details out of the recording.
 - Rehearse model loading and correction time. If the provider is unavailable, demonstrate the labelled manual fallback honestly; do not describe a fallback draft as an AI response.
-- Add verified deployment, repository and video links only after they exist. The confirmed registered team name is **Lets go**; use the roster in [the slide requirements](SLIDE_REQUIREMENTS.md).
+- The verified final prototype and video links are now provided above. The registered team name is **Lets go**; the final team contributions are listed in the signed declaration.
 - Both recording receipts passed a separate real OCR/DeepSeek, bank-match and approval check with no manual correction on 24 October 2026. See [the recording asset evidence](../data/demo/README.md). This check covers these two files; it does not guarantee a future model response or add samples to the frozen accuracy evaluation.
 
 ## 0:00–0:40 — problem and product
 
 **Screen:** Title, then the RM18,000 Lumen invoice. **Speaker:** Presenter 1.
 
-“We are [confirmed team name]. Our product is Milestone2Cash Proof-to-Cash, for small service businesses that invoice by project milestone and receive payment evidence through customer messages.
+“We are Lets go. Our product is Milestone2Cash Proof-to-Cash, for small service businesses that invoice by project milestone and receive payment evidence through customer messages.
 
 Imagine an overdue invoice for eighteen thousand ringgit. The customer sends a screenshot for nine thousand. Finance needs to establish whether the credit is in the bank records, avoid counting it twice, and keep collecting the remaining nine thousand. A promise to pay later must also stay separate from money already received.
 
@@ -76,6 +78,8 @@ The five reference mistakes were letter O versus zero confusions, and we kept th
 
 Separately, fifty backend tests, sixteen frontend tests and three browser scenarios passed. These results show performance on our synthetic set; they do not establish real-bank accuracy.”
 
+**Version note:** The quoted regression counts above belong to this earlier rehearsal. The `c438678` checks recorded 60 backend tests, 23 frontend tests and 13 contract/data groups. Later independent production checks and six agent-operated live UI workflows are separate evidence, linked in [STEP-8](../docs/issues/08-submission.md) and the [live validation results](validation/results.json). They do not update the frozen OCR/model benchmark or establish a measured staff-time saving.
+
 ## 5:30–6:20 — value, scope and close
 
 **Screen:** Remaining balance and its source records, then a final card with verified links. **Speaker:** Presenter 1 or confirmed closing speaker.
@@ -88,11 +92,13 @@ The current prototype uses synthetic bank data and simulated sending, with no li
 
 Milestone2Cash Proof-to-Cash turns scattered payment evidence into a reviewed record, while keeping the outstanding balance and expected cash visible. Thank you.”
 
-## Recording checks
+## Recording checks retained from preparation
 
 - Keep the final cut within the official duration after measuring the exported video, not only this script.
 - Record live responses and corrections honestly. Label prerecorded evidence, mock data and fallback behavior where used.
 - Never describe a payment promise, screenshot or successful import as confirmed cash.
 - Do not claim manual timing, independent review, deployment or submission completion without its corresponding evidence.
 - Cross-check all displayed metrics against [STEP7-METRICS.md](../docs/evaluation/STEP7-METRICS.md). Keep raw evidence linked from the repository; show the concise table in the pitch.
-- Preserve the actual public video URL and final exported version after publication. This draft does not authorize or confirm publication.
+- The published video is linked at the top of this document. Preserve its canonical URL and distinguish that final recording from these rehearsal notes.
+
+The shared live ledger was left settled after the 25 October UI walkthrough: `LUMEN-DEMO-001` shows RM18,000 received and RM0 due, with a separate RM6,000 invoice still unpaid. The rehearsal setup above assumes a clean seed; do not assume the shared instance remains in that initial state.

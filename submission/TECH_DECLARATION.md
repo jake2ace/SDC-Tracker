@@ -1,4 +1,8 @@
-# Technical & Tools Declaration — preparation draft
+# Technical & Tools Declaration — historical preparation notes
+
+**Final submission document:** [signed Technical & Tools Declaration PDF](SDC2026_Lets%20go_TechDeclaration.pdf). The leader authorised the typed signature **Jiazhong Yang** and date **25 October 2026** in that official form. These Markdown notes retain the preparation structure and technical references; the signed PDF is the declaration for judging.
+
+**Current access:** [public prototype](https://milestone-2-cash-proof-to-cash.replit.app/) · [6:19 pitch and demo video](https://www.youtube.com/watch?v=pholjV_8vBM) · [submission index](README.md). The video was verified playing without a signed-in account on 25 October. Application validation baseline: `c438678`.
 
 **Project:** Milestone2Cash Proof-to-Cash
 
@@ -8,7 +12,7 @@
 
 **Submission deadline:** 25 October 2026, 07:59:59 MYT
 
-This draft follows the [official Technical & Tools Declaration template](https://docs.google.com/document/d/1680e_RAmWr2hrOn9DwJeL-nwT3VXdH7l/edit). It is not signed or submitted. Transfer the verified content into that template, resolve the pending fields, and export `SDC2026_Lets go_TechDeclaration.pdf`. The official form's declarations must be confirmed by the team leader. Contact details belong in the controlled final copy, not this public repository draft.
+The preparation notes follow the [official Technical & Tools Declaration template](https://docs.google.com/document/d/1680e_RAmWr2hrOn9DwJeL-nwT3VXdH7l/edit). Contact details and the authorised signature are completed in the linked official PDF and are not repeated here. See [STEP-8](../docs/issues/08-submission.md) for the separate materials, deployment and portal-submission evidence.
 
 ## 1. Team & Project Overview
 
@@ -17,13 +21,13 @@ This draft follows the [official Technical & Tools Declaration template](https:/
 | Team name | Lets go |
 | Project / solution name | Milestone2Cash Proof-to-Cash |
 | Leader | Jiazhong Yang |
-| Leader email & phone | Add privately in the final official form; phone still requires confirmation. |
+| Leader email & phone | Completed in the signed official PDF. |
 | University affiliations | Monash University Malaysia; Universiti Malaya |
 | Team size | 4 |
-| Live prototype URL | Pending final deployment and judge-access verification. |
-| Code repository URL | https://github.com/jake2ace/SDC-Tracker — verify public access before submission. |
+| Live prototype URL | https://milestone-2-cash-proof-to-cash.replit.app/ |
+| Code repository URL | https://github.com/jake2ace/SDC-Tracker — public access verified on 25 October 2026. |
 
-Registered members are Jiazhong Yang (leader), LOW LI XIN, Jieheng Li and Lingchen Wu. Registration does not establish each person's implementation or presentation role; confirm actual contributions separately.
+Team-confirmed contributions: Jiazhong Yang is team leader and worked on code implementation; Jieheng Li worked on code implementation; Lingchen Wu worked on UI design, visual appearance and user experience; LOW LI XIN worked on proposal concept, core features, product positioning, slides and video production. The team confirmed completion of all mandatory workshops, no self-owned pre-event code and no employment/internship IP restrictions.
 
 ## 2. Architecture & Technology Stack
 
@@ -66,12 +70,12 @@ The DeepSeek key remains server-side and is omitted from this document, browser 
 
 | Service & provider | Purpose | Plan / region and status |
 | --- | --- | --- |
-| GitHub | Source history, issues, pull requests and repository distribution | Existing repository; account plan and final public access require confirmation. |
+| GitHub | Source history, issues, pull requests and repository distribution | Public repository, verified on 25 October 2026. |
 | DeepSeek hosted API | Application inference | Provider-managed service; account plan, processing location and retention terms require confirmation. |
-| Replit | Required sponsor platform; project workspace and shared demonstration hosting | [Project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) and [public demo](https://milestone-2-cash-proof-to-cash.replit.app/); Node.js 24, Reserved VM 0.5 vCPU / 2 GiB in Asia. Actual checks and storage limitations are recorded in [hosted verification](../docs/evaluation/HOSTED-VERIFICATION.md). Formal proof PDF remains pending. |
-| RunPod | No verified application workload or endpoint in the current code/evidence | No use claimed. Applicability of the GPU rule to hosted API inference still needs official clarification. |
+| Replit | Required sponsor platform; project workspace and shared demonstration hosting | [Project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) and [public demo](https://milestone-2-cash-proof-to-cash.replit.app/); recorded configuration: Node.js 24, Reserved VM 0.5 vCPU / 2 GiB in Asia. [Formal proof PDF](SDC2026_Lets%20go_Replit_POU.pdf) includes use evidence and storage limits. The workspace URL returned 404 anonymously on 24 October; judges can use the public demo. |
+| RunPod | No application workload or endpoint | Team-confirmed non-use; see the [non-use statement](SDC2026_Lets%20go_Runpod_POU.pdf). It does not claim an official exemption. |
 
-Local development and tests are verified separately from cloud deployment. Do not mark a cloud host as deployed until its real URL and execution/persistence checks are recorded.
+Local production checks and the live UI workflow are separate evidence. The [25 October live results](validation/results.json) record six agent-operated cases; the earlier [hosted verification](../docs/evaluation/HOSTED-VERIFICATION.md) retains the failed resume and data-reset observations. No durable storage across Replit redeployments is claimed.
 
 ## 4. AI Tools, Models & Datasets
 
@@ -103,28 +107,28 @@ Runtime extraction does not receive evaluation gold labels. OCR pre-training dat
 
 | Tool & version | Used for | Extent of use |
 | --- | --- | --- |
-| OpenAI Codex; exact app/model versions require confirmation from development records | Backend implementation support, integration fixes, test/evaluation scripts, repository planning and documentation preparation | Major assistance reflected in the development workflow; team to confirm final declaration |
-| Anthropic Claude; exact app/model versions require confirmation from the frontend developer's records | Frontend development support and interface implementation | Major frontend assistance reported in the project workflow; team to confirm final declaration |
+| OpenAI Codex; exact model versions were not recorded consistently | Backend and frontend implementation support, interface/routing work, integration fixes, tests, research, documentation and submission-file preparation | Major assistance; use confirmed by the team |
+| Anthropic Claude; exact model versions were not recorded consistently | Frontend development support and interface implementation | Major assistance; use confirmed by the team |
 
-Other assistants or tools used by any member must be added before signing. Do not invent a precise model version when the record contains only a product name.
+The signed declaration discloses the team-confirmed tools and their purposes. Product names are retained where an exact model version was not documented.
 
 **Review/testing/responsibility text (maximum 100 words):**
 
-The development workflow included type checks, separate backend and frontend tests, browser integration scenarios, deterministic matching/forecast comparisons, and real OCR/DeepSeek evaluation on frozen synthetic inputs. Failures and unsupported model outputs have explicit manual-review paths. These automated checks establish recorded technical behavior, not independent human authorship review. The requested member-review exercise was skipped at the project owner's direction. Before signing, the registered members must confirm their actual review, understanding and responsibility for the submitted code and materials; this draft does not claim that confirmation has occurred.
+Validation includes type checks, backend/frontend tests, deterministic comparisons and historical OCR/model evaluation on frozen synthetic inputs. On 25 October, six agent-operated live UI cases passed with actual receipt, promise and reminder outputs. Current source sends negated, conditional or redacted reply text to manual review regardless of confidence. Automated checks and assistant-operated workflows establish technical behavior; they are not an independent member study. The separate manual timing and independent-review exercises were skipped. Team contributions and the leader's authorised declaration are recorded in the signed PDF without inventing a completed independent review.
 
 ## 5. Sponsor-Provided Resources
 
-**Did the project use official sponsor-provided resources? Pending verified project-use evidence.** The portal's account/resource availability is not evidence that a resource was used in this project.
+**Actual sponsor-platform use: Replit.** The [Replit evidence PDF](SDC2026_Lets%20go_Replit_POU.pdf) records the team project and published application. Actual resource use is distinguished below from the Domain 2 design context and non-use of RunPod.
 
-| Sponsor | Resource | Actual use / outstanding evidence |
+| Sponsor | Resource | Actual use |
 | --- | --- | --- |
-| Replit | Replit Core resource offered through the event | The existing project was imported, built, tested and publicly hosted in the team account. Account redemption is reported in the portal for some members. Formal ownership details and proof-of-use PDF still require team review. |
-| RunPod | Event compute-credit resource | No verified project GPU workload or endpoint; do not claim usage. |
+| Replit | Replit Core resource offered through the event | The existing project was imported, built, tested and publicly hosted in the team account. Team-account and hosting evidence is included in the proof-of-use PDF. |
+| RunPod | Event compute-credit resource | Not used. Model inference calls the hosted DeepSeek API directly; no RunPod endpoint is claimed. |
 | Alpha Red Solutions / Orbyte | Domain-2 challenge brief and platform approach | Used as the product-design context; no live Orbyte API, account integration, customer data or production access. |
 
 **Essential/replacement text (maximum 100 words):**
 
-The current application uses portable Node.js, SQLite and a React build, with actual Replit workspace and public-host tests recorded. The formal Replit proof-of-use PDF remains pending. No GPU endpoint is used. Hosted extraction uses the team's existing DeepSeek account; deterministic matching, manual evidence review and forecasts do not depend on a sponsor model. Orbyte supplies the ecosystem design context, and the current interface assumptions are simulated. RunPod applicability and the submission form's API Premium sponsor statement must be resolved before declaring full compliance.
+The application uses portable Node.js, SQLite and React, with actual Replit use recorded in the linked PDF. Replit supplies the shared application host and can be replaced by a compatible Node host with suitable durable storage. Hosted extraction uses the team's DeepSeek account; matching rules, manual review and cash scenarios do not require a sponsor model. Orbyte supplies the ecosystem design context and its interface assumptions are simulated. RunPod was not used. The portal's sponsor confirmation is a separate team submission statement; it is not evidence of a live Orbyte API connection.
 
 ## 6. Security, Privacy & Responsible Use
 
@@ -138,7 +142,7 @@ OCR can confuse reference characters, including O/0; synthetic evaluation does n
 
 ## 7. Compliance & Readiness Checklist
 
-These boxes remain unselected until the final document and actual evidence support them.
+This is the historical preparation checklist, not the current submission status. The signed PDF contains the official declaration fields; current file/access checks and portal evidence are in [STEP-8](../docs/issues/08-submission.md). Leaving a historical item below unselected does not mean the final PDF, signature or public prototype is missing.
 
 - [ ] All APIs, cloud services, AI tools, models and datasets used by every member are declared.
 - [ ] The team has checked applicable licences and required notices for third-party components.
@@ -152,15 +156,15 @@ These boxes remain unselected until the final document and actual evidence suppo
 
 **Leader:** Jiazhong Yang
 
-**Signature:** Pending actual leader confirmation/signature.
+**Official form signature:** The leader authorised the typed name **Jiazhong Yang** in the [signed PDF](SDC2026_Lets%20go_TechDeclaration.pdf).
 
-**Date:** Pending signing date.
+**Official form date:** 25 October 2026.
 
-Do not reproduce the official confirmation as already accepted, fabricate a signature, or describe this unsigned preparation file as a completed submission.
+This Markdown file remains preparation/reference material. The signed official PDF and the portal's recorded submission are distinct evidence.
 
 ## Evidence for completing the final template
 
 - [Current official requirements and source versions](../docs/SUBMISSION_REQUIREMENTS.md).
 - [STEP-7 measured model/matcher/forecast results](../docs/evaluation/STEP7-METRICS.md) and [integration results](../docs/evaluation/STEP7-INTEGRATION.md).
 - [Extraction and data-boundary implementation](../docs/EXTRACTION.md), [reconciliation](../docs/RECONCILIATION.md), and [shared contract](../docs/CONTRACT.md).
-- Version/metadata sources: root, `web/` and `contracts/` package manifests and lockfiles. Exact assistant model versions, member contributions, provider account terms and final cloud use still need human confirmation.
+- Version/metadata sources: root, `web/` and `contracts/` package manifests and lockfiles. Team contributions, Codex/Claude use and Replit hosting are confirmed in the final materials; unspecified provider terms or assistant model versions are not invented.

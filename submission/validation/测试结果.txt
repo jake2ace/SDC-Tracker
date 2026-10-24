@@ -1,0 +1,62 @@
+Proof-to-Cash 朋友测试结果
+测试日期：2026-10-25，马来西亚时间；约 01:30 开始。
+测试地址：https://milestone-2-cash-proof-to-cash.replit.app/
+测试素材：用户提供的 Proof-to-Cash-朋友测试包-2026-10-24.zip
+执行方式：实际浏览器 UI 操作，不以源码分析或自动化单元测试代替。
+
+本轮结论：F01–F06 全部通过。未发现阻断问题。本结论只覆盖本测试包及本次运行。
+
+F01 发票审批：通过
+Finance 的 Mark complete 不可用；PM 可完成 Final handover 并生成 RM6,000 草稿。
+PM 的 Approve and issue 不可用，Owner 批准后成为 Issued · unpaid。
+同一里程碑显示一张发票，创建入口被发票链接替代。
+本轮新发票号：DEMO-4CDD753C-C8FF-44AE-8E2A-98CB0AA91B96。
+
+F02 提醒：通过；AI draft，无 Template 降级
+实际生成英文草稿，生成时显示 Nothing was sent。
+编辑草稿后点击 Send (simulated)，页面显示 Sent (simulated) 及 No message left this app。
+已收款保持 RM0。没有向真实客户发消息。
+
+F03 部分收款与重复证据：通过；未人工更正
+第一张截图识别为 RM9,000，LMN-231026-001，KOPI TIGA TEST，23 Oct 2026 10:30 MYT，DEMO SENDER BANK A。
+页面显示 AI confidence 95%。这些字段与原图一致。
+Bank check 找到部分付款记录时，已收仍为 RM0。
+未勾人工核对项时记账按钮不可用，核对并批准后已收 RM9,000、未收 RM9,000。
+再次上传同一图片返回已记录凭证，不再提供第二次匹配/记账入口，余额不变。
+
+F04 承诺与预测：通过；未人工更正
+输入：I will pay the remaining RM9,000 on 28 October 2026.
+识别为 Promises a date / RM9,000 / 2026-10-28，页面显示 AI confidence 95%。
+人工确认后已收、未收仍各 RM9,000，原到期日仍为 16 Oct 2026。
+Paid on time：预计 RM9,000 在 28 Oct；Paid 7 days late：预计在 4 Nov。
+第一笔实际 RM9,000 始终在 23 Oct，不随延迟情景移动。
+
+F05 结清与刷新：通过；未人工更正
+首次 CSV 导入：1 new, 0 already imported. No payment was recorded.
+导入后该发票仍欠 RM9,000。
+第二张截图识别为 RM9,000，LMN-231026-002，23 Oct 2026 11:00 MYT，其余字段正确，AI confidence 95%。
+银行匹配覆盖全额剩余欠款；未勾人工核对项时记录按钮仍不可用。
+人工批准后显示 Paid in full / Fully paid：累计已收 RM18,000、未收 RM0。
+Draft a reminder 按钮消失。现金流中该发票仅剩两笔实际 RM9,000，无预计余额。
+刷新后结清和付款记录保留。重复 CSV：0 new, 1 already imported. No payment was recorded.
+注意：F01 新开的 RM6,000 发票仍有预计收入，这是另一张发票，并非结清失败。
+
+F06 公司隔离与窄屏：通过
+Rantau 身份下发票和现金流只有其自己的记录；打开 Lumen 发票 URL 显示 Invoice not found in this company。
+切回 Lumen 后仍是已收 RM18,000、未收 RM0、两笔付款。
+390×844 CSS 像素视口检查：页面宽度为 390，无页面横向溢出，关键金额可读。
+实际切换了发票详情、现金流导航和 Day by day 明细；检查英文、中文、马来文及明暗主题。
+这是窄屏浏览器检查，没有在真实手机硬件上运行。
+
+工具与指南问题
+Chrome 扩展的自动上传最初受本地文件权限限制，首张图片通过系统文件选择器上传。
+之后窗口操作冲突，用户同意转到 Codex 应用内浏览器；后续测试在同一线上账本继续。
+没有修改 Chrome 扩展权限，这些工具问题不计为产品识别失败。
+指南旧标签应更新：Sign in → Open demo workspace；Home → Overview。
+
+测试后的共享数据
+LUMEN-DEMO-001 已付清，另新增一张 RM6,000 未付款发票；两笔银行记录均已用于收款。
+本轮没有重置线上环境。再次按同一流程从头测试前，需要负责人恢复初始种子状态。
+刷新保留不等于重新部署仍持久化；本轮没有暂停、重新发布或测试部署持久化。
+
+证据：同目录 screenshots/ 保存关键步骤截图；results.json 保存逐项结构化结果。

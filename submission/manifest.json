@@ -1,0 +1,44 @@
+{
+  "team": "Lets go",
+  "project": "Milestone2Cash Proof-to-Cash",
+  "verifiedApplicationCommit": "c4386784c9b5dacf44cc97e57a0c731931da36da",
+  "materialDate": "2026-10-25",
+  "video": {
+    "url": "https://www.youtube.com/watch?v=pholjV_8vBM",
+    "durationSecondsShown": 379,
+    "browserPlaybackVerified": true,
+    "unauthenticatedOembedHttpStatus": 200
+  },
+  "files": [
+    {
+      "path": "submission/SDC2026_Lets go_Preliminary.pdf",
+      "pages": 10,
+      "bytes": 2533814,
+      "sha256": "b022a5bfe57aeba2c429dfdeb784efd5e940c20f8a4aea260e57e904047912d8"
+    },
+    {
+      "path": "submission/SDC2026_Lets go_TechDeclaration.pdf",
+      "pages": 12,
+      "bytes": 2777231,
+      "sha256": "2036575d2b0b7eed55e595dbd872d1b87250d283e3114567d809b127bb7137bd"
+    },
+    {
+      "path": "submission/SDC2026_Lets go_Replit_POU.pdf",
+      "pages": 3,
+      "bytes": 120054,
+      "sha256": "7aa23a5169ce93865568707fa552788eb78a795b74d3ca20092697b8a716cf4c"
+    },
+    {
+      "path": "submission/SDC2026_Lets go_Runpod_POU.pdf",
+      "pages": 1,
+      "bytes": 2815,
+      "sha256": "2f615a689af71fb33459e093d5abaea69ca262871e4e4bc9dea98d91b3419f07"
+    },
+    {
+      "path": "submission/Milestone2Cash.pptx",
+      "slides": 14,
+      "bytes": 1565851,
+      "sha256": "70ee132a6fc2650034125f98dd94d80782e4302e65ba87b2543743bb0b7ab6c7"
+    }
+  ]
+}
