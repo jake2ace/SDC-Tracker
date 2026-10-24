@@ -1,229 +1,246 @@
 # Milestone2Cash Proof-to-Cash
 
-[English](README.md) | [简体中文](README.zh-CN.md)
+> Help Malaysian service micro-businesses turn completed work into invoices and check payment claims against bank records before recording receipts.
 
-> Help Malaysian service micro-businesses invoice completed work, follow up on overdue balances and check payment claims against bank records before recording payment.
+Milestone2Cash connects milestone invoices, customer replies, payment screenshots, bank CSV records, Finance approval and an outstanding balance. OCR and AI help read evidence. Rules check the proposed match, and a person approves the payment. A promise changes expected timing without becoming actual cash.
 
-**The frontend now connects all seventeen backend contract operations, including reviewed payment allocation, partial balances, payment promises and 30-day forecasts.** Local integration results are recorded in the [STEP-7 report](docs/evaluation/STEP7-INTEGRATION.md). The manual timing comparison and independent member review were skipped at the project owner's request; no such results are claimed. Deployment and submission are the current step.
-
-This README follows the section order of the [SDC submission template](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md). Template alignment does not mean submission requirements are complete.
+Verified application baseline: [`c438678`](https://github.com/jake2ace/SDC-Tracker/commit/c4386784c9b5dacf44cc97e57a0c731931da36da). Final signed forms, slides, the 6:19 pitch video and validation evidence are linked below. The forms contain the leader-authorised typed signature Jiazhong Yang, dated 25 October 2026. This submission update changes documentation and evidence; application behavior remains at the verified baseline.
 
 ## Team Information
 
 | Field | Details |
 | --- | --- |
 | Team Name | Lets go |
-| Team Domain | Domain 2 — Orbyte Smart SME Challenge |
-| SDG Track (1–17) | SDG 8 — Decent Work and Economic Growth; targets 8.2 / 8.3 proposed |
+| Team Domain | Domain 2 — Orbyte Smart SME Challenge / ALPHA RED |
+| SDG Track | SDG 8 — Decent Work and Economic Growth; targets 8.2 and 8.3 |
 | Team Leader | Jiazhong Yang |
 | Universities | Monash University Malaysia; Universiti Malaya |
-| Number of Members | 4 — registered roster confirmed |
+| Number of Members | 4 |
 
 ## Links
 
 | Resource | Link / status |
 | --- | --- |
-| GitHub Repository | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
-| Shared Contract | [Contract guide](docs/CONTRACT.md) · [types, rules and fixtures](contracts/) |
-| Backend API | [Startup, configuration and implemented endpoints](docs/BACKEND.md) |
-| Local Integration | [Browser, API and model validation](docs/evaluation/STEP7-INTEGRATION.md) |
-| Deployment Guide | [Single-port build, hosting and persistence](docs/DEPLOYMENT.md) |
-| Submission Preparation | [Documents and remaining requirements](submission/README.md) |
-| Synthetic Data | [Demo seed](data/seed/README.md) · [evaluation inputs and separate gold](data/eval/README.md) |
-| Replit Project | [Team workspace](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) |
-| Live Demo | [Open the shared demo](https://milestone-2-cash-proof-to-cash.replit.app/) · [Friend test guide](docs/FRIEND_TEST_GUIDE.zh-CN.md) |
-| RunPod Endpoint | Not used for this rebuild |
-| Slide Deck | Prepared separately; [local slide requirements](submission/SLIDE_REQUIREMENTS.md) |
-| Demo Video | Pending |
+| GitHub Repository | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) — public repository, verified on 25 October 2026 |
+| Live Demo | [Open Milestone2Cash](https://milestone-2-cash-proof-to-cash.replit.app/) |
+| Workspace Overview | [Open the demo workspace](https://milestone-2-cash-proof-to-cash.replit.app/#/home) |
+| Replit Project | [Team workspace URL](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) — owner access may be needed; use the Live Demo link for judging |
+| Preliminary Proposal / PRD | [Official-template PDF](submission/SDC2026_Lets%20go_Preliminary.pdf) |
+| Technical & Tools Declaration | [Official-template PDF](submission/SDC2026_Lets%20go_TechDeclaration.pdf) |
+| Replit Proof of Use | [Project and hosting evidence](submission/SDC2026_Lets%20go_Replit_POU.pdf) |
+| RunPod Use Statement | [Actual non-use statement](submission/SDC2026_Lets%20go_Runpod_POU.pdf) — no RunPod workload or endpoint is claimed |
+| Slide Deck | [Milestone2Cash PPTX](submission/Milestone2Cash.pptx) |
+| Demo Video | [Watch the pitch and prototype demonstration — 6:19](https://www.youtube.com/watch?v=pholjV_8vBM) |
+| Live Workflow Validation | [F01–F06 results](submission/validation/results.json) · [Chinese test report](submission/validation/%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.txt) · [16 screenshots](submission/validation/screenshots/) |
+| Submission Index | [File guide and completion requirements](submission/README.md) |
+
+The prototype uses synthetic companies, messages, receipts and bank records. Demo roles are selectable and are not production authentication. Sending is simulated. The application does not move real money or connect to live bank, WhatsApp, MyInvois or Orbyte services.
 
 ## Overview
 
 ### Problem
 
-Small service businesses must track milestone invoices and overdue balances. A customer's “I have paid” message or screenshot still needs checking against bank records, especially when payments are partial, duplicated or inconsistent.
+Project-based service firms often receive payment claims through short messages and screenshots. Someone must connect the claim to the invoice, find the receiving bank credit, check the amount and reference, and decide what remains due. A partial payment can otherwise be mistaken for full settlement, while duplicated evidence can be counted twice.
 
 ### Solution
 
-The application flow is: **milestone completed → invoice draft → Owner approval → overdue reminder draft → Finance confirms simulated sending → customer reply or screenshot → OCR and field extraction → bank-record matching → Finance approves payment allocation → balance, reminders, 30-day forecast and audit log update.**
+Milestone2Cash keeps this work in one review flow:
 
-The new focus is payment-proof checking: AI helps read the claim, rules explain the match, and a person approves the entry. Partial payments leave the remaining balance outstanding. The prototype uses team-created synthetic data and simulated sending and bank data, with no real payments or bank integration.
+1. A completed milestone creates an invoice draft for Owner approval.
+2. Finance reviews an editable reminder and explicitly confirms simulated sending.
+3. A customer reply or uploaded screenshot becomes evidence to review.
+4. Local OCR and restricted DeepSeek extraction propose structured fields. Unsupported, ambiguous, negated or conditional replies require manual review.
+5. Deterministic rules check an imported bank credit, including amount, reference, date and duplicate-allocation constraints.
+6. Finance approves the proposed payment. The paid amount, remaining balance, collection state, cash scenarios and audit log update together.
+
+An RM9,000 receipt against an RM18,000 invoice leaves RM9,000 outstanding. A later promise to pay the remainder changes an expected receipt date only. Actual received cash remains separate throughout.
 
 ### Key Features
 
-- **Invoices and collections:** milestone invoices and editable reminders with human approval.
-- **Proof review:** extracted fields, bank-credit candidates, duplicates, mismatches and manual fallback.
-- **Payment tracking:** approved partial/full allocations, remaining balances and traceable cash forecasts.
-
-The browser UI connects invoicing, collections, receipt extraction, bank matching, Finance-approved payment allocation, remaining balances and cash forecasts through the shared API contract.
+- Milestone invoicing, Owner approval and editable reminder drafts.
+- Original receipt inspection, OCR fields, manual correction and explained bank-match results.
+- Finance-approved partial and full payments, duplicate protection and a traceable audit record.
+- Cash scenarios with confirmed receipts separated from expected payments.
+- Searchable invoices, role-specific work queues, English / Chinese / Malay interfaces, light and dark themes.
 
 ### Tech Stack
 
-| Layer | Technology / status |
+| Layer | Technology |
 | --- | --- |
-| Frontend | React + TypeScript + Vite, in `web/` |
+| Frontend | React, TypeScript and Vite |
 | Backend | Node.js HTTP API; Node.js 24 LTS recommended |
-| Database | SQLite; local persistence and transactions verified; hosted durable storage pending |
-| AI / Compute | Bundled local Tesseract OCR; server-side DeepSeek extraction; explicit manual fallback without a key |
-| Hosting / Dev | Replit Node.js 24; resettable SQLite demo, not durable financial storage |
+| Database | SQLite with transactions, version checks and idempotency |
+| OCR | Tesseract.js with bundled English and Simplified Chinese language data; runs locally on the server |
+| AI | Server-side DeepSeek `deepseek-flash` for restricted receipt/reply extraction and reminder drafting |
+| Hosting / Development | Replit workspace and published demo; GitHub source control |
+| Evaluation | Synthetic fixtures, separate gold labels, backend/frontend tests, contract checks and browser workflow scenarios |
 
 ## Project Structure
 
-Current implementation, data and documentation entry points:
+The code repository contains:
 
 ```text
 .
-├── README.md / README.zh-CN.md
-├── CONTRIBUTING.md
-├── src/                        # HTTP API, business operations and SQLite store
-├── scripts/                    # Database tools and independent evaluators
-├── tests/integration/          # API, persistence and browser integration tests
-├── web/                        # React UI; separate frontend unit tests in web/tests/
-├── contracts/                  # v1.0.0 types, rules, fixtures and checks
-├── data/seed/                  # Synthetic demo state and bank CSVs
-├── data/eval/                  # Evaluation inputs and separate gold labels
-├── docs/
-│   ├── PRODUCT_SPEC.md / ISSUE_PLAN.md
-│   ├── CONTRACT.md / BACKEND.md
-│   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
-│   ├── decisions.md
-│   └── issues/                 # Eight implementation tasks
-├── submission/README.md        # Planned documents and evidence checklist
+├── src/                  # API, business operations, OCR/AI adapters and SQLite
+├── web/                  # React application and frontend unit tests
+├── contracts/            # Shared types, rules, fixtures and schema checks
+├── data/
+│   ├── seed/             # Two synthetic companies and initial bank records
+│   ├── demo/             # Partial/final receipt images and final bank CSV
+│   └── eval/             # Frozen evaluation inputs and separate gold labels
+├── scripts/              # Database tools and evaluation commands
+├── tests/                # Backend, integration and browser tests
+├── docs/                 # Architecture, API, evaluation and deployment records
+├── submission/           # Proposal, declarations, proofs of use and slide deck
+├── .env.example
+├── .replit
+├── package.json
 └── LICENSE
 ```
 
-The API in `src/` and UI in `web/` run locally. Test code stays outside production modules. See the [submission document checklist](submission/README.md) for planned materials.
-
 ### Architecture
 
-**Browser UI → Node.js API → SQLite.** The server runs OCR, calls DeepSeek for allowed extraction tasks, and matches imported synthetic bank credits. Human approval gates ledger and forecast updates. See [the product specification](docs/PRODUCT_SPEC.md).
+```text
+Browser (React)
+    |
+    v
+Node.js API on Replit -----> SQLite records and audit log
+    |
+    +-- local Tesseract OCR
+    +-- restricted text to DeepSeek, followed by validation/manual review
+    +-- deterministic bank-credit matching
+    +-- explicit Owner / Finance approval gates
+```
+
+Raw receipt images and full bank CSVs are not sent to the model. The model cannot approve or post a payment. Company checks, current evidence versions and duplicate-allocation protection apply to the final payment action. See the [architecture and product specification](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/docs/PRODUCT_SPEC.md), [extraction guide](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/docs/EXTRACTION.md) and [reconciliation guide](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/docs/RECONCILIATION.md).
 
 ## How to Run
 
-### Option 1 — Run on Replit
+### Option 1 — Use the Published Replit Demo
 
-Open the [published demo](https://milestone-2-cash-proof-to-cash.replit.app/) or use the [team project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) with the checked-in `.replit` configuration. The public core workflow has passed [hosted verification](docs/evaluation/HOSTED-VERIFICATION.md). This is a resettable shared demo: SQLite lives on the published filesystem, which is not durable financial storage. See [deployment instructions](docs/DEPLOYMENT.md) for setup and limits.
+**Shared state recorded after validation on 25 October 2026, 01:50 MYT:** `LUMEN-DEMO-001` is fully paid, with RM18,000 received through two RM9,000 payments and RM0 outstanding. The run also created and issued a separate RM6,000 Final handover invoice, which remains unpaid. Both Lumen bank credits have already been allocated. The run did not reset or redeploy the site.
+
+Judges can inspect the existing settled invoice and its evidence, payments and audit trail. Repeating the following sequence from the beginning requires the project owner to prepare a clean seed state, preferably in a separate demonstration environment. The shared instance must not be assumed to start at RM0 received. The [validation report](submission/validation/%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.txt) records the completed sequence and retained state.
+
+For a clean seeded demonstration:
+
+1. Open the [public website](https://milestone-2-cash-proof-to-cash.replit.app/) and choose **Open demo workspace**.
+2. Select **Lumen finance (demo)**. Open **Invoices → LUMEN-DEMO-001**.
+3. On a clean seed, confirm RM18,000 total, RM0 received and RM18,000 still due. The first RM9,000 bank credit is already present.
+4. Use the [synthetic partial receipt](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/data/demo/receipts/lumen-partial.png), inspect the evidence, run the bank check and approve the eligible partial payment as Finance. The remaining balance should be RM9,000.
+5. Follow the [complete repeatable demonstration guide](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/data/demo/README.md) for promise dates, final settlement and duplicate protection.
+
+The shared demo may receive further actions from other visitors. Its clock is fixed at 23 October 2026, 12:00 MYT. The 25 October run confirmed that page refresh preserved its payments; it did not test restarting or redeploying the host. A previous redeployment reset the ledger and uploaded evidence to the seed, so this is not durable financial storage. See the [earlier hosted verification record](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/docs/evaluation/HOSTED-VERIFICATION.md).
 
 ### Option 2 — Run Locally
 
-Use Node.js 24 LTS and npm. Clone the repository and start the API:
+Use Node.js 24 LTS and npm. From a terminal:
 
 ```bash
 git clone https://github.com/jake2ace/SDC-Tracker.git
 cd SDC-Tracker
 npm ci
 npm ci --prefix web
-# Keep an existing .env and its server-side key.
 test -f .env || cp .env.example .env
 npm run db:init
-npm start
-```
-
-In a second terminal, run `npm run dev:web` from the repository root and open `http://localhost:5173`. The demo sign-in screen opens the workspace; select a demo identity to work as PM, Owner or Finance. The UI defaults to the real local API. Add `?source=mock` and reload only when you want fixed fixture scenarios.
-
-For a single-port build, stop the development servers and run:
-
-```bash
 npm run build
 npm run start:production
 ```
 
-Open `http://localhost:3000`; the frontend and API share this address. [Deployment checks](docs/DEPLOYMENT.md) verified local process restart and missing-key recovery. The demo identity selector is not production authentication.
+Open `http://localhost:3000/` for the website or `http://localhost:3000/#/home` for the workspace. The frontend and API share one port. The repository is public and can be cloned without collaborator access.
 
-Set `DEEPSEEK_API_KEY` in the root `.env` and keep `DEEPSEEK_MODEL=deepseek-flash`; the key stays server-side and must not be placed in `web/` or any `VITE_` variable. Without a usable model, reminders use an identified template and evidence can be reviewed manually.
+For frontend development instead, use `npm start` for the API and `npm run dev:web` in a second terminal; open `http://localhost:5173/`.
 
-Check `http://localhost:3000/health`. The API provides seventeen operations; examples are in the [backend guide](docs/BACKEND.md), [bank matching guide](docs/BANK_MATCHING.md), [receipt/reply guide](docs/EXTRACTION.md) and [payment/forecast guide](docs/RECONCILIATION.md):
+Set `DEEPSEEK_API_KEY` in the root `.env` or Replit Secrets, with `DEEPSEEK_MODEL=deepseek-flash`. Keep the key on the server; never use a `VITE_` variable for it. Without a usable provider, reminders have a visibly identified template fallback and evidence remains available for manual review. Never treat fallback as a successful AI call.
 
-- `GET /api/demo-users` and `GET /api/workspace`
-- `POST /api/milestones/:id/complete` and `POST /api/milestones/:id/invoice-draft`
-- `POST /api/invoices/:id/decision`
-- `POST /api/invoices/:id/reminders` and `POST /api/reminders/:id/send`
-- `POST /api/bank-statements` and `POST /api/receipts/:id/match`
-- `POST /api/invoices/:id/replies` and `POST /api/invoices/:id/receipts`
-- `PATCH /api/replies/:id/extraction` and `PATCH /api/receipts/:id/evidence`
-- `GET /api/receipts/:id/image`
-- `POST /api/matches/:id/approve-payment` and `POST /api/replies/:id/confirm-promise`
-- `GET /api/forecast?asOfDate=2026-10-23&delayDays=7`
-
-Sending and payment recording are simulated. The [hosted verification record](docs/evaluation/HOSTED-VERIFICATION.md) distinguishes local, Replit workspace and public-host checks. The demo clock is fixed at 23 October 2026; the UI reads it from the API rather than the computer's date.
+To inspect configuration and endpoint examples, use the [backend guide](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/docs/BACKEND.md). The health endpoint is `http://localhost:3000/health`.
 
 ### Run Tests
 
-From the repository root:
+The preparation check on 24 October 2026 for source revision `c438678` passed **60 backend tests, 23 frontend tests, 13 contract/data validation groups, TypeScript checks and the production build**. The three automated browser scenarios in earlier reports were not rerun in that check or in the later UI walkthrough and are not included in these counts. The public root and `/health` endpoints also responded successfully on 24 October.
+
+A separate live workflow check ran on **25 October 2026, approximately 01:30–01:50 MYT** against the published Replit application. All **six F01–F06 cases passed** through actual browser UI actions operated by the assistant: role-controlled milestone invoicing, editable simulated reminders, partial payment and duplicate evidence, promise dates and forecast scenarios, final settlement and duplicate CSV import, and company isolation / narrow-screen navigation / languages / themes. This was an agent-operated workflow check, not an independent member study or a staff-time comparison. Its [structured results](submission/validation/results.json), [test report](submission/validation/%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.txt) and [screenshots](submission/validation/screenshots/) are included.
+
+Both receipt extractions and the RM9,000 promise extraction completed without manual correction and displayed 95% AI confidence in this run. The reminder displayed **AI draft**, was edited and then explicitly marked sent in the simulator. These observations cover these particular inputs; model confidence is not an accuracy measurement. The six workflows are not additional samples in the frozen 40-image / 40-reply benchmark, and they do not establish an updated current-model accuracy or review rate.
 
 ```bash
 npm run check
 npm test
 npm run test:web
-npm run test:e2e
 npm run build
-npm run test:deployment
-npm run test:deployment:smoke
-npm run evaluate:matcher
-npm run evaluate:forecast
 npm ci --prefix contracts
 npm --prefix contracts run check
 ```
 
-The browser suite lives in `tests/integration/browser/`; frontend unit tests live in `web/tests/`. If Chromium is not installed for Playwright, run `npx playwright install chromium` once before `test:e2e`. Backend tests cover persistence, permissions, evidence uploads, extraction fallback and manual corrections. The 30 frozen matcher cases and contract checks remain separate. [Integration evidence](docs/evaluation/STEP7-INTEGRATION.md) and [extraction evidence](docs/EXTRACTION.md) distinguish local OCR, actual model responses and injected tests; synthetic accuracy does not establish production accuracy.
+Optional workflow and evaluation commands:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+npm run evaluate:matcher
+npm run evaluate:forecast
+```
+
+Real extraction evaluation can consume the configured provider's allowance. It is separate from the commands above. [Evaluation evidence](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/docs/evaluation/STEP7-METRICS.md) records 40 synthetic receipt images and 40 synthetic replies: receipt amount 40/40, reference 35/40, transfer time 40/40 and reply intent 39/40. These are historical measurements for the evaluated version. The later conservative reply-semantic review changes require a new real-provider run before claiming those scores or review rates for the current projection. Matcher and forecast checks are deterministic consistency tests, not real-business predictive accuracy.
 
 ## How We Use Replit
 
-The existing repository was imported into the [team Replit project](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash). The workspace runs Node.js 24.22.1, builds the frontend, and serves the frontend and API together. Hosted workspace checks covered real DeepSeek reminders, receipt extraction, bank matching, human-approved settlement and forecast updates. Credentials stay in platform secrets. See the [deployment record](docs/DEPLOYMENT.md) for the public release status and storage limits; the final proof-of-use PDF remains a submission task.
+The team project imports this source repository, builds the React frontend and hosts the frontend/API together. API credentials remain in platform Secrets. The [25 October live UI run](submission/validation/results.json) exercised actual AI-labelled reminders, receipt/promise extraction, bank matching, explicit approval and balance updates through all six F01–F06 cases. Earlier hosted records remain separate evidence and retain their failures, retries and successful runs.
+
+Project workspace URL: [Milestone2Cash Proof-to-Cash](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash). Published app: [live demo](https://milestone-2-cash-proof-to-cash.replit.app/). An anonymous HTTP check of the workspace URL returned 404 on 24 October; the public live app and health endpoint were available. Judges should use the live app, and project-history access must be verified separately by the project owner.
+
+Proof of use: [Replit evidence PDF](submission/SDC2026_Lets%20go_Replit_POU.pdf). The hosting record does not establish durable storage across redeployments, and this prototype is not a production accounting archive.
 
 ## How We Use RunPod
 
-RunPod has not been used for this rebuild; the planned MVP has no GPU workload. Confirm whether RunPod evidence applies to this track against official requirements before submission. The template's “Required” label is not evidence of use.
+The team confirms that RunPod was not used and there is no RunPod endpoint for this implementation. OCR runs locally and model requests go directly to the hosted DeepSeek API. No GPU training or fine-tuning was performed by this project.
+
+The [RunPod statement](submission/SDC2026_Lets%20go_Runpod_POU.pdf) records actual non-use. Model inference calls the DeepSeek hosted API directly; the team did not deploy a RunPod GPU workload or perform model training or fine-tuning.
 
 ## Challenges & Learnings
 
-A receipt is a claim to verify, partial payments must preserve the remainder, and an interrupted response does not prove a write failed. Integration work adds safe retries, explicit recovery after a failed workspace refresh, identity-scoped state and source-aware cash forecasts. Manual workflow timing and independent member review were skipped at the project owner's request; staff time savings have not been measured.
+- A customer claim is not a bank receipt. The system retains original evidence and waits for explicit approval before changing the paid balance.
+- Partial payments preserve the remaining balance and its follow-up. Promises change expected timing without inflating actual receipts.
+- Negation, conditions and removed reply text can change meaning. Current source preserves supported negations and routes these semantic risks to Finance review regardless of model confidence.
+- Provider failures need an honest recovery route. Manual corrections record reasons, provenance and the reviewer instead of silently inventing model success.
+- Hosting recovery can reset demo data. A reproducible seed and separate recording assets make the demonstration recoverable, but do not replace durable production storage.
+
+Manual staff-time comparisons and independent member review were not part of the recorded technical evaluation. No measured time-saving percentage or real-SME validation outcome is claimed.
 
 ## Future Improvements
 
-- [ ] Improve extraction using measured error cases.
-- [ ] Consider real integrations after access, privacy and operating requirements are reviewed.
+- Evaluate the stricter reply projection on a held-out multilingual set, including negations, conditions and uncommon phrasing.
+- Improve receipt-reference accuracy from the recorded 87.5% baseline toward a proposed ≥95% held-out target; this is a technical target, not an achieved business result.
+- Measure the same evidence-checking task manually and with the tool, recording time, error rate and review burden with consenting participants.
+- Add durable hosting, real authentication and operational controls before any real financial-data deployment.
+- Validate reusable Orbyte module interfaces if sponsor access and requirements permit.
 
 ## Team
 
-| Name | University | Role |
+| Name | University | Team-confirmed contribution |
 | --- | --- | --- |
-| Jiazhong Yang | Monash University Malaysia | Registered team leader |
-| LOW LI XIN | Universiti Malaya | Team member; task ownership to be confirmed |
-| Jieheng Li | Monash University Malaysia | Team member; task ownership to be confirmed |
-| Lingchen Wu | Monash University Malaysia | Team member; task ownership to be confirmed |
+| Jiazhong Yang | Monash University Malaysia | Team leader; code implementation |
+| LOW LI XIN | Universiti Malaya | Proposal concept, core feature planning, product positioning, pitch deck and video production |
+| Jieheng Li | Monash University Malaysia | Code implementation |
+| Lingchen Wu | Monash University Malaysia | UI design, visual appearance and user experience |
 
-Team members claim specific tasks through the issues below. Work is organised into project coordination, frontend design and development, backend development, testing, and documentation. All seventeen operations are connected and the shared demo is published; the next team tasks are friend testing, the demonstration recording and submission material.
+The team confirmed these contributions on 24 October 2026. It also confirmed completion of the mandatory GenAI, Database and Cloud Deployment workshops, no use of self-owned code from before this competition, and no employment or internship intellectual-property restrictions. Earlier iterations during the same competition remain part of this event's development history.
 
-Members can claim synthetic cases, independent calculations, test reviews, documentation, slides and demo work now. These are available tasks, not recorded assignments. Follow the [team participation guide](docs/TEAM_GUIDE.md): accept the invitation if received, update `main`, claim a scoped task in its issue, then work on a separate branch and open a PR.
+OpenAI Codex (team-confirmed model: GPT-6 Astra) and Anthropic Claude (team-confirmed model: Fable 5.1) were used for major development assistance. Codex also assisted final verification and documentation. Their purposes and extent of use are disclosed in the Technical & Tools Declaration. These contribution statements do not substitute for the leader's final declaration or independent member review.
 
-### Eight-step plan
+## Final submission verification
 
-| Step | Issue | Deliverable |
-| --- | --- | --- |
-| 1 | [#17](https://github.com/jake2ace/SDC-Tracker/issues/17) | Complete — scope, data, API contracts and fixtures |
-| 2 | [#18](https://github.com/jake2ace/SDC-Tracker/issues/18) | Complete — backend, invoicing, collections and permissions |
-| 3 | [#19](https://github.com/jake2ace/SDC-Tracker/issues/19) | Frontend implemented and connected to all seventeen operations |
-| 4 | [#20](https://github.com/jake2ace/SDC-Tracker/issues/20) | Complete — bank CSV and deterministic matching |
-| 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | Complete — OCR, AI extraction and manual fallback |
-| 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | Complete — payment approval, partial payments and forecast |
-| 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | Complete — technical integration; manual timings and member review skipped by request |
-| 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | Deployment, presentation and submission checks |
+- Final official-template PRD and Technical Declaration PDFs contain the leader-authorised typed signature and the date 25 October 2026.
+- The public prototype, public source repository, Replit evidence, RunPod non-use statement, pitch deck and 6:19 YouTube video are linked above.
+- The registered four-person roster, actual contributions, mandatory workshop completion and prior-work/IP answers were confirmed by the team.
+- [Six live browser workflows](submission/validation/results.json) passed on 25 October. The main shared invoice is settled at RM18,000 received and RM0 due; a separate RM6,000 invoice remains unpaid.
+- [Independent clean production verification](docs/evaluation/STEP8-INDEPENDENT-PRODUCTION.md) passed: clean installation/configuration/build, four deployment integration tests and nine separate production-process checks. Local restart retained records and original evidence. Missing-key template/manual behavior was also checked in the browser.
+- [Final STEP-8 record](docs/evaluation/STEP8-FINAL-CHECK.md) separates current live access, local restart results, historical Replit storage limitations and the portal's saved submission state.
 
-Details: [dependencies and acceptance plan](docs/ISSUE_PLAN.md) · [frontend handoff](docs/FRONTEND_HANDOFF.md) · [decisions](docs/decisions.md).
+The deck and recorded video retain the earlier 69-check baseline (50 API, 16 UI and three automated browser scenarios). Slide 11 labels that baseline. Later verification contains 60 backend tests, 23 frontend tests and 13 contract/data groups; the three earlier automated browser scenarios were not rerun. These counts describe different checks and are not added together.
 
-## Submission Checklist
-
-- [x] Confirm registered team leader, roster and universities.
-- [ ] Confirm proposed SDG targets and actual contributions.
-- [ ] Add the slide deck and demo video links.
-- [ ] Record Replit use and proof of use.
-- [ ] Resolve RunPod applicability and provide any required truthful evidence.
-- [ ] Complete the Preliminary Submission and Technology Declaration PDFs.
-- [ ] Name submission files using the confirmed team name and official template.
-- [ ] Verify deployment, links and all “How to Run” instructions.
-- [ ] Review the final repository for credentials and private data.
-- [ ] Confirm measured claims and AI/tool declarations; retain the actual submission receipt.
+The competition portal already stores the repository URL. The [saved-state evidence](submission/SUBMISSION_STATUS.md) records the status visible on 25 October 2026; the portal does not display the original submission timestamp. Keep the public app and all submission links available during judging. The shared hosted demo should be inspected in its retained settled state; the clean local setup is the reproducible route for replaying the opening balance.
 
 ## License
 
-Licensed under [Apache License 2.0](LICENSE).
+Project source is licensed under [Apache License 2.0](https://github.com/jake2ace/SDC-Tracker/blob/c4386784c9b5dacf44cc97e57a0c731931da36da/LICENSE). Third-party packages and models retain their own licences and terms, as disclosed in the Technical & Tools Declaration.

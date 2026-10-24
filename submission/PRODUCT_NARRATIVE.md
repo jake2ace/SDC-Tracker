@@ -1,6 +1,8 @@
-# Milestone2Cash Proof-to-Cash
+# Milestone2Cash Proof-to-Cash — historical proposal notes
 
-Working submission text · 24 October 2026. Sections below map to the [official Preliminary Submission template](https://docs.google.com/document/d/1RUb7bQvtaI5ds8SLHQtzAFmg8OGb9WsK/edit). This file is not a submitted or signed form. Section 2.1 is below 250 words, 2.2 below 300 words and 3.2 below 200 words; count again after final edits.
+**Final proposal for judging:** [signed Preliminary / PRD PDF](SDC2026_Lets%20go_Preliminary.pdf). The leader authorised the typed signature **Jiazhong Yang** and date **25 October 2026** in that official form. [Live prototype](https://milestone-2-cash-proof-to-cash.replit.app/) · [6:19 pitch and demo video](https://www.youtube.com/watch?v=pholjV_8vBM) · [submission index](README.md).
+
+These notes began as working text on 24 October 2026, mapped to the [official Preliminary Submission template](https://docs.google.com/document/d/1RUb7bQvtaI5ds8SLHQtzAFmg8OGb9WsK/edit). The signed PDF supersedes this preparation text. Historical model results below retain their original evaluated scope; they are not newly measured accuracy for the later reply-semantic changes. Application validation baseline: `c438678`.
 
 ## 1. Team and project
 
@@ -8,10 +10,12 @@ Working submission text · 24 October 2026. Sections below map to the [official 
 | --- | --- |
 | Team | Lets go |
 | Challenge | Domain 2 — Orbyte Smart SME Challenge |
-| Proposed SDG alignment | SDG 8; targets 8.2 and 8.3, subject to team confirmation |
+| SDG alignment | SDG 8; targets 8.2 and 8.3 as declared in the final proposal; business impact is not yet measured |
 | Team leader | Jiazhong Yang — Monash University Malaysia |
 | Registered members | LOW LI XIN — Universiti Malaya; Jieheng Li — Monash University Malaysia; Lingchen Wu — Monash University Malaysia |
-| Deployment, video and final submission links | Add only after each link has been verified |
+| Prototype and video | [Public demo](https://milestone-2-cash-proof-to-cash.replit.app/) · [YouTube 6:19](https://www.youtube.com/watch?v=pholjV_8vBM), verified playing without sign-in on 25 October |
+
+Confirmed contributions: Jiazhong Yang and Jieheng Li worked on code implementation; Lingchen Wu worked on UI design, appearance and user experience; LOW LI XIN worked on proposal concept, core features, positioning, PPT and video. Codex and Claude provided major development assistance, detailed in the [signed technical declaration](SDC2026_Lets%20go_TechDeclaration.pdf).
 
 ## Product summary
 
@@ -53,7 +57,7 @@ flowchart LR
 
 Amounts use integer MYR sen. Permissions and company boundaries are checked by the server. Approval rechecks the invoice, screenshot and bank-record versions; changed evidence requires a fresh match. Database transactions, idempotency keys and unique credit allocation protect retries and concurrent approvals. Manual correction and template reminders remain available when the model cannot be used. Demo identity switching is not production authentication.
 
-**Sponsor API and cloud status:** no live Orbyte integration and no RunPod use are claimed. Actual Replit workspace and public-host results are recorded in [hosted verification](../docs/evaluation/HOSTED-VERIFICATION.md). The demonstration uses resettable SQLite storage; durable financial hosting is not claimed. The formal Replit proof-of-use PDF remains to be prepared.
+**Sponsor API and cloud status:** no live Orbyte integration or RunPod use is claimed. Actual Replit use is recorded in the [formal proof-of-use PDF](SDC2026_Lets%20go_Replit_POU.pdf), [25 October live workflow results](validation/results.json) and [historical hosted verification](../docs/evaluation/HOSTED-VERIFICATION.md). The demonstration uses resettable SQLite storage; durable financial hosting across redeployments is not claimed.
 
 ## 3.2. Design approach and deployment
 
@@ -61,7 +65,7 @@ The design starts from a synthetic service-business payment journey: completed w
 
 Implementation follows a shared API contract, with separate frontend and backend work and integration tests outside production modules. The local interface and API are connected, and synthetic workflow tests cover recovery, partial settlement and company switching. The recorded OCR/model evaluation includes its errors rather than repairing results against labels.
 
-Customer interviews, the paired manual timing study and independent team review have not been performed. Public deployment and platform proof of use require separate verified evidence; local completion is not a deployment claim. The next validation is a permissioned business pilot with a measured workflow baseline.
+Customer interviews, the paired manual timing study and independent team review have not been performed. Public deployment and platform use are documented separately; six agent-operated live UI cases passed on 25 October. The next business validation is a permissioned pilot with a measured workflow baseline.
 
 ## 4. SDG alignment and proposed impact measures
 
@@ -88,9 +92,11 @@ The recorded evaluation used frozen synthetic data. The real OCR/DeepSeek run on
 | Low-confidence replies sent to review | 11/11 |
 | Deterministic matching cases | 30/30; zero unsafe approval candidates in this set |
 | Independent forecast comparisons | 40/40 daily results across four cases |
-| Current regression checks | 50 backend tests, 16 frontend tests and three browser scenarios passed |
+| Historical regression record accompanying the earlier reports | 50 backend tests, 16 frontend tests and three browser scenarios passed; superseded as a current-count statement by the validation note below |
 
-The five reference misses were retained `O`/`0` OCR confusions. Correct extraction does not automatically make a record ready for approval: six receipts required date review against the frozen demo clock. The browser scenarios separately cover partial and full settlement, manual recovery, retries and company switching. See [the metrics report](../docs/evaluation/STEP7-METRICS.md), [integration report](../docs/evaluation/STEP7-INTEGRATION.md) and [deployment checks](../docs/DEPLOYMENT.md) for methods, errors and the four additional backend checks in the current total.
+The five reference misses were retained `O`/`0` OCR confusions. Correct extraction does not automatically make a record ready for approval: six receipts required date review against the frozen demo clock. The historical browser scenarios separately cover partial and full settlement, manual recovery, retries and company switching. See [the metrics report](../docs/evaluation/STEP7-METRICS.md), [integration report](../docs/evaluation/STEP7-INTEGRATION.md) and [deployment checks](../docs/DEPLOYMENT.md) for their original methods and versions.
+
+**Later validation:** `c438678` passed 60 backend tests, 23 frontend tests, 13 contract/data groups and its build. On 25 October an independent production process passed 13 checks, including missing-key fallback and process-restart persistence; this does not establish Replit redeployment durability. [F01–F06](validation/results.json) separately passed through live browser UI actions. Two receipts and one promise needed no manual correction and displayed 95% confidence for those inputs. These six workflows are not a rerun of the historical three automated browser scenarios or the frozen 40-sample accuracy evaluation.
 
 ## 5. Readiness and validation boundaries
 
@@ -100,14 +106,14 @@ The ten-screenshot manual timing comparison and independent team review were not
 
 The prototype has no live bank, WhatsApp, MyInvois or Orbyte connection. It neither transfers money nor verifies screenshot authenticity at the pixel level. The next validation would use permissioned business samples and a paired workflow study, followed by production authentication, operational controls and any required integration work. Public deployment, platform evidence and actual competition submission must each be verified separately.
 
-**Fields requiring actual team input:** workshop participation, readiness declarations, assigned presenters and confirmation of the proposed SDG targets. Do not infer participation from the existence of this prototype.
+The team confirmed completion of all mandatory GenAI, Database and Cloud Deployment workshops and the member contributions above. Formal readiness and signature fields are recorded in the signed PDF; the separate independent-review study remains unperformed.
 
 ## 6. Originality, prior work and third-party material
 
-The current project follows the selected `LetsGo_Final_Idea.pdf` concept. An earlier Milestone2Cash prototype existed and was archived before the current implementation was rebuilt. The team must confirm the exact prior-work description, ownership and any IP conflicts in the official declaration. This document does not certify them.
+The current project follows the selected `LetsGo_Final_Idea.pdf` concept. Earlier Milestone2Cash iterations were developed during this same competition. The team confirmed that it did not use self-owned code from before the competition and has no employment/internship IP restrictions. The signed proposal records these team declarations.
 
-The implementation uses third-party software and AI services. The final technology declaration must list the actual libraries, models, datasets, development assistance and applicable licenses, including React, Node.js, SQLite, Tesseract.js and DeepSeek where used. The synthetic evaluation data and its generation method are documented in the repository. Review the actual dependency inventory and source records before signing; do not treat this short list as the complete declaration.
+The implementation uses third-party software and AI services. The [signed technology declaration](SDC2026_Lets%20go_TechDeclaration.pdf) lists libraries, models, datasets, development assistance and applicable licences, including React, Node.js, SQLite, Tesseract.js and DeepSeek. The synthetic evaluation data and its generation method are documented in the repository. This short list is an overview; the official declaration and dependency inventory provide the detailed record.
 
 ## 7. Captain's declaration
 
-Captain: **Jiazhong Yang**. Signature and signing date: **pending completion by the captain**. No signature or agreement is represented by this draft.
+Captain: **Jiazhong Yang**. The leader authorised that typed signature and the date **25 October 2026** in the [official signed proposal](SDC2026_Lets%20go_Preliminary.pdf). This Markdown remains the historical preparation reference.

@@ -4,9 +4,9 @@
 
 > 帮助马来西亚微小型服务企业为已完成工作开票、跟进逾期欠款，并在登记收款前用银行记录核对客户的付款声明。
 
-**前端现已接通全部十七个后端契约接口，包含人工批准入账、部分收款、付款承诺及 30 天现金流预测。** 本地联调结果见[第七步报告](docs/evaluation/STEP7-INTEGRATION.md)。按用户要求跳过人工耗时对比与组员复核，不宣称已完成这两项实验；现进入部署与提交准备。
+**前端已接通全部十七个后端契约接口，包含人工批准入账、部分收款、付款承诺及 30 天现金流情景计算。** 评委请使用下方已签署 PDF、PPT、公开原型及 [6 分 19 秒演示视频](https://www.youtube.com/watch?v=pholjV_8vBM)。应用验证基线为 `c438678`；材料整理和链接更新不改变该业务代码基线。
 
-本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。结构对齐不代表已经完成参赛提交要求。
+本 README 按 [SDC 提交模板](https://github.com/michaelzhngg/SDC_Hackathon_Submission_Template/blob/main/README.md) 的章节顺序整理。25 October 2026 已复核公开仓库和未登录视频播放。历史模型评测、自动化测试、线上操作核验及门户提交记录分别保留证据，不相互替代。
 
 ## 团队信息
 
@@ -14,7 +14,7 @@
 | --- | --- |
 | 团队名称 | Lets go |
 | 参赛赛道 | Domain 2 — Orbyte Smart SME Challenge |
-| SDG 方向（1–17） | SDG 8 — 体面工作和经济增长；拟对应目标 8.2 / 8.3 |
+| SDG 方向（1–17） | SDG 8 — 体面工作和经济增长；目标 8.2 / 8.3，业务效果仍属待验证目标 |
 | 队长 | Jiazhong Yang |
 | 大学 | Monash University Malaysia；Universiti Malaya |
 | 成员人数 | 4 人；正式注册名单已确认 |
@@ -23,18 +23,23 @@
 
 | 资源 | 链接／状态 |
 | --- | --- |
-| GitHub 仓库 | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker) |
+| GitHub 仓库 | [jake2ace/SDC-Tracker](https://github.com/jake2ace/SDC-Tracker)；已公开 |
+| 正式方案／PRD | [已签署 Preliminary PDF](submission/SDC2026_Lets%20go_Preliminary.pdf) |
+| 技术与工具声明 | [已签署 Technical Declaration PDF](submission/SDC2026_Lets%20go_TechDeclaration.pdf) |
+| Replit 使用证明 | [Replit POU PDF](submission/SDC2026_Lets%20go_Replit_POU.pdf) |
+| RunPod 使用说明 | [真实非使用说明 PDF](submission/SDC2026_Lets%20go_Runpod_POU.pdf) |
 | 共享契约 | [契约说明](docs/CONTRACT.md) · [类型、规则与样例](contracts/) |
 | 后端 API | [启动、配置与已实现接口](docs/BACKEND.md) |
 | 本地联调 | [浏览器、API 与模型验证](docs/evaluation/STEP7-INTEGRATION.md) |
 | 部署说明 | [单端口构建、托管与持久化](docs/DEPLOYMENT.md) |
-| 提交准备 | [材料与剩余要求](submission/README.md) |
+| 提交材料索引 | [正式文件与验证证据](submission/README.md) |
 | 合成数据 | [演示 seed](data/seed/README.md) · [评测输入与独立 gold](data/eval/README.md) |
-| Replit 项目 | [团队工作区](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash) |
+| Replit 项目 | [团队工作区](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)；匿名工作区访问曾返回 404，评委请使用下方公开演示 |
 | 在线演示 | [公开演示](https://milestone-2-cash-proof-to-cash.replit.app/) · [朋友测试指南](docs/FRIEND_TEST_GUIDE.zh-CN.md) |
-| RunPod 端点 | 重建版尚未使用 |
-| 演示幻灯片 | 独立准备；[本地幻灯片需求](submission/SLIDE_REQUIREMENTS.md) |
-| 演示视频 | 待补充 |
+| RunPod 端点 | 本实现未使用 RunPod，无端点 |
+| 演示幻灯片 | [Milestone2Cash.pptx](submission/Milestone2Cash.pptx) |
+| 演示视频 | [YouTube：Milestone2Cash](https://www.youtube.com/watch?v=pholjV_8vBM)，6:19，已验证未登录播放 |
+| 线上流程证据 | [F01–F06 结果](submission/validation/results.json) · [中文记录](submission/validation/%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C.txt) · [16 张截图](submission/validation/screenshots/) |
 
 ## 项目概览
 
@@ -87,11 +92,11 @@
 │   ├── FRONTEND_HANDOFF.md / TEAM_GUIDE.md
 │   ├── decisions.md
 │   └── issues/                 # 八个实施任务
-├── submission/README.md        # 待准备材料与证据清单
+├── submission/README.md        # 正式材料与验证证据索引
 └── LICENSE
 ```
 
-`src/` 中的 API 和 `web/` 中的界面均可在本地运行，测试代码与业务模块分开。计划提交文件见[提交材料清单](submission/README.md)。
+`src/` 中的 API 和 `web/` 中的界面均可在本地运行，测试代码与业务模块分开。正式文件见[提交材料清单](submission/README.md)。
 
 ### 架构
 
@@ -101,7 +106,9 @@
 
 ### 方式一 — 在 Replit 运行
 
-可直接打开[公开演示](https://milestone-2-cash-proof-to-cash.replit.app/)，或在[团队项目](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)使用仓库内的 `.replit` 配置。公网核心流程已通过[托管验证](docs/evaluation/HOSTED-VERIFICATION.md)，朋友可按[测试指南](docs/FRIEND_TEST_GUIDE.zh-CN.md)操作。这是共用、可重置的演示账本：SQLite 保存在发布实例文件系统中，不是持久财务存档。配置和限制见[部署说明](docs/DEPLOYMENT.md)。
+评委可直接打开[公开演示](https://milestone-2-cash-proof-to-cash.replit.app/)，选择 **Open demo workspace**。25 October 的 F01–F06 已在真实线上界面跑通，证据见[本轮结果](submission/validation/results.json)。本轮结束后 `LUMEN-DEMO-001` 为已收 RM18,000、未收 RM0，两笔付款保留；另有一张 RM6,000 未付款发票。评委可以查看已完成结果和审计记录。若要按[测试指南](docs/FRIEND_TEST_GUIDE.zh-CN.md)从 RM0 已收重放，需要项目负责人先准备干净种子环境；共享账本目前不是未操作的初始状态。
+
+这是共用、可重置的演示账本：SQLite 保存在发布实例文件系统中。页面刷新保留已验证，但此前重新发布曾重置账本，不宣称 Replit 重新部署后仍具备持久财务存储。配置和限制见[部署说明](docs/DEPLOYMENT.md)及[历史托管验证](docs/evaluation/HOSTED-VERIFICATION.md)。团队工作区可能需要项目所有者访问，评委试用不依赖该入口。
 
 ### 方式二 — 在本地运行
 
@@ -118,7 +125,7 @@ npm run db:init
 npm start
 ```
 
-在第二个终端进入仓库根目录，运行 `npm run dev:web`，然后打开 `http://localhost:5173`。演示登录页进入工作区后，可切换 PM、Owner 或 Finance 身份。界面默认连接真实的本地 API；仅在需要固定样例时，添加 `?source=mock` 并重新加载。
+在第二个终端进入仓库根目录，运行 `npm run dev:web`，然后打开 `http://localhost:5173`。网站主页的 **Open demo workspace** 进入工作台后，可切换 PM、Owner 或 Finance 身份；`/#/home` 直接打开工作台。界面默认连接真实的本地 API；仅在需要固定样例时，添加 `?source=mock` 并重新加载。
 
 如需通过单一地址运行构建版本，先停止开发服务器，然后执行：
 
@@ -148,6 +155,10 @@ npm run start:production
 
 ### 运行测试
 
+24 October 对 `c438678` 的检查通过 60 项后端、23 项前端、13 组契约／数据验证、类型检查及构建。25 October 另完成独立生产构建的 13 项检查，包括无模型密钥降级与进程重启保留；这不是 Replit 重新部署持久化测试。
+
+25 October 约 01:30–01:50 MYT，助手操作线上界面完成六项 F01–F06，全部通过。两张收据与一条付款承诺无需人工更正，界面显示 95% 模型置信度。六项工作流不计入历史三条自动化浏览器场景，也不是新一轮 40 张回执／40 条回复准确率评测。独立队友研究和人工耗时对比仍未进行，不能从这些检查推导真实企业节省时间的比例。
+
 在仓库根目录执行：
 
 ```bash
@@ -168,11 +179,11 @@ npm --prefix contracts run check
 
 ## 我们如何使用 Replit
 
-现有仓库已导入[团队 Replit 项目](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)。工作区使用 Node.js 24.22.1，构建前端并在同一地址运行前端和 API。工作区已验证真实 DeepSeek 提醒、截图提取、银行匹配、人工批准入账和预测更新，密钥保存在平台 secrets。公开发布状态及数据保存限制见[部署记录](docs/DEPLOYMENT.md)；正式使用证明 PDF 仍需纳入提交材料。
+现有仓库已导入[团队 Replit 项目](https://replit.com/@lijieheng18/Milestone2Cash-Proof-to-Cash)。已记录的工作区使用 Node.js 24.22.1，构建前端并在同一地址运行前端和 API。线上验证覆盖真实 AI 标记的提醒、截图提取、银行匹配、人工批准入账和预测更新，密钥保存在平台 secrets。正式证据见 [Replit 使用证明 PDF](submission/SDC2026_Lets%20go_Replit_POU.pdf)，公开状态及存储限制见[部署记录](docs/DEPLOYMENT.md)。
 
 ## 我们如何使用 RunPod
 
-重建版尚未使用 RunPod；计划中的 MVP 没有 GPU 工作负载。提交前应根据官方要求确认本赛道是否需要 RunPod 使用证明。模板中的“Required”标签不代表本项目已经使用它。
+团队确认本实现没有使用 RunPod，也没有 RunPod 端点。Tesseract 在应用服务器本地运行，模型推理直接调用 DeepSeek hosted API。详见[真实非使用说明](submission/SDC2026_Lets%20go_Runpod_POU.pdf)；该文件不声称运行过 GPU 工作负载或获得官方豁免。
 
 ## 挑战与收获
 
@@ -187,14 +198,14 @@ npm --prefix contracts run check
 
 | 姓名 | 大学 | 职责 |
 | --- | --- | --- |
-| Jiazhong Yang | Monash University Malaysia | 注册队长 |
-| LOW LI XIN | Universiti Malaya | 组员；具体贡献待确认 |
-| Jieheng Li | Monash University Malaysia | 组员；具体贡献待确认 |
-| Lingchen Wu | Monash University Malaysia | 组员；具体贡献待确认 |
+| Jiazhong Yang | Monash University Malaysia | 队长；代码实现 |
+| LOW LI XIN | Universiti Malaya | 方案构思、核心功能规划、产品定位、PPT 与视频制作 |
+| Jieheng Li | Monash University Malaysia | 代码实现 |
+| Lingchen Wu | Monash University Malaysia | UI 设计、视觉外观与用户体验 |
 
-组员通过下方 Issue 认领具体任务，工作分为项目协调、前端设计与开发、后端开发、测试和文档。全部十七个操作现已接通，共享演示已发布；接下来完成朋友测试、演示录制和提交材料。
+以上为团队确认的实际分工。团队还确认全员完成规定的 GenAI、Database 和 Cloud Deployment workshops，未使用比赛开始前已有的自有代码，没有雇佣／实习知识产权限制。同一比赛期间的早期迭代仍属于本次开发历史。
 
-组员现在可以认领合成案例、独立核算、测试复核、文档、幻灯片和演示任务。这些是可参与的工作，不代表已经分配给任何人。按[组员参与指南](docs/TEAM_GUIDE.md)操作：收到邀请后接受、更新 `main`、在对应 Issue 认领具体任务，再创建独立分支并提交 PR。
+OpenAI Codex 和 Anthropic Claude 为开发提供了主要辅助。Codex 支持后端、前端界面与路由、测试、研究和文档制作；Claude 支持前端实现。真实使用范围及人工责任见[正式技术声明](submission/SDC2026_Lets%20go_TechDeclaration.pdf)。技术测试和助手操作的线上核验不等于独立队友研究。
 
 ### 八步开发计划
 
@@ -214,15 +225,16 @@ npm --prefix contracts run check
 ## 提交检查清单
 
 - [x] 确认正式注册队长、成员和大学。
-- [ ] 确认拟采用的 SDG 目标和实际分工。
-- [ ] 补充幻灯片和演示视频链接。
-- [ ] 记录 Replit 使用及使用证明。
-- [ ] 确认 RunPod 要求的适用性，提供所需的真实证据。
-- [ ] 完成 Preliminary Submission 和 Technology Declaration PDF。
-- [ ] 按确认后的团队名称及官方模板命名提交文件。
-- [ ] 验证部署、链接及全部运行步骤。
-- [ ] 检查最终仓库中的凭据与私有数据。
-- [ ] 确认实测声明及 AI／工具声明，并保留真实提交回执。
+- [x] 记录 SDG 8.2／8.3、实际分工、workshop 与原创性回答。
+- [x] 补充 PPT 和 6:19 YouTube 视频链接，并验证未登录播放。
+- [x] 记录 Replit 使用和真实使用证明、RunPod 实际非使用说明。
+- [x] 完成正式方案和技术声明 PDF，并按队长授权填写文字签名及日期。
+- [x] 按确认后的队名与官方模板命名提交文件。
+- [x] 公开仓库；核验公开原型、六项线上流程和独立生产构建检查。
+- [ ] 在材料 PR 合并后复核默认分支的最终 PDF、PPT 与全部链接。
+- [ ] 将门户显示的提交记录、代码／材料版本及核对范围保存在 [STEP-8 记录](docs/issues/08-submission.md)。
+
+官网 [FAQ](https://sdchack.my/faq) 和当前门户显示的截止时间为 **2026 年 10 月 25 日 07:59 AM MYT**。门户中的提交记录与本仓库材料发布是不同证据，见 STEP-8 的对应记录。
 
 ## 许可证
 

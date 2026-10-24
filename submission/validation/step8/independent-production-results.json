@@ -1,0 +1,105 @@
+{
+  "sourceCommit": "c4386784c9b5dacf44cc97e57a0c731931da36da",
+  "checkedAt": "2026-10-24T19:30:34.556Z",
+  "node": "v24.19.0",
+  "cwd": "[isolated-workspace]/work/step8-independent-verification/run-c438678-Xfl2vz",
+  "modelKeyConfigured": false,
+  "externalAppMutations": false,
+  "browserAutomationRun": false,
+  "results": [
+    {
+      "check": "actual production frontend, asset, API and initialized SQLite on one origin",
+      "status": "pass",
+      "evidence": {
+        "pid": 32666,
+        "port": 53138,
+        "asset": "/assets/index-CyBurXz3.js",
+        "invoice": [
+          0,
+          1800000
+        ]
+      }
+    },
+    {
+      "check": "missing/private routes return JSON errors, never frontend success",
+      "status": "pass",
+      "evidence": {
+        "authenticatedMissingStatus": 404,
+        "paths": 4,
+        "missingIdentityStatus": 401
+      }
+    },
+    {
+      "check": "missing model key yields explicitly labelled template reminder",
+      "status": "pass",
+      "evidence": {
+        "generationMode": "fallback_template",
+        "status": "draft"
+      }
+    },
+    {
+      "check": "missing key exposes reply manual-required and audited correction works",
+      "status": "pass",
+      "evidence": {
+        "initial": "manual_required",
+        "reason": "MODEL_NOT_CONFIGURED",
+        "correctedSource": "manual"
+      }
+    },
+    {
+      "check": "no-key receipt correction and deterministic matching remain usable",
+      "status": "pass",
+      "evidence": {
+        "initial": "manual_required",
+        "evidenceSource": "manual",
+        "verdict": "partial",
+        "paidBeforeApproval": 0
+      }
+    },
+    {
+      "check": "wrong-role and stale requests fail without posting payments",
+      "status": "pass",
+      "evidence": {
+        "wrongRole": {
+          "status": 403,
+          "code": "FORBIDDEN"
+        },
+        "stale": {
+          "status": 409,
+          "code": "VERSION_CONFLICT"
+        }
+      }
+    },
+    {
+      "check": "manual evidence reaches explicit approval and safe retry",
+      "status": "pass",
+      "evidence": {
+        "paidSen": 900000,
+        "outstandingSen": 900000,
+        "paymentCount": 1,
+        "replaySamePayment": true
+      }
+    },
+    {
+      "check": "full production-process restart plus db:init preserves workspace and original image",
+      "status": "pass",
+      "evidence": {
+        "firstPid": 32666,
+        "secondPid": 32680,
+        "workspaceExactMatch": true,
+        "imageSha256": "98e0a0e218e4a8abcb99692342305abdf221c3ed12a1eb13224cc9b4b54142ef",
+        "payments": 1,
+        "paidSen": 900000,
+        "manualReplySource": "manual"
+      }
+    },
+    {
+      "check": "invalid startup configuration fails explicitly",
+      "status": "pass",
+      "evidence": {
+        "missingBuildExit": 1,
+        "invalidPortExit": 1
+      }
+    }
+  ]
+}
