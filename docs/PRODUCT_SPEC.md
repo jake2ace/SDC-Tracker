@@ -1,6 +1,6 @@
 # Milestone2Cash Proof-to-Cash 产品规格
 
-状态：STEP-1 至 STEP-6 已实现，前端接入十七个后端契约接口，本地技术联调和量化准确率检查通过。STEP-7 人工耗时对照与组员复核按用户要求跳过；现进入 STEP-8 部署和提交准备。实现规则见[契约说明](CONTRACT.md)，运行方式见[后端说明](BACKEND.md)，证据见[联调报告](evaluation/STEP7-INTEGRATION.md)。完整任务为 #17–#24，见[八步计划](ISSUE_PLAN.md)。
+状态：STEP-1 至 STEP-6 已实现，前端接入十七个后端契约接口；STEP-7 的技术验证已完成，人工耗时对照与组员复核按用户要求跳过。STEP-8 的最终材料和提交核验已完成；队长于 2026-10-25 选择本次使用现有已测试的合成演示，云端跨重新发布持久化留待 [#40](https://github.com/jake2ace/SDC-Tracker/issues/40) 改进。当前范围和证据见[最终核验记录](evaluation/STEP8-FINAL-CHECK.md)，历史量化评测不代表后续版本已经重跑。实现规则见[契约说明](CONTRACT.md)，运行方式见[后端说明](BACKEND.md)。完整任务为 #17–#24，见[八步计划](ISSUE_PLAN.md)。
 
 ## 决策与来源
 

@@ -22,9 +22,9 @@ The recording asset report now includes a separate real-pipeline check: both rec
 | 4 | Confirmed promise changes expected timing; actual cash stays separate | Live on-time versus seven-day delay; optionally show final settlement |
 | 5 | React interface, Node API, SQLite; local OCR and restricted DeepSeek text tasks; matching rules and human approval | Editable architecture diagram with the approval gate visible |
 | 6 | Amount 40/40, reference 35/40, transfer time 40/40, reply intent 39/40; matcher 30/30; forecast 40/40 daily comparisons | Editable table; keep the synthetic evaluation label visible |
-| 7 | Intended benefit, proposed SDG 8.2/8.3 alignment, next validation and registered team | Verified links only; preserve unresolved deployment/video status |
+| 7 | Intended benefit, proposed SDG 8.2/8.3 alignment, next validation and registered team | Use the verified final links and retain the declared demonstration limitations |
 
-Current regression results are **50 backend tests, 16 frontend tests and three browser scenarios passed**. The original STEP-7 report records 46 backend tests; four later deployment tests account for the current total. Keep these counts separate from OCR accuracy and forecast comparisons.
+The historical pitch baseline is **50 backend tests, 16 frontend tests and three browser scenarios passed**. The original STEP-7 report recorded 46 backend tests; four later deployment tests accounted for that earlier 50-test total. The [final STEP-8 record](../docs/evaluation/STEP8-FINAL-CHECK.md) reports the later 60 backend tests, 23 frontend tests and 13 contract/data groups. The three historical automated browser scenarios were not rerun. Keep these scopes separate from OCR accuracy and forecast comparisons.
 
 ## Screenshot context
 
@@ -43,7 +43,7 @@ Use screenshots at readable sizes and preserve their proportions. Keep tables an
 | Jieheng Li | Monash University Malaysia | Member |
 | Lingchen Wu | Monash University Malaysia | Member |
 
-Presenter assignments and individual development contributions remain unconfirmed. Registration membership does not establish either. The confirmed registered team name is **Lets go**.
+The team confirmed actual contributions on 24 October 2026: Jiazhong Yang and Jieheng Li implemented code; Lingchen Wu designed the UI and user experience; LOW LI XIN developed the proposal and product positioning, prepared the slides and recorded the video. The registered team name is **Lets go**. This file preserves slide-planning guidance; the final [deck](Milestone2Cash.pptx), [6:19 video](https://www.youtube.com/watch?v=pholjV_8vBM) and [submission index](README.md) are the delivered materials.
 
 ## Claims to preserve accurately
 

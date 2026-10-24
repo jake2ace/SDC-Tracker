@@ -218,7 +218,7 @@ OpenAI Codex 和 Anthropic Claude 为开发提供了主要辅助。Codex 支持�
 | 5 | [#21](https://github.com/jake2ace/SDC-Tracker/issues/21) | 已完成 — OCR、AI 提取及人工降级 |
 | 6 | [#22](https://github.com/jake2ace/SDC-Tracker/issues/22) | 已完成 — 付款审批、部分收款与预测 |
 | 7 | [#23](https://github.com/jake2ace/SDC-Tracker/issues/23) | 已完成 — 技术联调；人工计时和组员复核按要求跳过 |
-| 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | 部署、演示与提交核对 |
+| 8 | [#24](https://github.com/jake2ace/SDC-Tracker/issues/24) | 已完成 — 按队长确认的现有演示范围；数据持久化后续跟踪 |
 
 详细资料：[依赖与验收计划](docs/ISSUE_PLAN.md) · [前端交接](docs/FRONTEND_HANDOFF.md) · [决策记录](docs/decisions.md)。
 
@@ -231,8 +231,10 @@ OpenAI Codex 和 Anthropic Claude 为开发提供了主要辅助。Codex 支持�
 - [x] 完成正式方案和技术声明 PDF，并按队长授权填写文字签名及日期。
 - [x] 按确认后的队名与官方模板命名提交文件。
 - [x] 公开仓库；核验公开原型、六项线上流程和独立生产构建检查。
-- [ ] 在材料 PR 合并后复核默认分支的最终 PDF、PPT 与全部链接。
-- [ ] 将门户显示的提交记录、代码／材料版本及核对范围保存在 [STEP-8 记录](docs/issues/08-submission.md)。
+- [x] 在材料 PR 合并后复核默认分支的最终 PDF、PPT 与全部链接。
+- [x] 将门户显示的提交记录、代码／材料版本及核对范围保存在 [STEP-8 记录](docs/issues/08-submission.md)。
+
+队长于 2026 年 10 月 25 日明确选择“这次先用现有演示，后续再完善数据保存”。因此本次保留队友已上线、已测试的合成演示并完成 STEP-8；云端重新发布后的数据保存转为 [后续改进 #40](https://github.com/jake2ace/SDC-Tracker/issues/40)，不记作已通过的测试。
 
 官网 [FAQ](https://sdchack.my/faq) 和当前门户显示的截止时间为 **2026 年 10 月 25 日 07:59 AM MYT**。门户中的提交记录与本仓库材料发布是不同证据，见 STEP-8 的对应记录。
 

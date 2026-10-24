@@ -39,6 +39,8 @@ The GitHub repository is public. The [submission status record](SUBMISSION_STATU
 
 Use the retained settled live demonstration for inspection, or the documented clean local setup for replay. The final verification does not claim hosted redeployment durability or independent SME validation. The recorded video's earlier regression counts are labelled historical in slide 11; current verification scope is recorded in the [STEP-8 report](../docs/evaluation/STEP8-FINAL-CHECK.md).
 
+The team leader confirmed this demonstration scope on 25 October 2026: use the existing tested website for the competition and improve data persistence later. STEP-8 is complete under that decision. [Issue 40](https://github.com/jake2ace/SDC-Tracker/issues/40) tracks the later storage improvement; the existing hosted demonstration is retained.
+
 ## Materials and evidence
 
 - [Official document templates](https://drive.google.com/drive/folders/1KvSNvXRXrnYpJ2rGterZx6Gfchi64Nkz).

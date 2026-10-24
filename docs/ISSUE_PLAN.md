@@ -1,6 +1,6 @@
 # Milestone2Cash Proof-to-Cash 开发计划
 
-依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1 至 STEP-7 技术工作已完成；人工耗时对照和组员复核按用户要求跳过；STEP-8 IN PROGRESS**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
+依据：团队定稿 `LetsGo_Final_Idea.pdf` 与 [产品规格](PRODUCT_SPEC.md)。状态：**STEP-1 至 STEP-8 已按确认范围完成；人工耗时对照和组员复核按用户要求跳过；本次保留已测试的合成演示，云端跨发布持久化转为后续改进 [#40](https://github.com/jake2ace/SDC-Tracker/issues/40)**。旧 Milestone2Cash 的代码、测试结果和已完成事项不作为重建版的验收结果。
 
 | 步骤 | 交付 | 职责 | 依赖 | 状态 |
 | --- | --- | --- | --- | --- |
@@ -11,7 +11,7 @@
 | STEP-5 | [本地 OCR、DeepSeek 结构化与 fallback](issues/05-ai-extraction.md) | 后端开发与 AI 集成 | STEP-1、STEP-2 | DONE |
 | STEP-6 | [审批入账、部分付款与现金流联动](issues/06-reconciliation.md) | 后端开发 | STEP-2、STEP-4、STEP-5 | DONE |
 | STEP-7 | [端到端与量化评测](issues/07-evaluation.md) | 测试与评测；团队交叉复核 | STEP-3、STEP-4、STEP-5、STEP-6 | DONE — 技术完成，两项人工证据按要求跳过 |
-| STEP-8 | [部署、材料与提交核对](issues/08-submission.md) | 部署与文档；团队完成展示与提交 | 骨架依赖 STEP-2；最终依赖 STEP-7 | IN PROGRESS |
+| STEP-8 | [部署、材料与提交核对](issues/08-submission.md) | 部署与文档；团队完成展示与提交 | 骨架依赖 STEP-2；最终依赖 STEP-7 | DONE — 按队长确认的现有演示范围；持久化另行跟踪 |
 
 顺序：**STEP-1 → STEP-2 → STEP-4/STEP-5 并行 → STEP-6 → STEP-7 → STEP-8 最终检查**。前端开发在 STEP-1 冻结后并行开展 STEP-3；先用同契约 mock，再接真实后端。STEP-8 的部署骨架在 STEP-2 可运行时立即验证，材料可同步准备。
 
@@ -54,5 +54,6 @@
 | 2026-10-23 | 按团队定稿从头建立新基线；旧方案先本地备份，再清理活动工作区；保留仓库身份和 Git 历史 | 本计划全部 TODO；备份及清理结果由主协调记录 |
 | 2026-10-23 | 同一仓库更新双语 README 与常规开发分工；完成契约 v1.0.0、两公司 seed 与合成评测清单 | STEP-1 IN REVIEW；见[契约](CONTRACT.md)与[校验记录](CONTRACT_VALIDATION.md)，应用尚未实现 |
 | 2026-10-23 | 用户批准直接合并第一步并开始第二步；已实现 SQLite 后端、角色隔离、发票和人工确认催收 | STEP-1 / STEP-2 DONE；见[后端运行与验证](BACKEND.md)，前端与付款核对仍待实施 |
+| 2026-10-25 | 最终 PDF、PPT、视频及核验记录合并；队长明确选择这次使用现有演示，后续再完善数据保存 | STEP-8 按已确认范围完成；云端持久化记录在 [#40](https://github.com/jake2ace/SDC-Tracker/issues/40)，不宣称测试通过 |
 
 后续范围、接口、指标或分工变化追加记录，并关联 Issue/PR；保留旧决定及取代原因，不覆盖历史。
