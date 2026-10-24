@@ -1,5 +1,6 @@
 /** Bahasa Melayu interface text. Keys are the English source strings. */
 export const ms: Record<string, string> = {
+  "{n} pending tasks": "{n} tugasan menunggu",
   "Compare this screenshot with bank records": "Bandingkan tangkapan skrin ini dengan rekod bank",
   "Overview": "Gambaran keseluruhan",
   "Website home": "Laman utama",

@@ -11,7 +11,7 @@ import { InvoicesPage } from "./pages/Invoices";
 import { BankPage } from "./pages/Bank";
 import { CashPage } from "./pages/Cash";
 import { ActivityPage } from "./pages/Activity";
-import { pendingCounts } from "./lib/selectors";
+import { invoiceTasks } from "./lib/tasks";
 import { useTheme, type Theme } from "./lib/theme";
 import { GlassPuck, useGlassPuck } from "./components/Glass";
 import { ThemeSwitch } from "./components/ThemeSwitch";
@@ -35,10 +35,6 @@ export function App() {
     : <Landing onSignIn={signIn} theme={theme} onToggleTheme={toggleTheme} />;
 }
 
-function isTyping(el: EventTarget | null): boolean {
-  return el instanceof HTMLElement && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
-}
-
 function NavIcon({ page }: { page: string }) {
   const paths: Record<string, string> = {
     home: "M3 10 12 3l9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z",
@@ -57,7 +53,7 @@ function Workspace({ onSignOut, theme, onToggleTheme }: { onSignOut: () => void;
   const [controlsOpen, setControlsOpen] = useState(false);
   const [focusInvoiceSearch, setFocusInvoiceSearch] = useState(false);
   const companies = Array.from(new Set(users.map((u) => u.companyId)));
-  const counts = workspace ? pendingCounts(workspace) : null;
+  const pending = workspace ? invoiceTasks(workspace, t).length : 0;
   const navRef = useRef<HTMLUListElement>(null);
   const puck = useGlassPuck(navRef, route.page);
 
@@ -71,19 +67,6 @@ function Workspace({ onSignOut, theme, onToggleTheme }: { onSignOut: () => void;
     if (input) { input.focus(); setFocusInvoiceSearch(false); }
   }, [focusInvoiceSearch, route.page, workspace]);
 
-  useEffect(() => {
-    // Keys 1 to 5 jump between sections, unless someone is typing.
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault(); setFocusInvoiceSearch(true); navigate("invoices"); return;
-      }
-      if (e.metaKey || e.ctrlKey || e.altKey || isTyping(e.target)) return;
-      const page = PAGES[Number(e.key) - 1];
-      if (page) { e.preventDefault(); navigate(page.id); }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   return (
     <div className="app">
@@ -106,7 +89,7 @@ function Workspace({ onSignOut, theme, onToggleTheme }: { onSignOut: () => void;
         <button className="workspace-search-trigger" type="button" disabled={!workspace} aria-label={t("Search invoices…")}
           onClick={() => { setFocusInvoiceSearch(true); navigate("invoices"); }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" /><path d="m16 16 4.5 4.5" /></svg>
-          <span>{t("Search invoices…")}</span><kbd aria-hidden="true">⌘ / Ctrl K</kbd>
+          <span>{t("Search invoices…")}</span>
         </button>
         <div className="topbar-right">
           <label className="user-switch">
@@ -146,14 +129,14 @@ function Workspace({ onSignOut, theme, onToggleTheme }: { onSignOut: () => void;
           <div className="nav-caption">{t("WORKSPACE")}</div>
           <ul ref={navRef} className="glass-track">
             <GlassPuck style={puck} />
-            {PAGES.map((p, i) => {
-              const count = counts?.[p.id] ?? 0;
+            {PAGES.map((p) => {
+              const count = p.id === "invoices" ? pending : 0;
               return (
                 <li key={p.id}>
                   <a href={`#/${p.id}`} aria-current={route.page === p.id ? "page" : undefined}
                     onClick={(e) => { e.preventDefault(); navigate(p.id); }}>
                     <span className="nav-label"><NavIcon page={p.id} />{t(p.label)}</span>
-                    {count > 0 ? <span className="count" aria-label={t("{n} items need attention", { n: count })}>{count}</span> : <kbd aria-hidden="true">{i + 1}</kbd>}
+                    {count > 0 && <span className="count" title={t("{n} pending tasks", { n: count })} aria-label={t("{n} pending tasks", { n: count })}>{count}</span>}
                   </a>
                 </li>
               );

@@ -9,6 +9,7 @@ import { ActionHint, Badge, Empty, ErrorNote, Field, InvoiceStatusBadge, KeyValu
 import { MessagesTab } from "./invoice/Messages";
 import { PaymentTab } from "./invoice/PaymentCheck";
 import { useT } from "../i18n";
+import { invoiceTasks, taskTab } from "../lib/tasks";
 import "./Invoices.css";
 
 type InvoiceFilters = {
@@ -24,6 +25,7 @@ export function InvoicesPage({ selectedId, tab }: { selectedId: string | null; t
   const [savedFilters, setSavedFilters] = useState<InvoiceFilters>({ companyId: "", query: "", status: "all", overdueOnly: false });
   if (!ws) return null;
   const selected = byId(ws.invoices, selectedId);
+  const tasks = invoiceTasks(ws, t);
   const asOf = ws.forecastDefaults.asOfDate;
   // Filters belong to this company and only affect the list. In particular,
   // they never select another invoice or unmount a selected invoice's forms.
@@ -76,13 +78,15 @@ export function InvoicesPage({ selectedId, tab }: { selectedId: string | null; t
             {filteredInvoices.map((inv) => {
               const late = isOpen(inv) ? daysPastDue(inv, asOf) : 0;
               const project = byId(ws.projects, inv.projectId);
+              const pending = tasks.filter((task) => task.invoice?.id === inv.id);
               return (
                 <li key={inv.id}>
-                  <a href={href("invoices", inv.id)} aria-current={inv.id === selectedId ? "true" : undefined}>
+                  <a href={href("invoices", inv.id, pending[0] ? taskTab(pending[0]) : "details")} aria-current={inv.id === selectedId ? "true" : undefined}>
                     <span className="inv-top"><b>{inv.number}</b><Money sen={inv.outstandingAmountSen} strong /></span>
                     <span className="inv-sub muted small">{customerName(ws, inv.customerId)}</span>
                     {project && <span className="inv-project small">{project.name}</span>}
                     <span className="inv-sub"><InvoiceStatusBadge status={inv.status} />{late > 0 && <span className="late small">{t("{n} days late", { n: late })}</span>}</span>
+                    {pending.length > 0 && <span className="inv-pending"><Badge tone="warning">{t("{n} pending tasks", { n: pending.length })}</Badge></span>}
                     <span className="inv-due small">{t("Due {date}", { date: formatMytDate(inv.dueDate) })}</span>
                   </a>
                 </li>
@@ -104,6 +108,7 @@ function InvoiceDetail({ ws, inv, tab }: { ws: Workspace; inv: Invoice; tab: Inv
   const t = useT();
   const late = isOpen(inv) ? daysPastDue(inv, ws.forecastDefaults.asOfDate) : 0;
   const project = byId(ws.projects, inv.projectId);
+  const pending = invoiceTasks(ws, t).filter((task) => task.invoice?.id === inv.id);
   const collectible = inv.status !== "draft" && inv.status !== "rejected";
   const tabs: { id: InvoiceTab; label: string }[] = [
     { id: "details", label: t("Details") },
@@ -137,9 +142,10 @@ function InvoiceDetail({ ws, inv, tab }: { ws: Workspace; inv: Invoice; tab: Inv
 
       <nav ref={tabRef} className="tabs glass-track" aria-label={t("Invoice sections")}>
         <GlassPuck style={puck} />
-        {tabs.map((x) => (
-          <a key={x.id} href={href("invoices", inv.id, x.id)} aria-current={active === x.id ? "page" : undefined}>{x.label}</a>
-        ))}
+        {tabs.map((x) => {
+          const count = pending.filter((task) => taskTab(task) === x.id).length;
+          return <a key={x.id} href={href("invoices", inv.id, x.id)} aria-current={active === x.id ? "page" : undefined}>{x.label}{count > 0 && <> <span className="count" title={t("{n} pending tasks", { n: count })} aria-label={t("{n} pending tasks", { n: count })}>{count}</span></>}</a>;
+        })}
       </nav>
 
       {active === "details" && <DetailsTab ws={ws} inv={inv} />}

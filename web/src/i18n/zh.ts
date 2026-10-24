@@ -1,5 +1,6 @@
 /** Simplified Chinese interface text. Keys are the English source strings. */
 export const zh: Record<string, string> = {
+  "{n} pending tasks": "{n} 项待处理",
   "Compare this screenshot with bank records": "将这张截图与银行记录核对",
   "Overview": "总览",
   "Website home": "网站主页",

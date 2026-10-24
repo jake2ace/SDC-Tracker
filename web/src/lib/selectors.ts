@@ -1,5 +1,4 @@
 import type { Invoice, MatchResult, Workspace } from "./contract";
-import type { Page } from "./route";
 import { daysBetween } from "./format";
 
 /** Read-only lookups over the server workspace. No money or match decisions are made here. */
@@ -29,16 +28,4 @@ export function latestMatchForReceipt(ws: Workspace, receiptId: string): MatchRe
   // The API preserves insertion order. Demo timestamps can tie; IDs are random.
   const matches = ws.matches.filter((m) => m.receiptId === receiptId);
   return matches.find((m) => m.status === "applied") ?? matches[matches.length - 1];
-}
-
-export function pendingCounts(ws: Workspace): Partial<Record<Page, number>> {
-  const role = ws.actor.role;
-  const drafts = ws.invoices.filter((i) => i.status === "draft").length;
-  const reminderDrafts = ws.reminders.filter((r) => r.status === "draft").length;
-  const replyReview = ws.replies.filter((r) => r.processingStatus !== "ready").length;
-  const receiptReview = ws.receipts.filter((r) => r.processingStatus !== "ready").length;
-  const awaitingFinance = ws.matches.filter((m) => m.status === "pending" && (m.verdict === "confirmed" || m.verdict === "partial")).length;
-  return {
-    invoices: (role === "owner" ? drafts : 0) + (role === "finance" ? reminderDrafts + replyReview + receiptReview + awaitingFinance : 0),
-  };
 }
