@@ -3,6 +3,7 @@ import type {
   BankCredit, Customer, Invoice, MatchResult, Payment, PaymentPromise, Receipt, Reply,
 } from "../contracts/domain.ts";
 import { AppError } from "./errors.ts";
+import { replySemanticReviewReason } from "./extraction.ts";
 import { matchReceipt } from "./matcher.ts";
 import {
   assertDate, audit, changed, command, expectVersion, invalid, money, requireEntity,
@@ -58,6 +59,8 @@ function reviewedPromise(ctx: Context, reply: Reply): void {
   const received = utcTime(reply.receivedAt);
   if (now === null || received === null || received > now) review("The reply has an invalid or future received time.");
   if (extraction.source === "ai") {
+    const reason = replySemanticReviewReason(reply.text);
+    if (reason) review("Review the original reply and correct its meaning before confirming a promise.", [reason]);
     if (typeof extraction.confidence !== "number" || !Number.isFinite(extraction.confidence) ||
         extraction.confidence < 0.85 || extraction.confidence > 1 ||
         extraction.reviewedBy !== null || extraction.reviewedAt !== null) {
