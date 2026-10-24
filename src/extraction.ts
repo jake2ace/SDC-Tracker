@@ -66,22 +66,58 @@ const injection = /ignore.{0,50}(?:instruction|previous)|system\s*(?:prompt|mess
 const safeWords = new Set((`i we you they me us our your their this that the a an for of in on at to from is are was were be been being have has had do does did done can could will would shall should may might must not no never only some all and or but so as if then than with without it its please thank thanks check need needs just now already still paid pay payment payments paying transfer transferred completed sent send receipt invoice bank entry reference remaining remainder rest balance part partial half full amount total work milestone finished finish twice same correct agreed review dispute disputing unclear maybe tomorrow today monday tuesday wednesday thursday friday saturday sunday later after before next week date day resend pdf ignore previous instructions mark received message wrong group what refers less more yet confirm confirmation promised promise committed cannot cant havent didnt
 saya kami anda mereka ini itu yang untuk dengan pada dalam ke dari sudah telah belum akan boleh dapat perlu mesti tidak tak bukan hanya semua sebahagian separuh baki jumlah tepat bayar dibayar bayaran pembayaran pindahkan pindah pemindahan dibuat resit hantar invois sila semak rekod selepas pelanggan dahulu tetapi siap kerja mempertikaikan sama harga dipersetujui terima kasih semula salinan orang menguruskan hubungi bahagian kewangan pasti mungkin nanti mesej kurang jelas esok hari isnin selasa rabu khamis jumaat sabtu ahad
 january januari february februari march mac april may mei june jun july julai august ogos september october oktober november december disember`).split(/\s+/));
-const chinesePhrases = ["这张发票", "已经转账", "已经付款", "刚刚转了", "参考号", "银行记录", "付款截图", "款项", "付好了", "稍后", "发给你", "核对", "我们", "承诺", "支付", "明天", "今天", "先付了", "已转", "不是全额", "余款", "还需要安排", "剩下的", "还没付", "付了一部分", "这个阶段", "还没有完成", "不同意", "现在付款", "重复开票", "请先核对", "两张发票", "发票金额不对", "修改后", "再讨论付款", "收到", "先问一下同事", "周五", "这个消息", "可能", "发错群", "不确定", "谢谢", "付款", "付", "我", "你", "了", "请", "的", "是", "在", "后", "还", "等"];
+for (const word of "am unless until when once provided providing assuming depending whether condition unable refuse refused decline declined reject rejected jika kalau sekiranya seandainya asalkan apabila sehingga kecuali jangan enggan".split(" ")) safeWords.add(word);
+const chinesePhrases = ["这张发票", "已经转账", "已经付款", "刚刚转了", "参考号", "银行记录", "付款截图", "款项", "付好了", "稍后", "发给你", "核对", "我们", "承诺", "支付", "明天", "今天", "先付了", "已转", "不是全额", "余款", "还需要安排", "剩下的", "还没付", "付了一部分", "这个阶段", "还没有完成", "不同意", "现在付款", "重复开票", "请先核对", "两张发票", "发票金额不对", "修改后", "再讨论付款", "收到", "先问一下同事", "周五", "这个消息", "可能", "发错群", "不确定", "谢谢", "付款", "付", "我", "你", "了", "请", "的", "是", "在", "后", "还", "等",
+  "没有", "沒有", "不会", "不能", "不是", "不要", "从未", "拒绝", "拒絕", "如果", "假如", "只有", "除非", "否则", "否則", "一旦", "只要", "要是", "前提", "取决", "取決", "完成", "同意", "可以", "愿意", "保证", "不", "没", "未", "无", "無", "别", "別", "勿", "莫", "否", "若", "才", "就", "会", "将"];
 const chinesePattern = new RegExp(chinesePhrases.sort((a, b) => b.length - a.length).join("|"), "g");
+
+/** Expand negative contractions before apostrophes are removed by the privacy filter. */
+function normalizeReplyText(text: string): string {
+  return text.normalize("NFKC").replace(/[\u2018\u2019\u02bc]/g, "'")
+    .replace(/\b(?:can't|cant)\b/gi, "cannot")
+    .replace(/\b(?:won't|wont)\b/gi, "will not")
+    .replace(/\b(?:shan't|shant)\b/gi, "shall not")
+    .replace(/\b(have|has|had|do|does|did|is|are|was|were|could|would|should|must|need)n'?t\b/gi, "$1 not");
+}
+
 function projectReply(text: string): string {
   // Protect only validated financial/date literals. All other numbers and text are removed.
   const protectedValues: string[] = [];
   const protect = (literal: string) => { const index = protectedValues.push(literal) - 1; return `\u0001${index}\u0002`; };
-  let value = text.normalize("NFKC").replace(amountPattern, match => protect(match));
+  let value = normalizeReplyText(text).replace(/[\u0001\u0002]/g, "[REDACTED]").replace(amountPattern, match => protect(match));
   value = value.replace(/\b\d{4}-\d{2}-\d{2}\b|\d{4}年\s*\d{1,2}月\s*\d{1,2}日/g, match => protect(match));
   months.forEach(month => { value = value.replace(new RegExp(`\\b\\d{1,2}\\s+(?:${month})\\s+\\d{4}\\b`, "gi"), match => protect(match)); });
   const tokens = value.match(/\u0001\d+\u0002|[A-Za-z]+|[\p{Script=Han}]+|[.,!?;:，。！？；：…]|\s+|[^\s]/gu) ?? [];
   return tokens.map(token => {
     if (token.startsWith("\u0001")) return protectedValues[Number(token.slice(1, -1))];
     if (/^[A-Za-z]+$/.test(token)) return safeWords.has(token.toLowerCase()) ? token.toLowerCase() : "[REDACTED]";
-    if (/\p{Script=Han}/u.test(token)) return (token.match(chinesePattern) ?? []).join("") || "[REDACTED]";
+    if (/\p{Script=Han}/u.test(token)) {
+      // Keep gaps visible: matching known words must never silently remove a
+      // negation, condition or other unknown text between them.
+      let end = 0, projected = "";
+      for (const match of token.matchAll(chinesePattern)) {
+        if (match.index > end) projected += "[REDACTED]";
+        projected += match[0];
+        end = match.index + match[0].length;
+      }
+      return projected + (end < token.length ? "[REDACTED]" : "");
+    }
     return /^[\s.,!?;:，。！？；：…]+$/.test(token) ? token : "[REDACTED]";
   }).join("").replace(/(?:\[REDACTED\]\s*)+/g, "[REDACTED] ").trim();
+}
+
+/** A model confidence score cannot resolve missing or qualified intent.
+ * Reused on confirmation so previously stored AI-ready replies get the same gate.
+ */
+export function replySemanticReviewReason(text: string, projected = projectReply(text)): string | null {
+  const normalized = normalizeReplyText(text);
+  if (injection.test(normalized)) return "UNTRUSTED_INSTRUCTION";
+  if (/\b(?:not|no|never|cannot|without|unable|refuse|refused|decline|declined|reject|rejected|tidak|tak|bukan|belum|jangan|enggan)\b|不|没|未|无|無|別|别|勿|莫|否|拒绝|拒絕/i.test(normalized)) return "REPLY_NEGATION_REVIEW_REQUIRED";
+  // "May" in a supported date is not the conditional verb "may". Date
+  // grounding still happens separately; only remove date literals from this scan.
+  const withoutDates = normalized.replace(new RegExp(`\\b\\d{1,2}\\s+(?:${months.join("|")})\\s+\\d{4}\\b`, "gi"), " ");
+  if (/\b(?:if|unless|until|when|once|provided|providing|assuming|depending|whether|may|might|maybe|jika|kalau|sekiranya|seandainya|asalkan|apabila|sehingga|kecuali|mungkin)\b|如果|假如|只有|除非|一旦|只要|要是|前提|取决|取決|若|才|可能/i.test(withoutDates)) return "REPLY_CONDITION_REVIEW_REQUIRED";
+  return projected.includes("[REDACTED]") ? "REPLY_REDACTION_REVIEW_REQUIRED" : null;
 }
 
 function provenance(text: string, provider: ExtractionProvider): ExtractionProvenance {
@@ -130,7 +166,7 @@ export async function extractReply(text: string, receivedAt: string, language: L
       : amounts(normalized).length > 1 ? "CONFLICTING_AMOUNTS"
       : (output.intent === "promise" || output.intent === "partial" && output.promisedDate !== null) && (!output.promisedDate || relative || ambiguousDate.test(normalized)) ? "PROMISE_DATE_REVIEW_REQUIRED"
       : output.intent === "partial" && output.amountSen === null ? "MISSING_PAYMENT_AMOUNT"
-      : output.intent === "other" ? "UNCLEAR_REPLY" : null;
+      : output.intent === "other" ? "UNCLEAR_REPLY" : replySemanticReviewReason(normalized, redactedText);
     trace.validated = true;
     return { extraction: { ...output, source: "ai", reviewedBy: null, reviewedAt: null }, processingStatus: reason ? "needs_review" : "ready", fallbackReason: reason, provenance: trace };
   } catch (error) { return fail(error instanceof ExtractionProviderError ? error.code : "MODEL_UNAVAILABLE"); }

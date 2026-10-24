@@ -73,12 +73,16 @@ Upload limits and behavior:
 
 The model receives a restricted text projection. Receipt payer names and references become reversible `PAYER_1` / `REF_1` tokens; raw images are never sent. Reply text is reduced to supported financial/date language, with other spans redacted. The server validates exact output fields, finite confidence, integer amounts, dates and tokens, then checks returned amounts and dates against local evidence. Unknown identifiers and ungrounded values are rejected. The current receipt parser supports explicit labeled fields; unsupported layouts can require manual entry even when OCR succeeds.
 
+Reply projection preserves supported Chinese negations and conditions, normalizes English negative contractions (including curly apostrophes), and marks every unsupported span as `[REDACTED]` instead of silently joining the remaining words. Negated or conditional statements, and any reply containing redacted content, require Finance review regardless of model confidence. For example, `我不承诺…` must not become `我承诺…`, and `can't` must not become `can`. The review codes are `REPLY_NEGATION_REVIEW_REQUIRED`, `REPLY_CONDITION_REVIEW_REQUIRED` and `REPLY_REDACTION_REVIEW_REQUIRED`. This conservative rule also sends harmless greetings or names outside the vocabulary to review; it does not claim to understand every language or semantic nuance.
+
+Promise confirmation rechecks the original text of AI-sourced replies, including records saved as `ready` before this fix. Finance must use the existing audited correction flow to resolve the meaning before confirming such a promise. Already-confirmed promises are not rewritten automatically. No full unredacted message is sent to the model, and a reply or promise still creates no actual payment.
+
 `processingStatus` communicates the next action:
 
 | Status | Meaning |
 | --- | --- |
 | `ready` | Validated structured evidence or a completed manual correction; it still does not authorize payment. |
-| `needs_review` | Structured output exists but has low confidence, missing fields, a future transfer time, an unclear reply or a promise date requiring review. |
+| `needs_review` | Structured output exists but needs review due to confidence, missing fields, dates, negation, conditions or removed reply text. |
 | `manual_required` | OCR/provider unavailable, invalid input/output, conflicting fields, ungrounded values or embedded instructions prevented usable extraction. |
 
 Confidence below `0.85` requires review. `fallbackReason` identifies the reason without exposing provider error bodies. SQLite stores extraction provenance, model-call/validation flags, input/output hashes, original evidence, manual changes and audit events. Model output has source `ai`; manual edits have source `manual`, a null confidence and server-generated review stamps. Provider failure has no invented extraction.
@@ -90,5 +94,7 @@ Matching is available through STEP-4 after evidence is ready. Payment approval, 
 ## Verification
 
 Run `npm test` for integration and regression cases, or `npm run test:integration` for the separate STEP-5 tests only. Image tests live in `tests/integration/receipt-image.test.ts` and cover real PNG/JPEG/WebP decoding, invalid files and limits, actual local OCR and timeout handling. Synthetic receipt/reply evaluation results are separate evidence: mocked provider tests establish behavior under controlled failures, not real model accuracy. See [the evaluation guide](evaluation/STEP5.md) for reproducible commands and actual run records.
+
+The reply-semantic regression tests use controlled provider outputs to verify projection, privacy, review routing, legacy-record rejection and audited manual recovery. Earlier real-provider evaluation scores describe the version that produced them; review rates and accuracy must be measured again before claiming those numbers for this stricter projection.
 
 Implementation references: [sharp input validation options](https://sharp.pixelplumbing.com/api-constructor/), [Tesseract.js worker API](https://github.com/naptha/tesseract.js/blob/master/docs/api.md), [bundled language data](https://github.com/naptha/tessdata), [DeepSeek JSON mode](https://api-docs.deepseek.com/guides/json_mode/), and [DeepSeek chat completion API](https://api-docs.deepseek.com/api/create-chat-completion/).

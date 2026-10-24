@@ -22,10 +22,10 @@ test("receipt evidence is tokenized locally, grounded and restored without sendi
   assert.deepEqual([result.provenance.modelCalled, result.provenance.validated], [true, true]);
 });
 
-test("reply projection keeps payment semantics and removes names, reference and contact details", async () => {
+test("reply projection removes private details and requires review when text was redacted", async () => {
   let sent = "";
   const result = await extractReply("I am Alice Wonder. I paid RM9,000. Email alice@example.test, phone +60123456789, address 88 Secret Road, ref LMN-231026-001.", now, "en", async input => { sent = input.redactedText; return replyOutput; });
-  assert.equal(result.processingStatus, "ready");
+  reason(result, "REPLY_REDACTION_REVIEW_REQUIRED", "needs_review");
   assert.match(sent, /paid RM9,000/);
   assert.doesNotMatch(sent, /alice|wonder|example|60123456789|secret|LMN|231026/i);
 });
